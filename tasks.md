@@ -1,0 +1,53 @@
+# Implementation Tasks: ScanBeforeEat PWA
+
+- [x] 1. Project Initialization & Architecture Foundation
+  - [x] Initialize package.json with ES modules and production dependencies
+  - [x] Configure environment variables validation (.env.example and server/config/env.js)
+  - [x] Set up structured logger (pino) and HTTP server architecture
+  - [x] Create MySQL database connection pool, migration runner, and initial schema
+  - [x] Implement seed script with realistic demo products and nutritional data
+- [ ] 2. Database Schema & Security Middleware
+  - [ ] Verify database migration execution (`users`, `sessions`, `products`, `ingredients`, `scans`, `reports`, `report_ingredients`, `user_preferences`)
+  - [ ] Implement session store with MySQL (`express-mysql-session`)
+  - [ ] Implement security middleware (Helmet, CSP, CSRF, Rate-limiting, Request Correlation ID)
+  - [ ] Implement error handling and redaction middleware
+- [ ] 3. Authentication & User Authorization Service
+  - [ ] Password hashing with argon2 / bcrypt
+  - [ ] User repository and auth controller (register, login, logout, me, change password, delete account)
+  - [ ] Ownership authorization middleware ensuring per-user isolation
+  - [ ] Unit & integration tests for auth and authorization
+- [ ] 4. AI Ingredient Analysis Engine & Evidence Service
+  - [ ] NVIDIA NIM / LLM API client adapter with configurable endpoint & model
+  - [ ] Deterministic development mock mode when API key is not present or AI_MOCK_MODE=true
+  - [ ] Strict Zod response schema validation (ingredients, functions, benefits, concerns, otherUses, longTermEvidence, overallAssessment)
+  - [ ] Transparent scoring methodology algorithm (0-100 educational profile score)
+  - [ ] Evidence source layer with authoritative public health citations (FSSAI, WHO, FDA, EFSA)
+- [ ] 5. Product Lookup, Barcode & OCR Services
+  - [ ] Open Food Facts product data integration with caching in MySQL
+  - [ ] Scan creation, update, and deletion endpoints with strict user scoping
+  - [ ] Comparison service comparing two or more user products
+  - [ ] Data export (JSON export of personal scans and reports)
+- [ ] 6. Mobile-First Frontend & Design System
+  - [ ] Design system tokens (CSS variables: `#A8D92F`, `#F4F3E9`, `#202522`, `#E4E7D8`, typography, 44px targets)
+  - [ ] Desktop blocker (CSS media queries + JS viewport resize listeners, QR code, phone graphic)
+  - [ ] Responsive PWA layout with mobile bottom navigation (Home, Scan, History, Profile)
+  - [ ] Views: Onboarding, Login/Register, Home Dashboard, Scan Hub, Camera View, Upload View, Barcode View, Manual Entry View, OCR Review/Correction, Analysis Progress/Loading, Detailed Report View, Product Comparison View, History with Search/Filter, Profile & Data Controls
+- [ ] 7. Client-Side Scanning Integrations
+  - [ ] Camera scanner with environment facingMode, torch, viewfinder guide, and stream management
+  - [ ] Tesseract.js client OCR with image pre-processing (canvas grayscale/contrast) and progress reporting
+  - [ ] @zxing/browser barcode reader with audio/visual feedback and lookup fallback
+  - [ ] Manual ingredient editor with validation and sample text
+- [ ] 8. PWA Service Worker & Offline Experience
+  - [ ] Web App Manifest (`manifest.webmanifest`) and icons
+  - [ ] Service worker caching app shell and static assets
+  - [ ] Custom offline fallback screen
+  - [ ] Installation promotion flow
+- [ ] 9. Automated Testing & Verification
+  - [ ] Unit tests (normalization, scoring, Zod schemas, validation)
+  - [ ] Integration tests (auth flow, scan to analysis flow, data ownership isolation, CSRF)
+  - [ ] Browser testing of mobile viewport, desktop blocker, and UI flows
+- [ ] 10. Documentation & Production Readiness
+  - [ ] README.md with complete setup and execution commands
+  - [ ] Database guide (ER diagram, Workbench guide) in docs/DATABASE.md
+  - [ ] Architecture, Security, AI & Evidence, Deployment docs in docs/
+  - [ ] Final verification and testing report
