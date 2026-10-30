@@ -5,11 +5,25 @@ import { logger } from '../utils/logger.js';
 
 export const authController = {
   async getCsrfToken(req, res) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     const token = ensureCsrfToken(req);
-    return res.json({
-      success: true,
-      csrfToken: token
-    });
+
+    if (req.session) {
+      req.session.save((err) => {
+        if (err) {
+          logger.error({ err: err.message }, 'Failed to persist session for CSRF token');
+        }
+        return res.json({
+          success: true,
+          csrfToken: token
+        });
+      });
+    } else {
+      return res.json({
+        success: true,
+        csrfToken: token
+      });
+    }
   },
 
   async register(req, res, next) {
@@ -44,18 +58,22 @@ export const authController = {
         req.session.userId = userId;
         const csrfToken = ensureCsrfToken(req);
 
-        logger.info({ userId, email }, 'New user successfully registered');
+        req.session.save((saveErr) => {
+          if (saveErr) return next(saveErr);
 
-        return res.status(201).json({
-          success: true,
-          message: 'Account created successfully.',
-          user: {
-            id: userId,
-            email,
-            displayName,
-            accountStatus: 'active'
-          },
-          csrfToken
+          logger.info({ userId, email }, 'New user successfully registered');
+
+          return res.status(201).json({
+            success: true,
+            message: 'Account created successfully.',
+            user: {
+              id: userId,
+              email,
+              displayName,
+              accountStatus: 'active'
+            },
+            csrfToken
+          });
         });
       });
     } catch (err) {
@@ -106,19 +124,23 @@ export const authController = {
         req.session.userId = user.id;
         const csrfToken = ensureCsrfToken(req);
 
-        logger.info({ userId: user.id }, 'User logged in successfully');
+        req.session.save((saveErr) => {
+          if (saveErr) return next(saveErr);
 
-        return res.json({
-          success: true,
-          message: 'Signed in successfully.',
-          user: {
-            id: user.id,
-            email: user.email,
-            displayName: user.display_name,
-            accountStatus: user.account_status,
-            createdAt: user.created_at
-          },
-          csrfToken
+          logger.info({ userId: user.id }, 'User logged in successfully');
+
+          return res.json({
+            success: true,
+            message: 'Signed in successfully.',
+            user: {
+              id: user.id,
+              email: user.email,
+              displayName: user.display_name,
+              accountStatus: user.account_status,
+              createdAt: user.created_at
+            },
+            csrfToken
+          });
         });
       });
     } catch (err) {

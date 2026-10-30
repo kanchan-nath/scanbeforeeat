@@ -4,7 +4,7 @@
  * Strictly avoids caching private API responses, user tokens, or reports.
  */
 
-const CACHE_NAME = 'scanbeforeeat-shell-v3';
+const CACHE_NAME = 'scanbeforeeat-shell-v8';
 
 const STATIC_ASSETS = [
   '/',
@@ -22,6 +22,7 @@ const STATIC_ASSETS = [
   '/js/app.js',
   '/js/api.js',
   '/js/router.js',
+  '/js/icons.js',
   '/js/camera.js',
   '/js/ocr.js',
   '/js/barcode.js',

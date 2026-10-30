@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { icons, renderProductThumbnail } from './icons.js';
 
 /**
  * Scan History Manager & View
@@ -151,7 +152,9 @@ export class HistoryView {
       if (scans.length === 0) {
         itemsContainer.innerHTML = `
           <div class="card" style="text-align: center; padding: 2.5rem 1rem;">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+            <div style="display: flex; justify-content: center; margin-bottom: 0.75rem; color: var(--color-ink-muted);">
+              ${icons.search(40)}
+            </div>
             <h3 style="margin-bottom: 0.25rem;">No scans found</h3>
             <p style="font-size: 0.85rem; color: var(--color-ink-muted); margin-bottom: 1rem;">
               ${this.currentSearch || this.currentMethod || this.currentVerdict ? 'No products match your current filters.' : 'You have not scanned any products yet.'}
@@ -176,14 +179,8 @@ export class HistoryView {
             <!-- Selection Checkbox for comparison -->
             <input type="checkbox" class="scan-select-checkbox" data-id="${s.id}" ${isSelected ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--color-primary-active); flex-shrink: 0;" />
 
-            <!-- Product Thumbnail -->
-            ${s.product_image_url ? `
-              <img src="${escapeHtml(s.product_image_url)}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" />
-            ` : `
-              <div style="width: 48px; height: 48px; border-radius: 8px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
-                🥗
-              </div>
-            `}
+            <!-- Product Thumbnail (Vector Icon) -->
+            ${renderProductThumbnail(s.product_image_url, 48, s.product_name || 'Scanned Product', '8px', s.product_category || s.product_brand)}
 
             <!-- Info -->
             <div style="flex: 1; min-width: 0;">

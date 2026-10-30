@@ -1,3 +1,5 @@
+import { renderProductThumbnail } from './icons.js';
+
 /**
  * Product Comparison View Renderer
  * Compares 2-3 products side-by-side with nutrition, scores, and ingredient contrasts.
@@ -25,8 +27,8 @@ export function renderComparison(comparisonData, containerEl, onBack) {
       <div style="display: grid; grid-template-columns: repeat(${items.length}, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; overflow-x: auto;">
         ${items.map(item => `
           <div class="card" style="padding: 1rem; text-align: center;">
-            <div style="width: 52px; height: 52px; border-radius: 10px; background: var(--color-surface-dim); margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-              ${item.imageUrl ? `<img src="${escapeHtml(item.imageUrl)}" style="width:100%; height:100%; object-fit:cover; border-radius:10px;" />` : '🥗'}
+            <div style="margin: 0 auto 0.5rem; display: flex; justify-content: center;">
+              ${renderProductThumbnail(item.imageUrl, 52, item.name, '10px', item.brand || item.category)}
             </div>
             <h4 style="font-size: 0.875rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(item.name)}">
               ${escapeHtml(item.name)}

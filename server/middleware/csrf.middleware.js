@@ -34,9 +34,13 @@ export function csrfMiddleware(req, res, next) {
   const clientToken = req.headers['x-csrf-token'] || req.body?._csrf;
 
   if (!serverToken || !clientToken || clientToken !== serverToken) {
+    if (req.session) {
+      req.session.save(() => {});
+    }
     return res.status(403).json({
       success: false,
       error: 'Invalid or missing CSRF token. Please refresh the page and try again.',
+      csrfToken: serverToken,
       correlationId: req.id
     });
   }

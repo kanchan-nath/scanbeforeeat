@@ -1,4 +1,5 @@
 import { api } from './api.js';
+import { icons, renderProductThumbnail } from './icons.js';
 import { startCamera, stopCamera, captureFrame } from './camera.js';
 import { recognizeText } from './ocr.js?v=3';
 import { startBarcodeScanner, stopBarcodeScanner } from './barcode.js';
@@ -141,8 +142,8 @@ export class AppRouter {
   renderOnboarding() {
     this.viewContainer.innerHTML = `
       <div style="text-align: center; padding: 2.5rem 1rem 1.5rem;">
-        <div style="width: 72px; height: 72px; border-radius: 20px; background: var(--color-primary); margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; box-shadow: 0 8px 24px rgba(168, 217, 47, 0.4);">
-          🥗
+        <div style="width: 72px; height: 72px; border-radius: 20px; background: var(--color-primary); color: #1A2805; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(168, 217, 47, 0.4);">
+          ${icons.leaf(38)}
         </div>
         <h1 style="font-size: 1.85rem; margin-bottom: 0.75rem;">Know What's Inside Your Food</h1>
         <p style="font-size: 0.95rem; color: var(--color-ink-secondary); margin-bottom: 2rem; line-height: 1.5;">
@@ -151,21 +152,27 @@ export class AppRouter {
 
         <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left; margin-bottom: 2.5rem;">
           <div class="card" style="display: flex; gap: 0.85rem; align-items: flex-start; padding: 1rem;">
-            <span style="font-size: 1.5rem;">📷</span>
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; color: var(--color-primary-active); flex-shrink: 0;">
+              ${icons.camera(20)}
+            </div>
             <div>
               <h4 style="font-size: 0.95rem;">Scan or Photograph Labels</h4>
               <p style="font-size: 0.825rem; margin-top: 0.2rem;">Client-side OCR extracts printed ingredient lists directly on your phone.</p>
             </div>
           </div>
           <div class="card" style="display: flex; gap: 0.85rem; align-items: flex-start; padding: 1rem;">
-            <span style="font-size: 1.5rem;">🧠</span>
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; color: var(--color-primary-active); flex-shrink: 0;">
+              ${icons.brain(20)}
+            </div>
             <div>
               <h4 style="font-size: 0.95rem;">Evidence-Based Intelligence</h4>
               <p style="font-size: 0.825rem; margin-top: 0.2rem;">Get verified ingredient functions, benefits, and cautions backed by WHO and FSSAI standards.</p>
             </div>
           </div>
           <div class="card" style="display: flex; gap: 0.85rem; align-items: flex-start; padding: 1rem;">
-            <span style="font-size: 1.5rem;">🔒</span>
+            <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; color: var(--color-primary-active); flex-shrink: 0;">
+              ${icons.lock(20)}
+            </div>
             <div>
               <h4 style="font-size: 0.95rem;">Private & Transparent</h4>
               <p style="font-size: 0.825rem; margin-top: 0.2rem;">No fabricated percentages, no selling of private health data, full control to export or delete anytime.</p>
@@ -293,7 +300,7 @@ export class AppRouter {
             <input type="email" id="reg-email" class="input-text" required placeholder="name@example.com" autocomplete="email" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="reg-password">Password (min. 8 characters)</label>
+            <label class="form-label" for="reg-password">Password (min. 8 characters, with letters & numbers)</label>
             <input type="password" id="reg-password" class="input-text" required placeholder="••••••••" autocomplete="new-password" />
           </div>
 
@@ -316,6 +323,9 @@ export class AppRouter {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       errorMsg.style.display = 'none';
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
       const displayName = form.querySelector('#reg-name').value.trim();
       const email = form.querySelector('#reg-email').value.trim();
       const password = form.querySelector('#reg-password').value;
@@ -329,6 +339,8 @@ export class AppRouter {
       } catch (err) {
         errorMsg.textContent = err.message || 'Registration failed.';
         errorMsg.style.display = 'block';
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
     });
 
@@ -354,8 +366,8 @@ export class AppRouter {
 
         <!-- Main Hero Scan Card -->
         <div class="card-dark" style="margin-bottom: 1.5rem; position: relative; overflow: hidden;">
-          <div style="position: absolute; right: -10px; bottom: -10px; font-size: 6rem; opacity: 0.12; pointer-events: none;">
-            🔍
+          <div style="position: absolute; right: -15px; bottom: -15px; opacity: 0.12; pointer-events: none; color: #fff;">
+            <svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </div>
           <span class="badge badge-safe" style="margin-bottom: 0.5rem; font-size: 0.7rem;">
             Food Ingredient Intelligence
@@ -375,16 +387,16 @@ export class AppRouter {
 
         <!-- Quick Action Grid -->
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin-bottom: 1.75rem;">
-          <button type="button" class="card" id="quick-barcode-btn" style="padding: 0.85rem 0.5rem; text-align: center; border: 1px solid var(--color-border); cursor: pointer;">
-            <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">📊</div>
+          <button type="button" class="card" id="quick-barcode-btn" style="padding: 0.85rem 0.5rem; text-align: center; border: 1px solid var(--color-border); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem;">
+            <div style="color: var(--color-primary-active); display: flex; align-items: center; justify-content: center;">${icons.barcode(24)}</div>
             <div style="font-size: 0.775rem; font-weight: 700; color: var(--color-ink);">Scan Barcode</div>
           </button>
-          <button type="button" class="card" id="quick-upload-btn" style="padding: 0.85rem 0.5rem; text-align: center; border: 1px solid var(--color-border); cursor: pointer;">
-            <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">📁</div>
+          <button type="button" class="card" id="quick-upload-btn" style="padding: 0.85rem 0.5rem; text-align: center; border: 1px solid var(--color-border); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem;">
+            <div style="color: var(--color-primary-active); display: flex; align-items: center; justify-content: center;">${icons.upload(24)}</div>
             <div style="font-size: 0.775rem; font-weight: 700; color: var(--color-ink);">Upload Photo</div>
           </button>
-          <button type="button" class="card" id="quick-manual-btn" style="padding: 0.85rem 0.5rem; text-align: center; border: 1px solid var(--color-border); cursor: pointer;">
-            <div style="font-size: 1.4rem; margin-bottom: 0.25rem;">✍️</div>
+          <button type="button" class="card" id="quick-manual-btn" style="padding: 0.85rem 0.5rem; text-align: center; border: 1px solid var(--color-border); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem;">
+            <div style="color: var(--color-primary-active); display: flex; align-items: center; justify-content: center;">${icons.pencil(24)}</div>
             <div style="font-size: 0.775rem; font-weight: 700; color: var(--color-ink);">Type Text</div>
           </button>
         </div>
@@ -401,11 +413,16 @@ export class AppRouter {
         </div>
 
         <!-- Educational Insight Card -->
-        <div class="card" style="background: var(--color-surface-dim); border: none;">
-          <h3 style="font-size: 0.95rem; margin-bottom: 0.35rem;">💡 Label Reading Tip</h3>
-          <p style="font-size: 0.825rem; line-height: 1.4; color: var(--color-ink-secondary);">
-            Ingredients are listed by regulatory law in descending order of weight. The first 3 to 5 items make up the vast bulk of what you are eating!
-          </p>
+        <div class="card" style="background: var(--color-surface-dim); border: none; display: flex; gap: 0.75rem; align-items: flex-start;">
+          <div style="color: var(--color-primary-active); flex-shrink: 0; margin-top: 2px;">
+            ${icons.lightbulb(20)}
+          </div>
+          <div>
+            <h3 style="font-size: 0.95rem; margin-bottom: 0.25rem;">Label Reading Tip</h3>
+            <p style="font-size: 0.825rem; line-height: 1.4; color: var(--color-ink-secondary);">
+              Ingredients are listed by regulatory law in descending order of weight. The first 3 to 5 items make up the vast bulk of what you are eating!
+            </p>
+          </div>
         </div>
       </div>
     `;
@@ -442,13 +459,7 @@ export class AppRouter {
 
           return `
             <div class="card home-scan-card" data-id="${s.id}" style="padding: 0.85rem; margin-bottom: 0.65rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
-              ${s.product_image_url ? `
-                <img src="${escapeHtml(s.product_image_url)}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 8px; flex-shrink: 0;" />
-              ` : `
-                <div style="width: 44px; height: 44px; border-radius: 8px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;">
-                  🥗
-                </div>
-              `}
+              ${renderProductThumbnail(s.product_image_url, 44, s.product_name || 'Scanned Product', '8px', s.product_category || s.product_brand)}
               <div style="flex: 1; min-width: 0;">
                 <h4 style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.15rem;">
                   ${escapeHtml(s.product_name || 'Scanned Product')}
@@ -489,8 +500,8 @@ export class AppRouter {
 
         <div style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div class="card scan-option-card" id="opt-camera" style="cursor: pointer; display: flex; gap: 1rem; align-items: center; padding: 1.25rem;">
-            <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-primary-subtle); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-              📷
+            <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-primary-subtle); display: flex; align-items: center; justify-content: center; color: var(--color-primary-active); flex-shrink: 0;">
+              ${icons.camera(26)}
             </div>
             <div>
               <h3 style="font-size: 1rem; margin-bottom: 0.2rem;">Camera Label Scanner</h3>
@@ -499,8 +510,8 @@ export class AppRouter {
           </div>
 
           <div class="card scan-option-card" id="opt-barcode" style="cursor: pointer; display: flex; gap: 1rem; align-items: center; padding: 1.25rem;">
-            <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-info-bg); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-              📊
+            <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-info-bg); display: flex; align-items: center; justify-content: center; color: var(--color-info-text); flex-shrink: 0;">
+              ${icons.barcode(26)}
             </div>
             <div>
               <h3 style="font-size: 1rem; margin-bottom: 0.2rem;">Barcode Scanner</h3>
@@ -509,8 +520,8 @@ export class AppRouter {
           </div>
 
           <div class="card scan-option-card" id="opt-upload" style="cursor: pointer; display: flex; gap: 1rem; align-items: center; padding: 1.25rem;">
-            <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-              🖼️
+            <div style="width: 50px; height: 50px; border-radius: 12px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; color: var(--color-ink); flex-shrink: 0;">
+              ${icons.upload(26)}
             </div>
             <div>
               <h3 style="font-size: 1rem; margin-bottom: 0.2rem;">Upload Existing Photo</h3>
@@ -519,8 +530,8 @@ export class AppRouter {
           </div>
 
           <div class="card scan-option-card" id="opt-manual" style="cursor: pointer; display: flex; gap: 1rem; align-items: center; padding: 1.25rem;">
-            <div style="width: 50px; height: 50px; border-radius: 12px; background: #FFF3CD; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-              ✍️
+            <div style="width: 50px; height: 50px; border-radius: 12px; background: #FFF3CD; display: flex; align-items: center; justify-content: center; color: #856404; flex-shrink: 0;">
+              ${icons.pencil(26)}
             </div>
             <div>
               <h3 style="font-size: 1rem; margin-bottom: 0.2rem;">Enter or Paste Ingredients</h3>
@@ -546,7 +557,7 @@ export class AppRouter {
         <div style="display: flex; align-items: center; justify-content: space-between;">
           <button type="button" class="btn btn-outline btn-sm" id="cam-cancel-btn">Cancel</button>
           <span style="font-size: 0.85rem; font-weight: 700;">Scan Ingredient Label</span>
-          <button type="button" class="btn btn-outline btn-sm" id="cam-switch-btn" title="Switch Camera">🔄</button>
+          <button type="button" class="btn btn-outline btn-sm" id="cam-switch-btn" title="Switch Camera" style="display: flex; align-items: center; justify-content: center; padding: 0.35rem 0.5rem;">${icons.refresh(16)}</button>
         </div>
 
         <div class="camera-container" id="camera-box">
@@ -572,13 +583,15 @@ export class AppRouter {
         </div>
 
         <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
-          <button type="button" class="btn btn-primary btn-block" id="cam-capture-btn" style="min-height: 52px; font-size: 1.05rem;">
-            📸 Capture & Read Text
+          <button type="button" class="btn btn-primary btn-block" id="cam-capture-btn" style="min-height: 52px; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            ${icons.camera(22)}
+            Capture & Read Text
           </button>
         </div>
         <div style="text-align: center; margin-top: 0.65rem;">
-          <button type="button" class="btn btn-sm btn-ghost" id="cam-upload-btn" style="font-size: 0.85rem; color: var(--color-ink-muted);">
-            📁 Or select a photo from your gallery
+          <button type="button" class="btn btn-sm btn-ghost" id="cam-upload-btn" style="font-size: 0.85rem; color: var(--color-ink-muted); display: inline-flex; align-items: center; gap: 0.4rem;">
+            ${icons.upload(16)}
+            Or select a photo from your gallery
           </button>
         </div>
       </div>
@@ -701,7 +714,9 @@ export class AppRouter {
         </div>
 
         <div class="card" style="text-align: center; padding: 2rem 1.25rem; border: 2px dashed var(--color-border-dark); margin-bottom: 1.25rem;">
-          <div style="font-size: 3rem; margin-bottom: 0.5rem;">📁</div>
+          <div style="display: flex; justify-content: center; margin-bottom: 0.75rem; color: var(--color-primary-active);">
+            ${icons.upload(44)}
+          </div>
           <h3 style="font-size: 1.1rem; margin-bottom: 0.35rem;">Select Photo from Device</h3>
           <p style="font-size: 0.85rem; color: var(--color-ink-muted); margin-bottom: 1.25rem;">
             Choose a photo of the ingredients list from your library or camera roll.
@@ -983,8 +998,9 @@ export class AppRouter {
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 0.65rem;">
-          <button type="button" class="btn btn-primary btn-block" id="confirm-and-analyze-btn">
-            🔬 Analyze with AI Intelligence
+          <button type="button" class="btn btn-primary btn-block" id="confirm-and-analyze-btn" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            ${icons.brain(20)}
+            Analyze with AI Intelligence
           </button>
           <button type="button" class="btn btn-outline btn-block" id="correction-retake-btn">
             Retake / Re-enter Label
@@ -1046,7 +1062,9 @@ export class AppRouter {
         <div class="radar-pulse-wrapper">
           <div class="radar-circle"></div>
           <div class="radar-circle"></div>
-          <div class="radar-core">🧬</div>
+          <div class="radar-core" style="display: flex; align-items: center; justify-content: center; color: var(--color-primary-active);">
+            ${icons.brain(24)}
+          </div>
         </div>
 
         <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem;" id="analysis-step-title">Analyzing Ingredients...</h2>
@@ -1190,8 +1208,9 @@ export class AppRouter {
             ScanBeforeEat does not sell your data or train AI models on personal reports.
           </p>
           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <a href="/api/v1/auth/export" class="btn btn-secondary btn-sm" style="text-align: center;">
-              📥 Export All My Data (JSON)
+            <a href="/api/v1/auth/export" class="btn btn-secondary btn-sm" style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; text-decoration: none;">
+              ${icons.download(16)}
+              Export All My Data (JSON)
             </a>
             <button type="button" class="btn btn-outline btn-sm" id="btn-view-privacy">
               Read Privacy Policy

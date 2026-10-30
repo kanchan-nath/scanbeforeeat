@@ -108,14 +108,26 @@ async function initApp() {
   const router = new AppRouter(appState);
   appState.router = router;
 
-  // 5. Bind Bottom Navigation Bar Click Handlers
-  document.querySelectorAll('.nav-item').forEach(button => {
-    button.addEventListener('click', () => {
-      const tab = button.getAttribute('data-tab');
-      if (tab) {
-        router.navigate(tab);
+  // 5. Bind Bottom Navigation Bar Click Handlers (handles .nav-item and .nav-scan-button)
+  const navBar = document.getElementById('bottom-nav-bar');
+  if (navBar) {
+    navBar.addEventListener('click', (e) => {
+      const button = e.target.closest('[data-tab]');
+      if (button) {
+        const tab = button.getAttribute('data-tab');
+        if (tab) {
+          router.navigate(tab);
+        }
       }
     });
+  }
+
+  // Listen for direct URL hash changes (e.g. #scan-hub)
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace(/^#/, '');
+    if (hash && hash !== router.currentView) {
+      router.navigate(hash, {}, false);
+    }
   });
 
   // Top header brand click

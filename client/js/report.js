@@ -4,6 +4,8 @@
  * long-term timeline, disease evidence, and citations.
  */
 
+import { renderProductThumbnail } from './icons.js';
+
 export function renderReport(reportData, containerEl, onAction = {}) {
   const r = reportData.report_json || reportData;
   const product = r.product || {};
@@ -46,13 +48,7 @@ export function renderReport(reportData, containerEl, onAction = {}) {
       <!-- Product Header -->
       <div class="card" style="margin-bottom: 1rem;">
         <div style="display: flex; gap: 1rem; align-items: center;">
-          ${reportData.product_image_url ? `
-            <img src="${escapeHtml(reportData.product_image_url)}" alt="Product Image" style="width: 72px; height: 72px; object-fit: cover; border-radius: 12px; border: 1px solid var(--color-border); flex-shrink: 0;" />
-          ` : `
-            <div style="width: 72px; height: 72px; border-radius: 12px; background: var(--color-surface-dim); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0;">
-              🥗
-            </div>
-          `}
+          ${renderProductThumbnail(reportData.product_image_url, 72, product.name || reportData.product_name, '12px', product.category || reportData.product_category || product.brand || reportData.product_brand)}
           <div>
             <span class="badge badge-info" style="margin-bottom: 0.35rem; font-size: 0.7rem;">
               ${escapeHtml(product.category || reportData.product_category || 'Packaged Food')}

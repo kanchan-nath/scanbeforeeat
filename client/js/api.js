@@ -7,7 +7,10 @@ let cachedCsrfToken = null;
 
 export async function fetchCsrfToken() {
   try {
-    const res = await fetch('/api/v1/auth/csrf-token', { credentials: 'include' });
+    const res = await fetch('/api/v1/auth/csrf-token', {
+      credentials: 'include',
+      cache: 'no-store'
+    });
     const data = await res.json();
     if (data.success && data.csrfToken) {
       cachedCsrfToken = data.csrfToken;
@@ -59,8 +62,20 @@ export async function request(endpoint, options = {}) {
     data = await response.text();
   }
 
+  // Automatic retry on CSRF token mismatch or stale token
+  if (response.status === 403 && data?.error && typeof data.error === 'string' && data.error.toLowerCase().includes('csrf') && !options._isCsrfRetry) {
+    cachedCsrfToken = data.csrfToken || null;
+    if (!cachedCsrfToken) {
+      await fetchCsrfToken();
+    }
+    return request(endpoint, { ...options, _isCsrfRetry: true });
+  }
+
   if (!response.ok) {
-    const errorMsg = data?.error || (typeof data === 'string' ? data : `HTTP ${response.status}`);
+    let errorMsg = data?.error || (typeof data === 'string' ? data : `HTTP ${response.status}`);
+    if (data?.details && Array.isArray(data.details) && data.details.length > 0) {
+      errorMsg = data.details.map(d => d.message).join('. ');
+    }
     const error = new Error(errorMsg);
     error.status = response.status;
     error.data = data;
