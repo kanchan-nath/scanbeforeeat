@@ -19,6 +19,13 @@ async function startServer() {
     // 2. Run migrations
     await runMigrations();
 
+    // 2b. Optional automatic seed if configured (useful for initial cloud deployment)
+    if (env.AUTO_SEED) {
+      logger.info('AUTO_SEED is enabled, seeding initial demonstration products...');
+      const { runSeed } = await import('../database/seeds/seed.js');
+      await runSeed();
+    }
+
     // 3. Start HTTP server
     const server = app.listen(env.PORT, () => {
       logger.info(`🚀 ScanBeforeEat PWA server running at ${env.APP_BASE_URL} (Port: ${env.PORT}) [${env.NODE_ENV}]`);

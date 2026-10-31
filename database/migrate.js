@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mysql from 'mysql2/promise';
-import { env } from '../server/config/env.js';
+import { getDbConfig } from '../server/config/database.js';
 import { logger } from '../server/utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,19 +11,11 @@ const __dirname = path.dirname(__filename);
 export async function runMigrations() {
   console.log('🔄 Running database migrations...');
   
-  const connConfig = {
-    host: env.DB_SOCKET_PATH ? undefined : env.DB_HOST,
-    port: env.DB_SOCKET_PATH ? undefined : env.DB_PORT,
-    socketPath: env.DB_SOCKET_PATH || undefined,
-    user: env.DB_USER,
-    password: env.DB_PASSWORD,
-    ssl: env.DB_SSL ? { rejectUnauthorized: true } : undefined
-  };
+  const baseConfig = getDbConfig();
 
-  // Connect to the database
+  // Connect to the database with multiple statements enabled for schema creation
   const connection = await mysql.createConnection({
-    ...connConfig,
-    database: env.DB_NAME,
+    ...baseConfig,
     multipleStatements: true
   });
 
