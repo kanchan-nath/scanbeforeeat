@@ -105,7 +105,8 @@ export const scanController = {
       return res.status(201).json({
         success: true,
         message: 'Scan created successfully.',
-        scan: scanRecord
+        scan: scanRecord,
+        demoScanInfo: req.demoScanInfo || null
       });
     } catch (err) {
       next(err);

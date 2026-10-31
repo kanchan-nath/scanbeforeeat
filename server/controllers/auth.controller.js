@@ -2,6 +2,7 @@ import argon2 from 'argon2';
 import { userRepository } from '../repositories/user.repository.js';
 import { ensureCsrfToken } from '../middleware/csrf.middleware.js';
 import { logger } from '../utils/logger.js';
+import { isDemoUser, getTodayScanCount } from '../middleware/demo-restriction.middleware.js';
 
 export const authController = {
   async getCsrfToken(req, res) {
@@ -70,7 +71,9 @@ export const authController = {
               id: userId,
               email,
               displayName,
-              accountStatus: 'active'
+              accountStatus: 'active',
+              isDemo: isDemoUser(email),
+              scansRemainingToday: null
             },
             csrfToken
           });
@@ -118,16 +121,19 @@ export const authController = {
       await userRepository.updateLastLogin(user.id);
 
       // Regenerate session on login
-      req.session.regenerate((err) => {
+      req.session.regenerate(async (err) => {
         if (err) return next(err);
 
         req.session.userId = user.id;
         const csrfToken = ensureCsrfToken(req);
+        const isDemo = isDemoUser(user);
+        const todayScans = isDemo ? await getTodayScanCount(user.id) : 0;
+        const scansRemainingToday = isDemo ? Math.max(0, 2 - todayScans) : null;
 
         req.session.save((saveErr) => {
           if (saveErr) return next(saveErr);
 
-          logger.info({ userId: user.id }, 'User logged in successfully');
+          logger.info({ userId: user.id, isDemo }, 'User logged in successfully');
 
           return res.json({
             success: true,
@@ -137,7 +143,9 @@ export const authController = {
               email: user.email,
               displayName: user.display_name,
               accountStatus: user.account_status,
-              createdAt: user.created_at
+              createdAt: user.created_at,
+              isDemo,
+              scansRemainingToday
             },
             csrfToken
           });
@@ -177,6 +185,9 @@ export const authController = {
     }
 
     const csrfToken = ensureCsrfToken(req);
+    const isDemo = isDemoUser(user);
+    const todayScans = isDemo ? await getTodayScanCount(user.id) : 0;
+    const scansRemainingToday = isDemo ? Math.max(0, 2 - todayScans) : null;
 
     return res.json({
       success: true,
@@ -186,7 +197,9 @@ export const authController = {
         displayName: user.display_name,
         accountStatus: user.account_status,
         createdAt: user.created_at,
-        lastLoginAt: user.last_login_at
+        lastLoginAt: user.last_login_at,
+        isDemo,
+        scansRemainingToday
       },
       csrfToken
     });

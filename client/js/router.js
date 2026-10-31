@@ -494,9 +494,21 @@ export class AppRouter {
     this.viewContainer.innerHTML = `
       <div style="padding: 1rem 0;">
         <h1 style="font-size: 1.5rem; margin-bottom: 0.35rem;">Choose Scanning Mode</h1>
-        <p style="font-size: 0.875rem; color: var(--color-ink-muted); margin-bottom: 1.5rem;">
+        <p style="font-size: 0.875rem; color: var(--color-ink-muted); margin-bottom: 1rem;">
           Select how you want to capture the food product's ingredient details.
         </p>
+
+        ${this.appState.user?.isDemo ? `
+          <div class="card" style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; border-left: 4px solid var(--color-primary-active); background: var(--color-primary-subtle); display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-ink);">Demo Account</div>
+              <div style="font-size: 0.775rem; color: var(--color-ink-secondary);">${this.appState.user?.scansRemainingToday ?? 2} of 2 scans remaining today</div>
+            </div>
+            <span class="badge ${this.appState.user?.scansRemainingToday === 0 ? 'badge-warning' : 'badge-safe'}" style="font-size: 0.7rem;">
+              ${this.appState.user?.scansRemainingToday === 0 ? 'Daily Limit Reached' : '2 Scans/Day'}
+            </span>
+          </div>
+        ` : ''}
 
         <div style="display: flex; flex-direction: column; gap: 0.85rem;">
           <div class="card scan-option-card" id="opt-camera" style="cursor: pointer; display: flex; gap: 1rem; align-items: center; padding: 1.25rem;">
@@ -985,6 +997,13 @@ export class AppRouter {
           OCR text may contain scanning errors. Please verify or correct the ingredients before submitting for AI intelligence analysis.
         </p>
 
+        ${this.appState.user?.isDemo ? `
+          <div style="margin-bottom: 0.75rem; padding: 0.5rem 0.75rem; background: var(--color-surface-dim); border-radius: var(--radius-sm); font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Demo Mode</span>
+            <span style="font-weight: 600;">${this.appState.user?.scansRemainingToday ?? 2} of 2 scans remaining today</span>
+          </div>
+        ` : ''}
+
         <div class="card" style="margin-bottom: 1rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
             <span style="font-size: 0.825rem; font-weight: 700;">Editable Ingredient Text</span>
@@ -1022,6 +1041,11 @@ export class AppRouter {
         return;
       }
 
+      if (this.appState.user?.isDemo && this.appState.user?.scansRemainingToday <= 0) {
+        alert('Demo daily limit reached (2 scans per day). Please create a free account to continue scanning products!');
+        return;
+      }
+
       this.activeScanData.confirmedIngredientsText = confirmedText;
       analyzeBtn.disabled = true;
 
@@ -1044,10 +1068,19 @@ export class AppRouter {
         const createRes = await api.scans.create(scanPayload);
         const scanId = createRes.scan.id;
 
+        if (createRes.demoScanInfo && this.appState.user?.isDemo) {
+          this.appState.user.scansRemainingToday = createRes.demoScanInfo.remaining;
+        }
+
         // Navigate to progress view which triggers analysis
         this.navigate('analysis-progress', { scanId });
       } catch (err) {
-        alert(`Failed to save scan: ${err.message}`);
+        if (err.data?.code === 'DEMO_SCAN_LIMIT_REACHED') {
+          if (this.appState.user) this.appState.user.scansRemainingToday = 0;
+          alert('Demo daily scan limit reached (2 scans per day). Please register for a free account to enjoy unlimited scans!');
+        } else {
+          alert(`Failed to save scan: ${err.message}`);
+        }
         analyzeBtn.disabled = false;
       }
     });
@@ -1136,9 +1169,17 @@ export class AppRouter {
       onBack: () => this.navigate('history'),
       onCompare: (id) => this.navigate('history'),
       onDelete: async (id) => {
+        if (this.appState.user?.isDemo) {
+          alert('Demo accounts are not permitted to delete scan reports.');
+          return;
+        }
         if (confirm('Delete this scan and report permanently?')) {
-          await api.scans.delete(id);
-          this.navigate('history');
+          try {
+            await api.scans.delete(id);
+            this.navigate('history');
+          } catch (err) {
+            alert(`Failed to delete scan: ${err.message}`);
+          }
         }
       }
     });
@@ -1150,7 +1191,7 @@ export class AppRouter {
   renderHistory() {
     const historyView = new HistoryView(this.viewContainer, (route, params) => {
       this.navigate(route, params);
-    });
+    }, this.appState.user);
     historyView.load();
   }
 
@@ -1223,9 +1264,15 @@ export class AppRouter {
           <button type="button" class="btn btn-outline btn-block" id="btn-logout">
             Sign Out
           </button>
-          <button type="button" class="btn btn-danger btn-block btn-sm" id="btn-delete-account" style="margin-top: 0.5rem;">
-            Delete Account Permanently
-          </button>
+          ${this.appState.user?.isDemo ? `
+            <div style="text-align: center; font-size: 0.8rem; color: var(--color-ink-muted); margin-top: 0.5rem; padding: 0.6rem; background: var(--color-surface-dim); border-radius: var(--radius-sm);">
+              🔒 Demo account cannot be deleted.
+            </div>
+          ` : `
+            <button type="button" class="btn btn-danger btn-block btn-sm" id="btn-delete-account" style="margin-top: 0.5rem;">
+              Delete Account Permanently
+            </button>
+          `}
         </div>
       </div>
     `;
@@ -1258,20 +1305,27 @@ export class AppRouter {
       this.navigate('login');
     });
 
-    // Delete Account
-    this.viewContainer.querySelector('#btn-delete-account').addEventListener('click', async () => {
-      const pwd = prompt('Enter your password to confirm permanent account deletion:');
-      if (pwd) {
-        try {
-          await api.auth.deleteAccount({ password: pwd });
-          this.appState.user = null;
-          alert('Account deleted.');
-          this.navigate('onboarding');
-        } catch (err) {
-          alert(err.message);
+    // Delete Account (disabled for demo account)
+    const deleteAccountBtn = this.viewContainer.querySelector('#btn-delete-account');
+    if (deleteAccountBtn) {
+      deleteAccountBtn.addEventListener('click', async () => {
+        if (this.appState.user?.isDemo) {
+          alert('Demo account cannot be deleted.');
+          return;
         }
-      }
-    });
+        const pwd = prompt('Enter your password to confirm permanent account deletion:');
+        if (pwd) {
+          try {
+            await api.auth.deleteAccount({ password: pwd });
+            this.appState.user = null;
+            alert('Account deleted.');
+            this.navigate('onboarding');
+          } catch (err) {
+            alert(err.message);
+          }
+        }
+      });
+    }
 
     this.viewContainer.querySelector('#btn-view-privacy').addEventListener('click', () => {
       this.navigate('privacy');

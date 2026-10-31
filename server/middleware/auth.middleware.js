@@ -1,5 +1,6 @@
 import { pool } from '../config/database.js';
 import { logger } from '../utils/logger.js';
+import { isDemoUser } from './demo-restriction.middleware.js';
 
 /**
  * Ensures user is authenticated via session
@@ -35,6 +36,7 @@ export async function requireAuth(req, res, next) {
       });
     }
 
+    user.isDemo = isDemoUser(user);
     req.user = user;
     next();
   } catch (err) {

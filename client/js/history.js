@@ -5,9 +5,10 @@ import { icons, renderProductThumbnail } from './icons.js';
  * Scan History Manager & View
  */
 export class HistoryView {
-  constructor(containerEl, onNavigate) {
+  constructor(containerEl, onNavigate, user = null) {
     this.containerEl = containerEl;
     this.onNavigate = onNavigate;
+    this.user = user;
     this.currentPage = 1;
     this.currentSearch = '';
     this.currentMethod = '';
@@ -25,13 +26,17 @@ export class HistoryView {
       <div class="history-page-wrapper">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
           <h1 style="font-size: 1.4rem;">Scan History</h1>
-          <div style="display: flex; gap: 0.5rem;">
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
             <button type="button" class="btn btn-outline btn-sm" id="history-export-btn" title="Export my scan history">
               Export
             </button>
-            <button type="button" class="btn btn-danger btn-sm" id="history-clear-all-btn" title="Clear all scans">
-              Clear All
-            </button>
+            ${this.user?.isDemo ? `
+              <span class="badge badge-neutral" style="font-size: 0.75rem; padding: 0.35rem 0.6rem;" title="Deletions disabled in demo mode">Demo Mode</span>
+            ` : `
+              <button type="button" class="btn btn-danger btn-sm" id="history-clear-all-btn" title="Clear all scans">
+                Clear All
+              </button>
+            `}
           </div>
         </div>
 
@@ -101,17 +106,24 @@ export class HistoryView {
       this.fetchAndRenderList();
     });
 
-    // Clear All
-    this.containerEl.querySelector('#history-clear-all-btn').addEventListener('click', async () => {
-      if (confirm('Are you sure you want to delete all saved scan history? This action cannot be undone.')) {
-        try {
-          await api.scans.clearAll();
-          this.fetchAndRenderList();
-        } catch (err) {
-          alert(`Failed to clear history: ${err.message}`);
+    // Clear All (disabled for demo users)
+    const clearAllBtn = this.containerEl.querySelector('#history-clear-all-btn');
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener('click', async () => {
+        if (this.user?.isDemo) {
+          alert('Demo accounts are not permitted to delete scan history.');
+          return;
         }
-      }
-    });
+        if (confirm('Are you sure you want to delete all saved scan history? This action cannot be undone.')) {
+          try {
+            await api.scans.clearAll();
+            this.fetchAndRenderList();
+          } catch (err) {
+            alert(`Failed to clear history: ${err.message}`);
+          }
+        }
+      });
+    }
 
     // Export
     this.containerEl.querySelector('#history-export-btn').addEventListener('click', () => {
@@ -207,9 +219,11 @@ export class HistoryView {
               <button type="button" class="btn btn-outline btn-sm view-report-btn" data-id="${s.id}" style="padding: 0.3rem 0.6rem; font-size: 0.775rem;">
                 View
               </button>
-              <button type="button" class="btn btn-ghost btn-sm delete-scan-btn" data-id="${s.id}" title="Delete" style="color: var(--color-warning); padding: 0.2rem;">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-              </button>
+              ${this.user?.isDemo ? '' : `
+                <button type="button" class="btn btn-ghost btn-sm delete-scan-btn" data-id="${s.id}" title="Delete" style="color: var(--color-warning); padding: 0.2rem;">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                </button>
+              `}
             </div>
           </div>
         `;

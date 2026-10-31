@@ -3,6 +3,7 @@ import { authController } from '../controllers/auth.controller.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
 import { csrfMiddleware } from '../middleware/csrf.middleware.js';
 import { validateBody } from '../middleware/validation.middleware.js';
+import { preventDemoDeletion } from '../middleware/demo-restriction.middleware.js';
 import { authLimiter, passwordResetLimiter } from '../middleware/rate-limit.middleware.js';
 import {
   registerSchema,
@@ -58,6 +59,7 @@ router.post(
 router.delete(
   '/delete-account',
   requireAuth,
+  preventDemoDeletion,
   csrfMiddleware,
   authController.deleteAccount
 );

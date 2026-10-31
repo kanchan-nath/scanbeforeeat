@@ -96,7 +96,7 @@ export const reportRepository = {
 
       // 4. Update scan status
       await conn.execute(
-        'UPDATE scans SET status = "completed" WHERE id = ?',
+        "UPDATE scans SET status = 'completed' WHERE id = ?",
         [scanId]
       );
 
