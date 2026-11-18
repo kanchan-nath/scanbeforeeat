@@ -6,6 +6,15 @@ node_modules/
 .env
 .env.local
 .env.*.local
+server/.env
+frontend/.env.local
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+data/
+server/data/
 
 # Logs
 logs/
@@ -25,3 +34,11 @@ coverage/
 .cache/
 dist/
 build/
+server/dist/
+frontend/.next/
+frontend/out/
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json
+
+# Tooling dumps
+repomix-output.xml
