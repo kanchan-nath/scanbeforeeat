@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Duel - ScanBeforeEat</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              DEFAULT: "#0a0f0d",
+              variant: "#141c18",
+              card: "#111815",
+              elevated: "#18221d"
+            },
+            primary: {
+              DEFAULT: "#10b981",
+              container: "#064e3b",
+              light: "#34d399",
+              dark: "#059669"
+            },
+            danger: {
+              DEFAULT: "#ef4444",
+              container: "#450a0a",
+              light: "#f87171"
+            },
+            "on-surface": "#f1f5f3",
+            "on-surface-variant": "#94a39b",
+            "on-primary-container": "#a7f3d0",
+            "border-subtle": "rgba(255, 255, 255, 0.08)"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500;
+    }
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen flex justify-center selection:bg-primary-container selection:text-on-primary-container">
+<!-- Mobile Viewport Container (~390px width context) -->
+<div class="w-full max-w-[420px] bg-surface min-h-screen relative flex flex-col pb-36 shadow-2xl overflow-x-hidden border-x border-border-subtle">
+<!-- TopAppBar (Shared Component Implementation) -->
+<header class="fixed top-0 left-0 w-full max-w-[420px] left-1/2 -translate-x-1/2 z-50 flex items-center justify-between px-4 h-14 bg-surface/90 backdrop-blur-md border-b border-surface-variant shadow-sm">
+<button aria-label="Go back" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex flex-col items-center">
+<h1 class="text-base font-extrabold tracking-tight font-headline text-on-surface">Product Duel</h1>
+<span class="text-[10px] font-label uppercase tracking-widest text-primary font-semibold">Compare Cleanliness</span>
+</div>
+<button aria-label="Share comparison" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface hover:bg-surface-variant active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-4 pt-16 mt-2 space-y-4">
+<!-- Scientific Credibility Trust Badge -->
+<div class="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full bg-surface-variant/80 border border-border-subtle mx-auto w-fit">
+<span class="material-symbols-outlined text-primary text-[15px]" data-icon="verified">verified</span>
+<span class="text-[10px] tracking-wide font-label uppercase text-on-surface-variant font-medium">EFSA &amp; FDA Harmonized Standards</span>
+</div>
+<!-- Side-by-Side Product Comparison Cards -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<!-- Product A: Doritos Nacho Cheese -->
+<div class="relative bg-surface-card rounded-xl p-3 border border-danger/30 flex flex-col justify-between shadow-lg overflow-hidden group">
+<!-- Ambient Danger Glow behind card -->
+<div class="absolute -top-10 -left-10 w-28 h-28 bg-danger/10 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Product Image & Score Chip -->
+<div>
+<div class="relative w-full aspect-square rounded-lg bg-surface-variant/50 overflow-hidden mb-3 border border-border-subtle flex items-center justify-center p-2">
+<img alt="Doritos Nacho Cheese pack" class="w-full h-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/ALJJyrB6vUDxX69K_YpSh-MlmYfJ8u7dREynM8iW96UPxfgjV11st9-m6M83LXaUdNd2idDzf8vw-hIVrxOpxRhVovcXwFKexhkxUgz_hC_kekbRZ8FdcES08vUSeW1cDW29mw9IPTpIV6FMBW7-pdwx5f5Gydo6XlOQoYiM7ZWUMW274VE4Wll9VgpbJrwxaa3OkJtUklXWN9rsck9NMTbKqXUp-F4qbDxD54tADMBEEKcKuZX9ahkQNG0lNpw"/>
+<!-- Danger Score Pill -->
+<div class="absolute top-2 right-2 bg-danger-container/90 border border-danger/50 text-danger-light px-2 py-0.5 rounded-full flex items-center gap-1 backdrop-blur-sm">
+<span class="text-xs font-label font-bold">32</span>
+<span class="text-[9px] text-danger-light/80">/100</span>
+</div>
+</div>
+<!-- Brand & Name -->
+<p class="text-[10px] font-label font-semibold text-on-surface-variant uppercase tracking-wider">Frito-Lay</p>
+<h2 class="text-sm font-bold font-headline text-on-surface leading-tight line-clamp-2 mt-0.5">Doritos Nacho Cheese</h2>
+<p class="text-[10px] text-on-surface-variant mt-0.5">150g bag</p>
+</div>
+<!-- Status Indicators -->
+<div class="mt-3 pt-2.5 border-t border-border-subtle space-y-1.5">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-on-surface-variant">Class</span>
+<span class="font-label font-bold text-danger-light bg-danger-container/60 px-1.5 py-0.5 rounded text-[10px]">NOVA 4</span>
+</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-on-surface-variant">Safety</span>
+<span class="text-danger font-medium text-[10px]">High Additives</span>
+</div>
+</div>
+</div>
+<!-- Product B: LesserEvil Organic Popcorn -->
+<div class="relative bg-surface-card rounded-xl p-3 border-2 border-primary/50 flex flex-col justify-between shadow-[0_0_20px_rgba(16,185,129,0.15)] overflow-hidden group">
+<!-- Ambient Emerald Glow -->
+<div class="absolute -top-10 -right-10 w-28 h-28 bg-primary/15 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Cleaner Choice Ribbon -->
+<div class="absolute top-0 right-0 bg-primary text-surface px-2 py-0.5 rounded-bl-lg text-[9px] font-label font-extrabold uppercase tracking-wider flex items-center gap-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[11px] leading-none" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+            Cleaner Choice
+          </div>
+<!-- Product Image & Score Chip -->
+<div>
+<div class="relative w-full aspect-square rounded-lg bg-surface-variant/50 overflow-hidden mb-3 border border-primary/20 flex items-center justify-center p-2 mt-2">
+<img alt="LesserEvil Organic Popcorn bag" class="w-full h-full object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida/ALJJyrDTeVsRb29aDTUHhgb65Dk1mLGRpPjR7yBWBhapS7T6STFbAzFAkQAxx7YnM0pF7QrxbEKhGxk05MT9yZcqIZiT0tIvSWkZc1XuBn6r1NMhA4IEURK2yQ6pcLnKCoJl6S7Q_hCqdKGvxkMMNzrE0lVpVcrAT6K1QThmoFAc1-NQOLJk3hS-n_LIPzZvnyLL0CySQsECwqdxZVikk5V32UYoR_mXO1mJgbxc2tjRALATUAjRTeZJKHGF2cA"/>
+<!-- Health Score Pill -->
+<div class="absolute top-2 left-2 bg-primary-container/90 border border-primary/50 text-on-primary-container px-2 py-0.5 rounded-full flex items-center gap-1 backdrop-blur-sm">
+<span class="text-xs font-label font-bold text-primary-light">86</span>
+<span class="text-[9px] text-on-primary-container/80">/100</span>
+</div>
+</div>
+<!-- Brand & Name -->
+<p class="text-[10px] font-label font-semibold text-primary uppercase tracking-wider">LesserEvil</p>
+<h2 class="text-sm font-bold font-headline text-on-surface leading-tight line-clamp-2 mt-0.5">Organic Himalayan Gold</h2>
+<p class="text-[10px] text-on-surface-variant mt-0.5">198g bag</p>
+</div>
+<!-- Status Indicators -->
+<div class="mt-3 pt-2.5 border-t border-border-subtle space-y-1.5">
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-on-surface-variant">Class</span>
+<span class="font-label font-bold text-primary-light bg-primary-container/70 px-1.5 py-0.5 rounded text-[10px]">NOVA 1</span>
+</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-on-surface-variant">Safety</span>
+<span class="text-primary-light font-medium text-[10px]">Clean Matrix</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Delta Winner Banner -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary-container via-surface-card to-surface-card p-3.5 border border-primary/40 shadow-lg">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0 text-primary-light mt-0.5">
+<span class="material-symbols-outlined text-xl" data-icon="emoji_events" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold font-headline text-white">Clear Winner: LesserEvil</span>
+<span class="bg-primary/20 text-primary-light font-label text-[10px] px-2 py-0.5 rounded-full font-bold">+54 Score</span>
+</div>
+<p class="text-[11px] leading-relaxed text-on-surface-variant">
+              Swap this snack to eliminate <strong class="text-white font-medium">4 high-risk synthetic dyes</strong> and industrial flavorings from your daily intake.
+            </p>
+<!-- Key Delta Quick Tags -->
+<div class="flex flex-wrap gap-1.5 pt-0.5">
+<span class="text-[9px] font-label font-medium bg-surface/60 text-primary-light px-2 py-0.5 rounded border border-primary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]" data-icon="check_circle">check_circle</span> 0 Synthetic Additives
+              </span>
+<span class="text-[9px] font-label font-medium bg-surface/60 text-primary-light px-2 py-0.5 rounded border border-primary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]" data-icon="trending_down">trending_down</span> 77% Less Sodium
+              </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comparative Breakdown Section -->
+<div class="space-y-2 pt-1">
+<div class="flex items-center justify-between px-1">
+<h3 class="text-xs font-bold font-headline uppercase tracking-wider text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="analytics">analytics</span>
+            Detailed Face-Off
+          </h3>
+<span class="text-[10px] font-label text-on-surface-variant">Per 100g serving</span>
+</div>
+<!-- Comparison Rows Card Table -->
+<div class="bg-surface-card rounded-xl border border-border-subtle divide-y divide-border-subtle overflow-hidden">
+<!-- Metric 1: Processing Tier -->
+<div class="p-3 text-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span>Processing Level</span>
+<span class="text-[10px] font-label text-primary">Winner: LesserEvil</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-variant/40 p-2 rounded border border-danger/20">
+<p class="font-bold text-danger text-[11px]">NOVA 4</p>
+<p class="text-[10px] text-on-surface-variant leading-tight mt-0.5">Industrial extrusion &amp; refining</p>
+</div>
+<div class="bg-surface-variant/40 p-2 rounded border border-primary/30">
+<p class="font-bold text-primary-light text-[11px]">NOVA 1</p>
+<p class="text-[10px] text-on-surface-variant leading-tight mt-0.5">Air-popped whole grain</p>
+</div>
+</div>
+</div>
+<!-- Metric 2: Ingredients Count -->
+<div class="p-3 text-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span>Total Ingredients</span>
+<span class="text-[10px] font-label text-primary">Winner: LesserEvil</span>
+</div>
+<div class="grid grid-cols-2 gap-3 items-center">
+<div class="bg-surface-variant/40 p-2 rounded">
+<p class="font-bold text-on-surface text-[12px]">28 items</p>
+<p class="text-[10px] text-danger-light mt-0.5 leading-snug">Complex industrial recipe</p>
+</div>
+<div class="bg-surface-variant/40 p-2 rounded border border-primary/20">
+<p class="font-bold text-primary-light text-[12px]">3 items</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5 leading-snug">Organic Corn, Avocado Oil, Himalayan Salt</p>
+</div>
+</div>
+</div>
+<!-- Metric 3: Flagged Additives (High Impact) -->
+<div class="p-3 text-xs flex flex-col gap-2">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span class="flex items-center gap-1">
+                Flagged Additives
+                <span class="material-symbols-outlined text-xs text-danger" data-icon="warning">warning</span>
+</span>
+<span class="text-[10px] font-label text-primary">Winner: LesserEvil</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-danger-container/30 border border-danger/30 p-2 rounded space-y-1.5">
+<div class="flex items-center justify-between">
+<span class="font-bold text-danger-light text-[11px]">4 Detected</span>
+</div>
+<div class="flex flex-wrap gap-1">
+<span class="bg-danger/20 text-danger-light text-[9px] px-1.5 py-0.5 rounded font-label">MSG E621</span>
+<span class="bg-danger/20 text-danger-light text-[9px] px-1.5 py-0.5 rounded font-label">Yellow 5 (E102)</span>
+<span class="bg-danger/20 text-danger-light text-[9px] px-1.5 py-0.5 rounded font-label">Yellow 6 (E110)</span>
+<span class="bg-danger/20 text-danger-light text-[9px] px-1.5 py-0.5 rounded font-label">E631</span>
+</div>
+</div>
+<div class="bg-primary-container/20 border border-primary/30 p-2 rounded flex flex-col justify-center">
+<span class="font-bold text-primary-light text-[11px]">0 Detected</span>
+<p class="text-[10px] text-on-primary-container mt-1">100% clean additive profile, zero colorants or artificial enhancers.</p>
+</div>
+</div>
+</div>
+<!-- Metric 4: Sodium per 100g -->
+<div class="p-3 text-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span>Sodium Content</span>
+<span class="text-[10px] font-label text-primary">-77% Reduction</span>
+</div>
+<div class="grid grid-cols-2 gap-3 items-center">
+<div class="bg-surface-variant/40 p-2 rounded">
+<p class="font-bold text-danger-light text-[12px]">840 mg</p>
+<div class="w-full bg-surface h-1.5 rounded-full overflow-hidden mt-1.5">
+<div class="bg-danger h-full w-[84%]"></div>
+</div>
+<p class="text-[9px] text-on-surface-variant mt-1">37% Daily Intake</p>
+</div>
+<div class="bg-surface-variant/40 p-2 rounded border border-primary/20">
+<p class="font-bold text-primary-light text-[12px]">190 mg</p>
+<div class="w-full bg-surface h-1.5 rounded-full overflow-hidden mt-1.5">
+<div class="bg-primary h-full w-[19%]"></div>
+</div>
+<p class="text-[9px] text-on-surface-variant mt-1">8% Daily Intake</p>
+</div>
+</div>
+</div>
+<!-- Metric 5: Fats & Oil Quality -->
+<div class="p-3 text-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span>Saturated Fat &amp; Lipids</span>
+<span class="text-[10px] font-label text-primary">Healthier Fats</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-variant/40 p-2 rounded">
+<p class="font-bold text-on-surface text-[12px]">4.8g / 100g</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Refined vegetable &amp; corn blend</p>
+</div>
+<div class="bg-surface-variant/40 p-2 rounded border border-primary/20">
+<p class="font-bold text-primary-light text-[12px]">1.2g / 100g</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Cold-pressed Avocado Oil</p>
+</div>
+</div>
+</div>
+<!-- Metric 6: Sugar & Sweeteners -->
+<div class="p-3 text-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span>Sugars</span>
+<span class="text-[10px] font-label text-primary">0g Added</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-variant/40 p-2 rounded">
+<p class="font-bold text-on-surface text-[12px]">3.2g</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Added dextrose &amp; lactose</p>
+</div>
+<div class="bg-surface-variant/40 p-2 rounded border border-primary/20">
+<p class="font-bold text-primary-light text-[12px]">0.0g</p>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Naturally sugar free</p>
+</div>
+</div>
+</div>
+<!-- Metric 7: Allergen & Facility Cross-Contact -->
+<div class="p-3 text-xs flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[11px] text-on-surface-variant font-medium">
+<span>Allergens &amp; Certifications</span>
+<span class="text-[10px] font-label text-on-surface-variant">Profile</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-variant/40 p-2 rounded">
+<p class="text-[10px] text-on-surface leading-tight font-medium">Contains Milk ingredients; Wheat cross-contact risk.</p>
+</div>
+<div class="bg-surface-variant/40 p-2 rounded border border-primary/20">
+<p class="text-[10px] text-primary-light leading-tight font-medium">Certified GF, Vegan, USDA Organic, Non-GMO.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Swap Recommendation Box -->
+<div class="p-3 rounded-xl bg-surface-variant/50 border border-border-subtle flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="autorenew">autorenew</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Auto-Add Swap to Cart</p>
+<p class="text-[10px] text-on-surface-variant">Save 12g saturated fat per movie night</p>
+</div>
+</div>
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-elevated text-primary text-[11px] font-label font-bold border border-primary/30 active:scale-95 transition-all">
+          Enable
+        </button>
+</div>
+</main>
+<!-- Bottom Action Dock (Sticky Glassmorphic Bar above BottomNavBar) -->
+<div class="fixed bottom-14 left-0 w-full max-w-[420px] left-1/2 -translate-x-1/2 z-40 px-4 py-2.5 bg-surface/90 backdrop-blur-md border-t border-border-subtle flex items-center gap-2.5">
+<button class="flex-1 h-11 bg-primary hover:bg-primary-dark active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-surface font-label font-bold text-xs shadow-lg shadow-primary/25">
+<span class="material-symbols-outlined text-lg font-bold" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+        Choose Cleaner Product
+      </button>
+<button aria-label="Save comparison duel" class="w-11 h-11 rounded-lg bg-surface-variant border border-border-subtle flex items-center justify-center text-on-surface hover:text-primary active:scale-95 transition-all shrink-0">
+<span class="material-symbols-outlined text-xl" data-icon="bookmark">bookmark</span>
+</button>
+</div>
+<!-- BottomNavBar (Shared Component Implementation) -->
+<!-- Active Navigation Logic: This is the Product Duel screen, mapping strictly to 'Duel' index -->
+<nav class="fixed bottom-0 left-0 w-full max-w-[420px] left-1/2 -translate-x-1/2 z-50 flex justify-around items-center px-4 py-1.5 bg-surface border-t border-surface-variant shadow-md">
+<!-- Destination 1: Scan -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-1 hover:text-primary active:scale-95 transition-all duration-150" href="#scan">
+<span class="material-symbols-outlined text-[22px]" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span class="text-[10px] font-label mt-0.5">Scan</span>
+</a>
+<!-- Destination 2: Duel (ACTIVE ITEM) -->
+<a class="flex flex-col items-center justify-center text-primary font-medium p-1 hover:text-primary active:scale-95 transition-all duration-150 relative" href="#duel">
+<span class="material-symbols-outlined text-[22px]" data-icon="swords" style="font-variation-settings: 'FILL' 1;">swords</span>
+<span class="text-[10px] font-label font-bold text-primary mt-0.5">Duel</span>
+<!-- Small indicator dot for active item -->
+<span class="absolute -top-0.5 w-1 h-1 bg-primary rounded-full"></span>
+</a>
+<!-- Destination 3: History -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-1 hover:text-primary active:scale-95 transition-all duration-150" href="#history">
+<span class="material-symbols-outlined text-[22px]" data-icon="history">history</span>
+<span class="text-[10px] font-label mt-0.5">History</span>
+</a>
+<!-- Destination 4: Saved -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-1 hover:text-primary active:scale-95 transition-all duration-150" href="#saved">
+<span class="material-symbols-outlined text-[22px]" data-icon="bookmark">bookmark</span>
+<span class="text-[10px] font-label mt-0.5">Saved</span>
+</a>
+</nav>
+</div>
+</body></html>

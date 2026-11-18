@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScanBeforeEat API</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#F8FAFC",
+            "surface-variant": "#E2E8F0",
+            primary: "#059669",
+            "primary-container": "#A7F3D0",
+            "on-primary-container": "#064E3B",
+            "on-surface": "#0F172A",
+            "on-surface-variant": "#475569",
+            emerald: {
+              50: "#ECFDF5",
+              100: "#D1FAE5",
+              500: "#10B981",
+              600: "#059669",
+              700: "#047857",
+              800: "#065F46",
+              900: "#064E3B"
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full px-4 py-3 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800 shadow-sm">
+<a class="flex items-center gap-1.5 font-display font-bold text-base text-neutral-900 dark:text-white" href="#">
+<img alt="ScanBeforeEat Logo" class="w-7 h-7 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-slate-900 dark:text-white font-extrabold text-base">ScanBeforeEat</span>
+</a>
+<div class="flex items-center gap-2">
+<a class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-semibold shadow-sm active:scale-95 transition-transform duration-100 flex items-center gap-1" href="#">
+<span>Start Scanning</span>
+</a>
+<button aria-label="Open Navigation Menu" class="p-1.5 text-neutral-600 dark:text-neutral-300 hover:text-emerald-700 transition-colors duration-150 rounded-lg">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-4xl mx-auto px-4 py-6 space-y-8">
+<!-- Status Banner -->
+<div class="flex items-center justify-between p-4 rounded-xl bg-emerald-50 border border-emerald-100">
+<div class="flex items-center space-x-3">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+</span>
+<span class="font-label text-sm font-bold text-emerald-900">v2.4-prod // 99.98% Uptime</span>
+</div>
+<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">Operational</span>
+</div>
+<!-- Hero Header -->
+<div class="space-y-4">
+<div class="space-y-2">
+<h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface">Bio-Informatics API &amp; Endpoints</h2>
+<p class="text-on-surface-variant text-base">High-performance programmatic endpoints for real-time allergen detection, additive toxicology grading, and nutritional decoding.</p>
+</div>
+<div class="flex flex-wrap gap-3 pt-2">
+<button class="px-5 py-2.5 rounded-xl bg-primary text-white font-headline font-semibold text-sm hover:bg-emerald-700 transition-all shadow-sm flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm">key</span>
+<span>Get API Key</span>
+</button>
+<button class="px-5 py-2.5 rounded-xl bg-surface-variant text-on-surface font-headline font-semibold text-sm hover:bg-slate-300 transition-all flex items-center space-x-2">
+<span class="material-symbols-outlined text-sm">terminal</span>
+<span>Interactive Sandbox</span>
+</button>
+</div>
+</div>
+<!-- Infrastructure Metrics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-5 rounded-xl bg-white border border-surface-variant shadow-sm space-y-1">
+<div class="text-on-surface-variant text-xs font-label font-bold uppercase tracking-wider">System Uptime</div>
+<div class="text-2xl font-headline font-extrabold text-on-surface">99.98%</div>
+<div class="text-xs text-primary font-medium flex items-center space-x-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+<span>Last 30 days stable</span>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-white border border-surface-variant shadow-sm space-y-1">
+<div class="text-on-surface-variant text-xs font-label font-bold uppercase tracking-wider">P95 Latency</div>
+<div class="text-2xl font-headline font-extrabold text-on-surface">&lt;28ms</div>
+<div class="text-xs text-primary font-medium flex items-center space-x-1">
+<span class="material-symbols-outlined text-xs">bolt</span>
+<span>Global edge nodes</span>
+</div>
+</div>
+<div class="p-5 rounded-xl bg-white border border-surface-variant shadow-sm space-y-1">
+<div class="text-on-surface-variant text-xs font-label font-bold uppercase tracking-wider">Rate Limit Info</div>
+<div class="text-2xl font-headline font-extrabold text-on-surface">5,000 / min</div>
+<div class="text-xs text-on-surface-variant font-medium">Standard Tier Quota</div>
+</div>
+</div>
+<!-- REST Endpoint Cards -->
+<div class="space-y-6">
+<h3 class="text-xl font-headline font-bold text-on-surface">Core REST Endpoints</h3>
+<!-- POST /v1/scan/upc -->
+<div class="bg-white rounded-xl border border-surface-variant overflow-hidden shadow-sm">
+<div class="p-4 bg-surface border-b border-surface-variant flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center space-x-3">
+<span class="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 font-label text-xs font-bold">POST</span>
+<span class="font-mono text-sm font-semibold text-on-surface">/v1/scan/upc</span>
+</div>
+<span class="text-xs text-on-surface-variant">Barcode Scanning Endpoint</span>
+</div>
+<div class="p-5 space-y-4">
+<div class="space-y-2">
+<h4 class="text-xs font-label font-bold text-on-surface-variant uppercase">Request Body JSON</h4>
+<div class="p-3 rounded-lg bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto">
+<pre>{
+  "upc": "049000028904",
+  "user_profile_id": "usr_998a7bc",
+  "include_tox_score": true
+}</pre>
+</div>
+</div>
+<div class="space-y-2">
+<h4 class="text-xs font-label font-bold text-on-surface-variant uppercase">Response Schema Preview</h4>
+<div class="p-3 rounded-lg bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto">
+<pre>{
+  "status": "success",
+  "product": {
+    "name": "Diet Sparkling Beverage",
+    "safety_grade": "A",
+    "allergens": [],
+    "additives": [{"code": "E951", "risk_level": "low"}]
+  }
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<!-- GET /v1/additives/{id} -->
+<div class="bg-white rounded-xl border border-surface-variant overflow-hidden shadow-sm">
+<div class="p-4 bg-surface border-b border-surface-variant flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center space-x-3">
+<span class="px-2.5 py-1 rounded bg-blue-100 text-blue-800 font-label text-xs font-bold">GET</span>
+<span class="font-mono text-sm font-semibold text-on-surface">/v1/additives/{id}</span>
+</div>
+<span class="text-xs text-on-surface-variant">Additive Toxicology Endpoint</span>
+</div>
+<div class="p-5 space-y-4">
+<div class="space-y-2">
+<h4 class="text-xs font-label font-bold text-on-surface-variant uppercase">Parameters</h4>
+<div class="text-xs text-on-surface space-y-1">
+<div><code class="font-mono bg-surface px-1.5 py-0.5 rounded text-emerald-700">id</code> (string, required) - E-number or chemical identifier.</div>
+</div>
+</div>
+<div class="space-y-2 flex items-center justify-between">
+<h4 class="text-xs font-label font-bold text-on-surface-variant uppercase">Code Snippet (cURL)</h4>
+<button class="text-xs text-primary font-semibold flex items-center space-x-1 hover:underline">
+<span class="material-symbols-outlined text-xs">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+<div class="p-3 rounded-lg bg-slate-900 text-emerald-400 font-mono text-xs overflow-x-auto">
+<pre>curl -X GET "https://api.scanbeforeeat.com/v1/additives/E250" \
+     -H "Authorization: Bearer sbe_live_sec_1092"</pre>
+</div>
+</div>
+</div>
+</div>
+<!-- SDK Quickstart -->
+<div class="space-y-4">
+<h3 class="text-xl font-headline font-bold text-on-surface">SDK Quickstart</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-white p-5 rounded-xl border border-surface-variant shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<span class="font-label text-sm font-bold text-on-surface">Python SDK</span>
+<span class="text-xs font-mono bg-surface px-2 py-0.5 rounded text-on-surface-variant">pip install sbe-sdk</span>
+</div>
+<div class="p-3 rounded-lg bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto">
+<pre>from scanbeforeeat import Client
+client = Client(api_key="sbe_live_...")
+report = client.scan_upc("049000028904")
+print(report.safety_grade)</pre>
+</div>
+</div>
+<div class="bg-white p-5 rounded-xl border border-surface-variant shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<span class="font-label text-sm font-bold text-on-surface">Node.js SDK</span>
+<span class="text-xs font-mono bg-surface px-2 py-0.5 rounded text-on-surface-variant">npm i @sbe/api</span>
+</div>
+<div class="p-3 rounded-lg bg-slate-900 text-slate-200 font-mono text-xs overflow-x-auto">
+<pre>import { SBEClient } from '@sbe/api';
+const sbe = new SBEClient({ apiKey: 'sbe_live_...' });
+const analysis = await sbe.scanBarcode('049000028904');
+console.log(analysis.additives);</pre>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface dark:bg-surface border-t border-surface-variant shadow-md md:hidden">
+<!-- Active Item: Scan -->
+<a class="flex flex-col items-center justify-center bg-surface-variant text-primary rounded-xl px-3 py-1.5 transition-all duration-200 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+<span class="font-label text-xs">Scan</span>
+</a>
+<!-- Inactive Items -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 transition-all duration-200 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-xl">history</span>
+<span class="font-label text-xs">History</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 transition-all duration-200 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-xl">favorite</span>
+<span class="font-label text-xs">Health</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1.5 transition-all duration-200 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-xl">gavel</span>
+<span class="font-label text-xs">Legal</span>
+</a>
+</nav>
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 mt-auto">
+<div class="w-full max-w-[390px] mx-auto px-6 py-8 flex flex-col items-center gap-4 text-center font-body text-xs text-neutral-500 dark:text-neutral-400">
+<!-- Brand & Tagline -->
+<div class="flex items-center gap-1.5 font-display font-bold text-sm text-neutral-900 dark:text-white">
+<img alt="ScanBeforeEat Logo" class="w-7 h-7 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-slate-900 dark:text-white font-bold">ScanBeforeEat</span>
+</div>
+<p class="text-[11px] text-slate-500 dark:text-neutral-400 max-w-xs -mt-2">
+      Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+    </p>
+<!-- Navigation Links -->
+<div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Database</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a>
+</div>
+<!-- Medical & Scientific Disclaimer -->
+<div class="bg-neutral-100/80 dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800 text-[10px] text-neutral-500 dark:text-neutral-400 leading-normal text-left">
+<strong class="text-neutral-700 dark:text-zinc-300 font-semibold">Medical Disclaimer:</strong>
+      ScanBeforeEat provides informational analysis based on published research and food safety standards. Consult with a qualified physician or registered dietitian for individual health concerns.
+    </div>
+<!-- Copyright & Privacy Compliance -->
+<div class="text-[10px] text-neutral-400 dark:text-neutral-500 font-label flex flex-col gap-0.5 pt-1">
+<span>© 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.</span>
+<span>GDPR Compliant • Zero User Tracking • 100% User Funded</span>
+</div>
+</div>
+</footer></body></html>

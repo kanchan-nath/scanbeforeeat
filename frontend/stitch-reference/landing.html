@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScanBeforeEat — Deep Ingredient Parsing &amp; Peer-Reviewed Science</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Public+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#059669",
+            "background-light": "#f5f8f7",
+            "background-dark": "#0f231d",
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Public Sans", "Inter", "sans-serif"],
+            display: ["Public Sans", "Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "monospace"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    /* Viewfinder scanning beam keyframes */
+    @keyframes scanSweep {
+      0% { top: 6%; opacity: 0; }
+      15% { opacity: 1; }
+      50% { top: 90%; opacity: 0.95; }
+      85% { opacity: 1; }
+      100% { top: 6%; opacity: 0; }
+    }
+    .animate-scan-sweep {
+      animation: scanSweep 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    }
+
+    /* Calibrated reticle pulse */
+    @keyframes reticlePulse {
+      0%, 100% { opacity: 0.75; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.04); }
+    }
+    .animate-reticle {
+      animation: reticlePulse 2.4s ease-in-out infinite;
+    }
+
+    /* Subtle grid line pulse */
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.28; }
+      50% { opacity: 0.45; }
+    }
+    .animate-grid-pulse {
+      animation: gridPulse 4s ease-in-out infinite;
+    }
+
+    /* Breathing subtle status glow */
+    @keyframes breathGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    }
+    .animate-beacon {
+      animation: breathGlow 2.2s infinite;
+    }
+
+    /* Shimmer effect for primary button */
+    .btn-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shimmer::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent,
+        rgba(255, 255, 255, 0.25),
+        transparent
+      );
+      transform: rotate(25deg);
+      transition: none;
+    }
+    .btn-shimmer:hover::after {
+      left: 140%;
+      transition: all 0.75s ease-in-out;
+    }
+
+    /* Card subtle hover elevation */
+    .card-elevate {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+    }
+    .card-elevate:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(5, 150, 105, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+      border-color: rgba(5, 150, 105, 0.35);
+    }
+
+    /* Ambient glow pulsation for bottom CTA */
+    @keyframes ambientGlow {
+      0%, 100% { opacity: 0.3; transform: scale(1) translate(-50%, 0); }
+      50% { opacity: 0.55; transform: scale(1.18) translate(-50%, -4px); }
+    }
+    .animate-ambient-glow {
+      animation: ambientGlow 5.5s ease-in-out infinite;
+    }
+
+    /* Reveal-on-scroll classes */
+    .reveal-init {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+    .reveal-init.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Table row highlight hover transition */
+    .row-interactive {
+      transition: background-color 0.18s ease, transform 0.18s ease;
+    }
+    .row-interactive:hover {
+      background-color: rgba(5, 150, 105, 0.035);
+    }
+
+    .grid-pattern {
+      background-size: 24px 24px;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    }
+
+    /* Accessibility: Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-scan-sweep,
+      .animate-reticle,
+      .animate-grid-pulse,
+      .animate-beacon,
+      .animate-ambient-glow,
+      .card-elevate,
+      .reveal-init {
+        animation: none !important;
+        transform: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+      }
+      .btn-shimmer::after {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-white text-zinc-900 font-body antialiased selection:bg-emerald-100 selection:text-emerald-900">
+<!-- TOP APP BAR -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<main class="pt-16">
+<!-- HERO SECTION -->
+<section class="relative border-b border-zinc-200 overflow-hidden bg-white grid-pattern">
+<div class="max-w-7xl mx-auto px-6 pt-16 pb-20 md:py-24">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+<!-- Left Column -->
+<div class="lg:col-span-7 flex flex-col items-start">
+<div class="reveal-init inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 mb-6 transition-all duration-300 hover:border-emerald-400/80 hover:bg-emerald-100/50">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-beacon"></span>
+<span class="font-label text-xs font-medium text-emerald-800 tracking-tight">v2.4 Powered by Deep Ingredient Parsing &amp; Peer-Reviewed Science</span>
+</div>
+<h1 class="reveal-init font-headline text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-zinc-950 leading-[1.08] mb-6" style="transition-delay: 80ms;">
+              Know What You Eat. <br class="hidden sm:inline"/>
+<span class="text-emerald-700 inline-block bg-gradient-to-r from-emerald-700 via-emerald-600 to-teal-700 bg-clip-text text-transparent">Before You Eat It.</span>
+</h1>
+<p class="reveal-init text-base sm:text-lg text-zinc-600 leading-relaxed max-w-2xl mb-8" style="transition-delay: 140ms;">
+              Scan any food barcode or paste ingredients. Get instant AI analysis of additives, allergens, ultra-processed markers, and a transparent health score backed by science — not marketing.
+            </p>
+<div class="reveal-init flex flex-wrap items-center gap-3 w-full sm:w-auto mb-10" style="transition-delay: 200ms;">
+<a class="btn-shimmer w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded text-sm font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/25 active:scale-[0.98] transition-all duration-200 group" href="#start">
+<span>Start Scanning Free</span>
+<span class="material-symbols-outlined text-base transition-transform duration-200 group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</a>
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded text-sm font-semibold text-zinc-700 bg-white border border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300 active:scale-[0.98] transition-all duration-200 shadow-sm" href="#how-it-works">
+<span>See How It Works</span>
+</a>
+</div>
+<!-- Trust Indicators -->
+<div class="reveal-init flex items-center gap-2 text-xs font-medium text-zinc-500 border-t border-zinc-200/80 pt-6 w-full" style="transition-delay: 260ms;">
+<span class="material-symbols-outlined text-emerald-600 text-base" data-icon="verified_user">verified_user</span>
+<span>Over 1.2M+ foods analyzed <span class="text-zinc-300 mx-1.5">•</span> 0% corporate food lobby sponsorship <span class="text-zinc-300 mx-1.5">•</span> Instant scans without signup</span>
+</div>
+</div>
+<!-- Right Column / Scan Mockup -->
+<div class="lg:col-span-5 flex justify-center reveal-init" style="transition-delay: 180ms;">
+<div class="relative w-full max-w-sm rounded-xl p-3 bg-zinc-900 border border-zinc-800 shadow-2xl shadow-zinc-950/20 group">
+<!-- Top bar simulator -->
+<div class="flex items-center justify-between px-3 py-1.5 mb-2 text-zinc-400 font-label text-[10px]">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-beacon"></span>
+<span class="uppercase tracking-widest text-zinc-300 font-semibold">CAM_FEED // 60 FPS</span>
+</div>
+<span class="text-zinc-400 font-mono tracking-tight transition-colors">ISO 120 • 4K HDR</span>
+</div>
+<!-- Viewfinder Frame -->
+<div class="relative w-full h-80 rounded-lg bg-zinc-950 overflow-hidden border border-zinc-800 flex items-center justify-center">
+<!-- Ambient Viewfinder Grid Texture -->
+<div class="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px] animate-grid-pulse pointer-events-none"></div>
+<!-- Barcode Graphic inside viewfinder -->
+<div class="w-48 h-28 opacity-35 flex items-center justify-center gap-1.5 transition-opacity group-hover:opacity-45">
+<div class="w-1 bg-white h-full"></div>
+<div class="w-2 bg-white h-full"></div>
+<div class="w-0.5 bg-white h-full"></div>
+<div class="w-3 bg-white h-full"></div>
+<div class="w-1 bg-white h-full"></div>
+<div class="w-4 bg-white h-full"></div>
+<div class="w-0.5 bg-white h-full"></div>
+<div class="w-2 bg-white h-full"></div>
+<div class="w-1 bg-white h-full"></div>
+<div class="w-3 bg-white h-full"></div>
+<div class="w-0.5 bg-white h-full"></div>
+<div class="w-2 bg-white h-full"></div>
+</div>
+<!-- Laser Scanline with Soft Aura Sweep -->
+<div class="absolute left-4 right-4 h-[2px] bg-emerald-400 shadow-[0_0_16px_4px_rgba(52,211,153,0.7),0_0_4px_1px_#ffffff] animate-scan-sweep pointer-events-none">
+<div class="absolute inset-x-0 -top-6 h-6 bg-gradient-to-t from-emerald-400/25 to-transparent pointer-events-none"></div>
+</div>
+<!-- Viewfinder Corner Accents with Calibrated Pulse -->
+<div class="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-emerald-400 animate-reticle"></div>
+<div class="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-emerald-400 animate-reticle"></div>
+<div class="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-emerald-400 animate-reticle"></div>
+<div class="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-emerald-400 animate-reticle"></div>
+<!-- Telemetry Match Notification -->
+<div class="absolute bottom-3 left-0 right-0 text-center">
+<span class="inline-flex items-center gap-1.5 font-label text-[11px] text-emerald-300 tracking-wider bg-black/75 backdrop-blur-sm px-2.5 py-1 rounded border border-emerald-500/30 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+<span>MATCH ACQUIRED: 8901058852331</span>
+</span>
+</div>
+</div>
+<!-- Floating Preview Card Overlay -->
+<div class="mt-3 p-3.5 rounded-lg bg-zinc-950/90 border border-zinc-800 text-left transition-colors duration-200 hover:border-zinc-700">
+<div class="flex items-start justify-between gap-2 mb-2">
+<div>
+<span class="text-[10px] font-label text-emerald-400 uppercase tracking-wider">Detected Product</span>
+<h2 class="text-xs font-bold text-white leading-tight">Maggi 2-Minute Masala Noodles (70g)</h2>
+</div>
+<div class="text-right">
+<span class="text-[9px] font-label text-zinc-400 uppercase">Health Score</span>
+<div class="text-base font-extrabold text-rose-500 font-label leading-none">38<span class="text-[10px] text-zinc-400 font-normal">/100</span></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-2 border-t border-zinc-800/80 text-[11px] mb-2.5">
+<div class="flex items-center gap-1.5 text-zinc-300">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+<span>NOVA 4 (Ultra-Processed)</span>
+</div>
+<div class="flex items-center gap-1.5 text-zinc-300">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<span>4 Flagged Additives</span>
+</div>
+</div>
+<!-- Color-Coded Safety Tags -->
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/30 transition-transform hover:scale-105">High Risk (Red)</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-transform hover:scale-105">Moderate (Amber)</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 transition-transform hover:scale-105">Safe (Emerald)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ANIMATED SCAN DEMO / WORKFLOW SECTION -->
+<section class="py-20 bg-zinc-50 border-b border-zinc-200" id="how-it-works">
+<div class="max-w-7xl mx-auto px-6">
+<div class="max-w-3xl mb-14 reveal-init">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-semibold font-label bg-zinc-200/80 text-zinc-800 mb-3">
+<span class="material-symbols-outlined text-xs" data-icon="sync">sync</span>
+<span>Transparent Methodology</span>
+</div>
+<h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight">See It In Action</h2>
+<p class="text-zinc-600 mt-2 text-base">From UPC barcode to peer-reviewed scientific breakdown in sub-500 milliseconds.</p>
+</div>
+<!-- 3-Step Horizontal Workflow -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+<!-- Step 1 -->
+<div class="reveal-init card-elevate relative bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex flex-col justify-between" style="transition-delay: 50ms;">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-900 border border-zinc-200 transition-colors group-hover:bg-zinc-200">
+<span class="material-symbols-outlined text-xl" data-icon="photo_camera">photo_camera</span>
+</div>
+<span class="font-label text-xs font-bold text-zinc-400">STEP 01</span>
+</div>
+<h3 class="text-base font-bold text-zinc-900 mb-2">Scan Barcode</h3>
+<p class="text-sm text-zinc-600 leading-relaxed">Point camera at any packaged item or snap nutrition label with instant lens auto-detection.</p>
+</div>
+<div class="mt-6 pt-3 border-t border-zinc-100 font-label text-[11px] text-zinc-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Supports UPC, EAN-13, QR</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="reveal-init card-elevate relative bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex flex-col justify-between" style="transition-delay: 150ms;">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-700 border border-emerald-200 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="memory">memory</span>
+</div>
+<span class="font-label text-xs font-bold text-emerald-700">STEP 02</span>
+</div>
+<h3 class="text-base font-bold text-zinc-900 mb-2">AI Analyzes Ingredients</h3>
+<p class="text-sm text-zinc-600 leading-relaxed">Cross-referenced against EFSA, FDA &amp; PubMed peer-reviewed toxicology and nutrition papers.</p>
+</div>
+<div class="mt-6 pt-3 border-t border-zinc-100 font-label text-[11px] text-zinc-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>Over 80,000 additives cataloged</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="reveal-init card-elevate relative bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex flex-col justify-between" style="transition-delay: 250ms;">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-900 border border-zinc-200">
+<span class="material-symbols-outlined text-xl" data-icon="verified">verified</span>
+</div>
+<span class="font-label text-xs font-bold text-zinc-400">STEP 03</span>
+</div>
+<h3 class="text-base font-bold text-zinc-900 mb-2">Get Transparent Results</h3>
+<p class="text-sm text-zinc-600 leading-relaxed">Clear risk ratings with exact citations and healthier alternative recommendations.</p>
+</div>
+<div class="mt-6 pt-3 border-t border-zinc-100 font-label text-[11px] text-zinc-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-emerald-600" data-icon="check_circle">check_circle</span>
+<span>100% unbiased scientific formula</span>
+</div>
+</div>
+</div>
+<!-- Sample Result Card for Maggi Instant Noodles -->
+<div class="reveal-init bg-white rounded-xl border border-zinc-300 shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:border-zinc-400/80" id="results">
+<!-- Header Bar -->
+<div class="p-6 md:p-8 border-b border-zinc-200 bg-zinc-50/50">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<div class="flex items-center gap-2 text-xs font-label text-zinc-500 mb-1">
+<span>Nestlé</span>
+<span>•</span>
+<span>Category: Packaged Meals</span>
+<span>•</span>
+<span class="text-zinc-400 font-mono">EAN: 8901058852331</span>
+</div>
+<h3 class="text-2xl font-bold text-zinc-950">Maggi 2-Minute Instant Noodles</h3>
+</div>
+<!-- Key Metric Badges -->
+<div class="flex items-center gap-4 flex-wrap">
+<!-- Overall Score -->
+<div class="bg-rose-50 border border-rose-200 px-4 py-2.5 rounded-lg flex items-center gap-3 transition-transform hover:scale-105">
+<div>
+<div class="text-[10px] font-label font-bold text-rose-800 uppercase tracking-wider">Health Score</div>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-black text-rose-600 font-label leading-tight">38</span>
+<span class="text-xs text-rose-800 font-bold">/100 POOR</span>
+</div>
+</div>
+</div>
+<!-- NOVA Score Badge -->
+<div class="bg-rose-950 text-white px-3.5 py-2.5 rounded-lg border border-rose-900 transition-transform hover:scale-105">
+<div class="text-[10px] font-label text-rose-300 uppercase tracking-wider">Processing Tier</div>
+<div class="text-xs font-bold tracking-tight">Group 4 - Ultra-Processed Food</div>
+</div>
+</div>
+</div>
+<!-- Allergen tags & note -->
+<div class="mt-4 pt-4 border-t border-zinc-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+<div class="flex items-center gap-2">
+<span class="font-semibold text-zinc-700">Allergen Notice:</span>
+<span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-300 font-medium text-zinc-800 hover:bg-zinc-200/80 transition-colors">Gluten (Wheat)</span>
+<span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-300 font-medium text-zinc-800 hover:bg-zinc-200/80 transition-colors">Soy</span>
+<span class="px-2 py-0.5 rounded bg-zinc-100 border border-zinc-300 font-medium text-zinc-800 hover:bg-zinc-200/80 transition-colors">Trace Dairy</span>
+</div>
+<div class="text-rose-600 font-medium text-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+<span>Contains high sodium &amp; artificial enhancers</span>
+</div>
+</div>
+</div>
+<!-- Ingredient Breakdown Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm border-collapse">
+<thead>
+<tr class="bg-zinc-100/70 border-b border-zinc-200 text-xs font-semibold text-zinc-600 font-label">
+<th class="py-3 px-6">Ingredient</th>
+<th class="py-3 px-6">Function</th>
+<th class="py-3 px-6">Risk Level</th>
+<th class="py-3 px-6">Evidence Strength</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-zinc-200 font-body text-xs sm:text-sm text-zinc-800">
+<!-- Row 1 -->
+<tr class="row-interactive transition-colors">
+<td class="py-3.5 px-6 font-semibold text-zinc-950">MSG (Monosodium Glutamate)</td>
+<td class="py-3.5 px-6 text-zinc-600">Flavor Enhancer</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded font-label text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      Moderate
+                    </span>
+</td>
+<td class="py-3.5 px-6 font-label text-xs text-zinc-500">Strong (PubMed 124 studies)</td>
+</tr>
+<!-- Row 2 -->
+<tr class="row-interactive transition-colors">
+<td class="py-3.5 px-6 font-semibold text-zinc-950">Tartrazine (E102)</td>
+<td class="py-3.5 px-6 text-zinc-600">Artificial Color</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded font-label text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200 shadow-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                      High
+                    </span>
+</td>
+<td class="py-3.5 px-6 font-label text-xs text-zinc-500">Strong (EFSA / EU Warning label)</td>
+</tr>
+<!-- Row 3 -->
+<tr class="row-interactive transition-colors">
+<td class="py-3.5 px-6 font-semibold text-zinc-950">Palm Oil</td>
+<td class="py-3.5 px-6 text-zinc-600">Processed Fat</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded font-label text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      Moderate
+                    </span>
+</td>
+<td class="py-3.5 px-6 font-label text-xs text-zinc-500">Moderate (High saturated fat index)</td>
+</tr>
+<!-- Row 4 -->
+<tr class="row-interactive transition-colors">
+<td class="py-3.5 px-6 font-semibold text-zinc-950">TBHQ (E319)</td>
+<td class="py-3.5 px-6 text-zinc-600">Preservative</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded font-label text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200 shadow-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                      High
+                    </span>
+</td>
+<td class="py-3.5 px-6 font-label text-xs text-zinc-500">Strong (Toxicological limits flagged)</td>
+</tr>
+<!-- Row 5 -->
+<tr class="row-interactive transition-colors">
+<td class="py-3.5 px-6 font-semibold text-zinc-950">Sodium (890mg / serving)</td>
+<td class="py-3.5 px-6 text-zinc-600">Mineral / Seasoning</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded font-label text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      Moderate
+                    </span>
+</td>
+<td class="py-3.5 px-6 font-label text-xs text-zinc-500">Strong (44% Daily Recommended Max)</td>
+</tr>
+<!-- Row 6 -->
+<tr class="row-interactive transition-colors">
+<td class="py-3.5 px-6 font-semibold text-zinc-950">Wheat Flour (Refined)</td>
+<td class="py-3.5 px-6 text-zinc-600">Primary Carbohydrate Base</td>
+<td class="py-3.5 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded font-label text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                      Low
+                    </span>
+</td>
+<td class="py-3.5 px-6 font-label text-xs text-zinc-500">Strong (Standard refined cereal)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom Card Note -->
+<div class="px-6 py-4 bg-zinc-50 border-t border-zinc-200 text-xs text-zinc-500 flex items-center justify-between flex-wrap gap-2">
+<span class="font-label">Source database updated daily from Open Food Facts &amp; EFSA food additive scientific evaluations.</span>
+<span class="text-emerald-700 font-semibold cursor-pointer hover:underline hover:text-emerald-800 flex items-center gap-1 transition-colors">
+              Download PDF Clinical Dossier
+              <span class="material-symbols-outlined text-xs" data-icon="file_download">file_download</span>
+</span>
+</div>
+</div>
+</div>
+</section>
+<!-- FEATURES GRID (3x2 layout) -->
+<section class="py-20 bg-white border-b border-zinc-200" id="features">
+<div class="max-w-7xl mx-auto px-6">
+<div class="max-w-2xl mb-14 reveal-init">
+<div class="font-label text-xs uppercase tracking-widest text-emerald-700 font-bold mb-2">Engineered Precision</div>
+<h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight">Features Built for Pure Food Transparency</h2>
+<p class="text-zinc-600 mt-2 text-base">We removed marketing hype to give you direct scientific insight into packaged consumer goods.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="reveal-init card-elevate p-6 rounded-xl border border-zinc-200 bg-white flex flex-col justify-between shadow-sm cursor-default" style="transition-delay: 50ms;">
+<div>
+<div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4 border border-emerald-200">
+<span class="material-symbols-outlined" data-icon="barcode_scanner">barcode_scanner</span>
+</div>
+<h3 class="font-label text-base font-bold text-zinc-950 mb-2">Barcode Scanner</h3>
+<p class="text-zinc-600 text-sm leading-relaxed">
+                Instant real-time live camera scanning supporting UPC, EAN-13, and QR codes across 2M+ global products with zero lag.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs font-label text-zinc-400">
+<span>SCAN_LATENCY: &lt;180ms</span>
+<span class="text-emerald-700 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="reveal-init card-elevate p-6 rounded-xl border border-zinc-200 bg-white flex flex-col justify-between shadow-sm cursor-default" style="transition-delay: 100ms;">
+<div>
+<div class="w-10 h-10 rounded-lg bg-zinc-100 text-zinc-800 flex items-center justify-center mb-4 border border-zinc-200">
+<span class="material-symbols-outlined" data-icon="document_scanner">document_scanner</span>
+</div>
+<h3 class="font-label text-base font-bold text-zinc-950 mb-2">OCR Text Reader</h3>
+<p class="text-zinc-600 text-sm leading-relaxed">
+                Photograph any physical ingredient list or paste unformatted text from obscure import labels with multilingual NLP support.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs font-label text-zinc-400">
+<span>MULTILINGUAL_OCR</span>
+<span class="text-emerald-700 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="reveal-init card-elevate p-6 rounded-xl border border-zinc-200 bg-white flex flex-col justify-between shadow-sm cursor-default" style="transition-delay: 150ms;">
+<div>
+<div class="w-10 h-10 rounded-lg bg-zinc-100 text-zinc-800 flex items-center justify-center mb-4 border border-zinc-200">
+<span class="material-symbols-outlined" data-icon="biotech">biotech</span>
+</div>
+<h3 class="font-label text-base font-bold text-zinc-950 mb-2">AI Ingredient Analysis</h3>
+<p class="text-zinc-600 text-sm leading-relaxed">
+                Granular breakdown for every single additive, hidden sugars, synthetic gums, and chemical emulsifiers against toxicological bounds.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs font-label text-zinc-400">
+<span>EFSA_PARSER_V3</span>
+<span class="text-emerald-700 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="reveal-init card-elevate p-6 rounded-xl border border-zinc-200 bg-white flex flex-col justify-between shadow-sm cursor-default" style="transition-delay: 200ms;">
+<div>
+<div class="w-10 h-10 rounded-lg bg-zinc-100 text-zinc-800 flex items-center justify-center mb-4 border border-zinc-200">
+<span class="material-symbols-outlined" data-icon="notification_important">notification_important</span>
+</div>
+<h3 class="font-label text-base font-bold text-zinc-950 mb-2">Allergen Alerts</h3>
+<p class="text-zinc-600 text-sm leading-relaxed">
+                Configure custom profiles for Celiac, lactose intolerance, nuts, seed oils, sulfites, or artificial dyes with zero false positives.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs font-label text-zinc-400">
+<span>ZERO_TOLERANCE_MODE</span>
+<span class="text-emerald-700 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="reveal-init card-elevate p-6 rounded-xl border border-zinc-200 bg-white flex flex-col justify-between shadow-sm cursor-default" style="transition-delay: 250ms;">
+<div>
+<div class="w-10 h-10 rounded-lg bg-zinc-100 text-zinc-800 flex items-center justify-center mb-4 border border-zinc-200">
+<span class="material-symbols-outlined" data-icon="compare_arrows">compare_arrows</span>
+</div>
+<h3 class="font-label text-base font-bold text-zinc-950 mb-2">Product Comparison</h3>
+<p class="text-zinc-600 text-sm leading-relaxed">
+                Side-by-side nutritional &amp; processing duel between 2-3 grocery alternatives to choose the cleanest option effortlessly.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs font-label text-zinc-400">
+<span>DELTA_RANKING</span>
+<span class="text-emerald-700 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="reveal-init card-elevate p-6 rounded-xl border border-zinc-200 bg-white flex flex-col justify-between shadow-sm cursor-default" style="transition-delay: 300ms;">
+<div>
+<div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-4 border border-emerald-200">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+</div>
+<h3 class="font-label text-base font-bold text-zinc-950 mb-2">NOVA &amp; Nutri-Score</h3>
+<p class="text-zinc-600 text-sm leading-relaxed">
+                Independent scientific processing classification (NOVA 1-4) combined with calibrated European Nutri-Score standards.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-xs font-label text-zinc-400">
+<span>UN_FAO_STANDARDS</span>
+<span class="text-emerald-700 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- COMPARISON TABLE SECTION -->
+<section class="py-20 bg-zinc-50 border-b border-zinc-200" id="comparison">
+<div class="max-w-7xl mx-auto px-6">
+<div class="max-w-3xl mb-12 reveal-init">
+<div class="font-label text-xs uppercase tracking-widest text-emerald-700 font-bold mb-2">Uncompromising Standard</div>
+<h2 class="text-3xl sm:text-4xl font-extrabold text-zinc-950 tracking-tight">Why ScanBeforeEat?</h2>
+<p class="text-zinc-600 mt-2 text-base">Independent scientific rigor vs sponsored nutrition apps.</p>
+</div>
+<div class="reveal-init bg-white rounded-xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm border-collapse">
+<thead>
+<tr class="border-b border-zinc-200 bg-zinc-100/80 font-label text-xs text-zinc-700">
+<th class="py-4 px-6 font-bold w-1/4">Criteria</th>
+<th class="py-4 px-6 font-bold text-emerald-800 bg-emerald-50/70 border-x border-emerald-100 w-1/3">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-beacon"></span>
+<span>ScanBeforeEat</span>
+</div>
+</th>
+<th class="py-4 px-6 font-semibold text-zinc-600 w-1/5">Yuka</th>
+<th class="py-4 px-6 font-semibold text-zinc-600 w-1/5">Generic Apps</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-zinc-200 font-body text-xs sm:text-sm">
+<!-- Row 1 -->
+<tr class="row-interactive">
+<td class="py-4 px-6 font-semibold text-zinc-900">Transparent Score Breakdown</td>
+<td class="py-4 px-6 text-emerald-950 font-medium bg-emerald-50/30 border-x border-emerald-100">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-bold">
+<span class="material-symbols-outlined text-sm font-bold text-emerald-600" data-icon="check">check</span>
+<span>Full scientific formula shown</span>
+</span>
+</td>
+<td class="py-4 px-6 text-zinc-600">Proprietary algorithm / partial</td>
+<td class="py-4 px-6 text-zinc-400">
+<span class="inline-flex items-center gap-1 text-rose-600">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+<span>Vague high-level score</span>
+</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="row-interactive">
+<td class="py-4 px-6 font-semibold text-zinc-900">Per-Ingredient Evidence</td>
+<td class="py-4 px-6 text-emerald-950 font-medium bg-emerald-50/30 border-x border-emerald-100">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-bold">
+<span class="material-symbols-outlined text-sm font-bold text-emerald-600" data-icon="check">check</span>
+<span>Direct PubMed &amp; EFSA citations</span>
+</span>
+</td>
+<td class="py-4 px-6 text-zinc-600">General hazard rating</td>
+<td class="py-4 px-6 text-zinc-400">
+<span class="inline-flex items-center gap-1 text-rose-600">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+<span>None</span>
+</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="row-interactive">
+<td class="py-4 px-6 font-semibold text-zinc-900">NOVA Processing Level</td>
+<td class="py-4 px-6 text-emerald-950 font-medium bg-emerald-50/30 border-x border-emerald-100">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-bold">
+<span class="material-symbols-outlined text-sm font-bold text-emerald-600" data-icon="check">check</span>
+<span>Full NOVA 1-4 classification</span>
+</span>
+</td>
+<td class="py-4 px-6 text-rose-600">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+<span>No native NOVA</span>
+</span>
+</td>
+<td class="py-4 px-6 text-rose-600">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+<span>No</span>
+</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="row-interactive">
+<td class="py-4 px-6 font-semibold text-zinc-900">Personal Allergen Profile</td>
+<td class="py-4 px-6 text-emerald-950 font-medium bg-emerald-50/30 border-x border-emerald-100">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-bold">
+<span class="material-symbols-outlined text-sm font-bold text-emerald-600" data-icon="check">check</span>
+<span>Custom multi-tier threshold alerts</span>
+</span>
+</td>
+<td class="py-4 px-6 text-zinc-600">Basic alerts</td>
+<td class="py-4 px-6 text-zinc-400">
+<span class="inline-flex items-center gap-1 text-rose-600">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+<span>Rarely supported</span>
+</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="row-interactive">
+<td class="py-4 px-6 font-semibold text-zinc-900">No Corporate Bias</td>
+<td class="py-4 px-6 text-emerald-950 font-medium bg-emerald-50/30 border-x border-emerald-100">
+<span class="inline-flex items-center gap-1 text-emerald-700 font-bold">
+<span class="material-symbols-outlined text-sm font-bold text-emerald-600" data-icon="check">check</span>
+<span>100% user-supported, zero brand sponsorships</span>
+</span>
+</td>
+<td class="py-4 px-6 text-zinc-600">Independent</td>
+<td class="py-4 px-6 text-zinc-400">
+<span class="inline-flex items-center gap-1 text-rose-600">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+<span>Sponsored brand listings</span>
+</span>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="row-interactive">
+<td class="py-4 px-6 font-semibold text-zinc-900">Free to Start</td><td class="p-4 text-center text-xs font-semibold text-emerald-700 bg-emerald-50/40"><span class="inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-emerald-600 text-sm">check</span>15 free scans / month (₹0 forever)</span></td><td class="p-4 text-center text-xs text-zinc-500">Freemium with locked features</td><td class="p-4 text-center text-xs text-zinc-500">Ad-supported / subscription wall</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA BANNER SECTION -->
+<section class="py-20 bg-white" id="start">
+<div class="max-w-7xl mx-auto px-6">
+<div class="reveal-init relative overflow-hidden rounded-2xl bg-zinc-950 border border-zinc-800 text-white p-8 md:p-14 text-center group">
+<!-- Background radial glow with ambient pulsing -->
+<div class="absolute -top-24 left-1/2 w-96 h-96 bg-emerald-600/25 blur-[100px] pointer-events-none rounded-full animate-ambient-glow"></div>
+<div class="relative z-10 max-w-2xl mx-auto">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/90 border border-emerald-800/80 mb-6 backdrop-blur-sm transition-transform hover:scale-105">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-beacon"></span>
+<span class="font-label text-xs font-semibold text-emerald-300">Ready in 30 seconds</span>
+</div>
+<h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
+              Start scanning your food today.
+            </h2>
+<p class="text-base sm:text-lg text-zinc-400 mb-8 max-w-xl mx-auto">
+              100% Free & Unlimited Scans — no credit card or subscription required. Know exactly what goes into your body.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<a class="btn-shimmer w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/30 active:scale-[0.98] transition-all duration-200" href="#">
+                Get Started Free
+              </a>
+<span class="text-xs font-label text-zinc-400">Instant access in your mobile browser</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FOOTER -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+  // High-performance IntersectionObserver for scroll-triggered entrance dynamics
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealElements = document.querySelectorAll('.reveal-init');
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      revealElements.forEach(el => el.classList.add('revealed'));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // Nav subtle elevation on scroll
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        nav.classList.add('shadow-sm', 'border-neutral-300/80');
+      } else {
+        nav.classList.remove('shadow-sm', 'border-neutral-300/80');
+      }
+    }, { passive: true });
+  });
+</script>
+</body></html>

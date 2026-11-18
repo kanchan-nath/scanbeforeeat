@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScanBeforeEat Developer API &amp; Bio-Informatics Documentation</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            slate: {
+              850: '#0f172a',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-neutral-50 text-neutral-900 font-body antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+<!-- TOP APP BAR -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="flex-1 pt-28 pb-16">
+<!-- Hero / Header Section -->
+<section class="max-w-7xl mx-auto px-6 pt-6 pb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-neutral-200 pb-8">
+<div class="max-w-3xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300/80 font-label text-xs font-semibold tracking-wider uppercase mb-4">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+            REST API &amp; OPEN BIO-INFORMATICS // COMMUNITY READY
+          </div>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 font-headline mb-4">
+            ScanBeforeEat Developer API &amp; Bio-Informatics Engine
+          </h1>
+<p class="text-base sm:text-lg text-neutral-600 font-body leading-relaxed">
+            Programmatically query food additive toxicology ratings, barcode ingredient lists, and real-time NOVA-4 ultra-processing scores with sub-30ms latency.
+          </p>
+</div>
+<!-- Hero Actions -->
+<div class="flex flex-wrap items-center gap-3">
+<a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline text-sm font-semibold tracking-tight shadow-md shadow-emerald-600/20 active:scale-[0.98] transition-all" href="#api-key">
+<span>Get API Key (Free Tier)</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-800 font-headline text-sm font-medium shadow-xs transition-colors" href="#sandbox">
+<span class="material-symbols-outlined text-neutral-500 text-[18px]">terminal</span>
+<span>Interactive Sandbox</span>
+</a>
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-neutral-800 font-headline text-sm font-medium shadow-xs transition-colors" href="#sdks">
+<span class="material-symbols-outlined text-neutral-500 text-[18px]">inventory_2</span>
+<span>SDK Libraries</span>
+</a>
+</div>
+</div>
+<!-- Live Performance Metrices Strip -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+<div class="bg-white rounded-xl p-4 border border-neutral-200 shadow-xs flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">check_circle</span>
+</div>
+<div>
+<div class="font-label text-base font-bold text-neutral-900 tracking-tight">99.98% Uptime</div>
+<div class="text-xs text-neutral-500 font-body">Historical 30-Day SLA</div>
+</div>
+</div>
+<div class="bg-white rounded-xl p-4 border border-neutral-200 shadow-xs flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">bolt</span>
+</div>
+<div>
+<div class="font-label text-base font-bold text-neutral-900 tracking-tight">&lt;28ms P95 Response</div>
+<div class="text-xs text-neutral-500 font-body">Global Edge Caching</div>
+</div>
+</div>
+<div class="bg-white rounded-xl p-4 border border-neutral-200 shadow-xs flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">database</span>
+</div>
+<div>
+<div class="font-label text-base font-bold text-neutral-900 tracking-tight">450,000+ Verified EANs</div>
+<div class="text-xs text-neutral-500 font-body">Global UPC/GTIN Catalog</div>
+</div>
+</div>
+<div class="bg-white rounded-xl p-4 border border-neutral-200 shadow-xs flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[22px]">sync</span>
+</div>
+<div>
+<div class="font-label text-base font-bold text-neutral-900 tracking-tight">EFSA/FDA Sync Daily</div>
+<div class="text-xs text-neutral-500 font-body">Live Regulatory Pipelines</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2-COLUMN WORKSPACE: LEFT NAV + RIGHT DOCS -->
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- LEFT SIDEBAR (STICKY NAVIGATION) -->
+<aside class="hidden lg:block lg:col-span-3 sticky top-28 space-y-6 max-h-[calc(100vh-130px)] overflow-y-auto pr-2 custom-scrollbar">
+<!-- Search in Docs -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-neutral-400 text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-2 bg-white border border-neutral-200 rounded-lg text-xs font-headline text-neutral-800 placeholder-neutral-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-xs" placeholder="Filter endpoints &amp; schemas..." type="text"/>
+</div>
+<!-- Section: GETTING STARTED -->
+<div class="space-y-1">
+<h4 class="text-[11px] font-label font-bold tracking-wider text-neutral-400 uppercase px-3 py-1">Getting Started</h4>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#overview">
+<span>Overview &amp; Architecture</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#authentication">
+<span>Authentication (Bearer)</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#rate-limits">
+<span>Rate Limits &amp; Quotas</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#error-codes">
+<span>Error Codes &amp; Standard Payloads</span>
+</a>
+</div>
+<!-- Section: CORE ENDPOINTS -->
+<div class="space-y-1">
+<h4 class="text-[11px] font-label font-bold tracking-wider text-neutral-400 uppercase px-3 py-1">Core Endpoints</h4>
+<a class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#lookup">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-neutral-200 text-neutral-700">GET</span>
+<span class="truncate">/v2/product/{barcode}</span>
+</a>
+<!-- ACTIVE ITEM -->
+<a class="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-emerald-50 text-emerald-900 border-l-4 border-emerald-600 transition-colors shadow-xs" href="#analyze-endpoint">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-600 text-white">POST</span>
+<span class="truncate">/v2/analyze/ingredients</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#additives">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-neutral-200 text-neutral-700">GET</span>
+<span class="truncate">/v2/additives/{e_number}</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#nova-score">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">POST</span>
+<span class="truncate">/v2/nova/score</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#alternatives">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-neutral-200 text-neutral-700">GET</span>
+<span class="truncate">/v2/alternatives/{barcode}</span>
+</a>
+</div>
+<!-- Section: REAL-TIME & WEBHOOKS -->
+<div class="space-y-1">
+<h4 class="text-[11px] font-label font-bold tracking-wider text-neutral-400 uppercase px-3 py-1">Real-Time &amp; Webhooks</h4>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#webhooks">
+<span>Recalls &amp; EFSA Ban Triggers</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-xs font-medium rounded-lg text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 transition-colors" href="#streaming">
+<span>Streaming OCR Tokenizer</span>
+</a>
+</div>
+<!-- Section: CLIENT SDKS -->
+<div class="space-y-1">
+<h4 class="text-[11px] font-label font-bold tracking-wider text-neutral-400 uppercase px-3 py-1">Client SDKs</h4>
+<a class="flex items-center gap-2 px-3 py-1.5 text-xs text-neutral-600 hover:text-neutral-900 transition-colors" href="#python">
+<span class="material-symbols-outlined text-[16px] text-neutral-400">code</span>
+<span>Python (scanbeforeeat-py)</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-1.5 text-xs text-neutral-600 hover:text-neutral-900 transition-colors" href="#node">
+<span class="material-symbols-outlined text-[16px] text-neutral-400">javascript</span>
+<span>npm @scanbeforeeat/sdk</span>
+</a>
+<a class="flex items-center gap-2 px-3 py-1.5 text-xs text-neutral-600 hover:text-neutral-900 transition-colors" href="#swift">
+<span class="material-symbols-outlined text-[16px] text-neutral-400">terminal</span>
+<span>Swift &amp; Go Packages</span>
+</a>
+</div>
+<!-- Sandbox Badge Card -->
+<div class="p-3.5 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/30 rounded-xl">
+<div class="flex items-center gap-2 text-emerald-800 font-headline font-semibold text-xs mb-1">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>Interactive Postman Hub</span>
+</div>
+<p class="text-[11px] text-neutral-600 mb-2">Import collection v2.4 directly to test live sandbox responses.</p>
+<button class="text-xs font-semibold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1">
+              Export OpenAPI 3.0 Specs <span class="material-symbols-outlined text-[12px]">download</span>
+</button>
+</div>
+</aside>
+<!-- RIGHT MAIN CONTENT COLUMN -->
+<div class="lg:col-span-9 space-y-12">
+<!-- SECTION 1: AUTHENTICATION -->
+<section class="bg-white rounded-2xl border border-neutral-200 p-6 md:p-8 shadow-xs" id="authentication">
+<div class="flex items-center justify-between border-b border-neutral-100 pb-4 mb-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-700">
+<span class="material-symbols-outlined text-[20px]">key</span>
+</div>
+<h2 class="text-xl font-bold font-headline text-neutral-900">Authentication</h2>
+</div>
+<span class="text-xs font-label uppercase px-2.5 py-1 bg-neutral-100 text-neutral-700 rounded-md font-semibold">Standard HTTP Header</span>
+</div>
+<p class="text-sm text-neutral-600 leading-relaxed mb-4">
+              All requests to the ScanBeforeEat Bio-Informatics Engine require an API Secret Token supplied in the HTTP Authorization header as a Bearer token. Live keys begin with <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-800">sbe_live_</code> while Sandbox keys begin with <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-neutral-100 text-neutral-800">sbe_test_</code>.
+            </p>
+<div class="bg-slate-900 rounded-xl p-4 flex items-center justify-between font-mono text-xs text-neutral-200 border border-slate-800">
+<div class="flex items-center gap-3 overflow-x-auto custom-scrollbar py-1">
+<span class="text-emerald-400 select-none font-bold">Authorization:</span>
+<span class="text-white">Bearer sbe_live_9a7d3f82e1c0b8924ff93a9082de71b4</span>
+</div>
+<button class="ml-4 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-neutral-300 hover:text-white flex items-center gap-1.5 transition-colors flex-shrink-0 text-xs font-sans" onclick="navigator.clipboard.writeText('Authorization: Bearer sbe_live_9a7d3f82e1c0b8924ff93a9082de71b4')">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span>Copy</span>
+</button>
+</div>
+</section>
+<!-- SECTION 2: ENDPOINT DOCUMENTATION (POST /v2/analyze/ingredients) -->
+<section class="space-y-6" id="analyze-endpoint">
+<!-- Endpoint Header Banner -->
+<div class="bg-white rounded-2xl border border-neutral-200 p-6 md:p-8 shadow-xs">
+<div class="flex flex-wrap items-center gap-3 mb-4">
+<span class="px-3 py-1 rounded-lg bg-emerald-600 text-white font-mono text-sm font-bold tracking-wide">POST</span>
+<h2 class="text-xl md:text-2xl font-bold font-mono text-neutral-900">/v2/analyze/ingredients</h2>
+<span class="ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-label font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  Avg Latency: 24ms
+                </span>
+</div>
+<p class="text-sm md:text-base text-neutral-600 leading-relaxed font-body">
+                Parses raw ingredient strings or unformatted OCR text, maps chemical synonyms to standard E-numbers, computes clinical toxicology penalties, and delivers NOVA-4 processing ratings with peer-reviewed citations.
+              </p>
+</div>
+<!-- Parameters Table -->
+<div class="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-xs">
+<div class="px-6 py-4 border-b border-neutral-200 bg-neutral-50/70 flex items-center justify-between">
+<h3 class="font-headline text-sm font-bold text-neutral-900 tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-neutral-500">tune</span>
+                  Request Body (application/json)
+                </h3>
+<span class="text-xs text-neutral-500 font-label">Schema: IngredientAnalysisPayload</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead>
+<tr class="border-b border-neutral-200 text-neutral-500 font-label uppercase">
+<th class="py-3 px-6 font-semibold">Parameter</th>
+<th class="py-3 px-4 font-semibold">Type</th>
+<th class="py-3 px-4 font-semibold">Requirement</th>
+<th class="py-3 px-6 font-semibold">Description</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-neutral-100 font-body text-neutral-700">
+<tr class="hover:bg-neutral-50/60 transition-colors">
+<td class="py-3.5 px-6 font-mono font-semibold text-neutral-900">ingredients_raw</td>
+<td class="py-3.5 px-4 font-mono text-emerald-700 font-medium">string</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">Required</span>
+</td>
+<td class="py-3.5 px-6 text-neutral-600">
+                        Unformatted ingredient list or raw OCR string from packaging scan. Handled through multi-language bio-dictionary tokenizers.
+                      </td>
+</tr>
+<tr class="hover:bg-neutral-50/60 transition-colors">
+<td class="py-3.5 px-6 font-mono font-semibold text-neutral-900">barcode</td>
+<td class="py-3.5 px-4 font-mono text-neutral-600">string</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-neutral-100 text-neutral-600">Optional</span>
+</td>
+<td class="py-3.5 px-6 text-neutral-600">
+                        8, 12, or 13-digit EAN/UPC identifier. When present, correlates packaging OCR with verified manufacturer nutritional data.
+                      </td>
+</tr>
+<tr class="hover:bg-neutral-50/60 transition-colors">
+<td class="py-3.5 px-6 font-mono font-semibold text-neutral-900">strict_mode</td>
+<td class="py-3.5 px-4 font-mono text-amber-700">boolean</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-neutral-100 text-neutral-600">Optional</span>
+</td>
+<td class="py-3.5 px-6 text-neutral-600">
+                        Defaults to <code class="font-mono text-neutral-900">false</code>. When true, enables pediatric allergen flags and EU banned thresholding (Southampton Six dyes, Titanium Dioxide).
+                      </td>
+</tr>
+<tr class="hover:bg-neutral-50/60 transition-colors">
+<td class="py-3.5 px-6 font-mono font-semibold text-neutral-900">include_alternatives</td>
+<td class="py-3.5 px-4 font-mono text-amber-700">boolean</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-neutral-100 text-neutral-600">Optional</span>
+</td>
+<td class="py-3.5 px-6 text-neutral-600">
+                        Returns up to 3 lower-processed, clean pantry swap recommendations with NOVA 1 or 2 classifications.
+                      </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Interactive Request / Response split container -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+<!-- Left: Request Box (Tabs: cURL, Python, Node.js) -->
+<div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden flex flex-col">
+<div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+<span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+<span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+<span class="ml-2 text-xs font-label text-slate-400 font-semibold tracking-wide uppercase">Request Body</span>
+</div>
+<!-- Code Language Tabs -->
+<div class="flex items-center bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-xs font-mono">
+<button class="px-2.5 py-1 rounded-md bg-emerald-600 text-white font-medium">cURL</button>
+<button class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-colors">Python</button>
+<button class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white transition-colors">Node.js</button>
+</div>
+</div>
+<div class="p-4 font-mono text-xs text-slate-300 leading-relaxed overflow-x-auto flex-1 custom-scrollbar">
+<pre class="text-slate-300"><span class="text-purple-400">curl</span> -X POST https://api.scanbeforeeat.com/v2/analyze/ingredients \
+  -H <span class="text-emerald-300">"Authorization: Bearer sbe_live_9a7d3f82e1c0b..."</span> \
+  -H <span class="text-emerald-300">"Content-Type: application/json"</span> \
+  -d <span class="text-amber-300">'{
+    "ingredients_raw": "Corn, Vegetable Oil, Maltodextrin, Salt, Monosodium Glutamate (E621), Sunset Yellow (E110), Artificial Flavor",
+    "barcode": "028400042451",
+    "strict_mode": true,
+    "include_alternatives": true
+  }'</span></pre>
+</div>
+<div class="px-4 py-2.5 bg-slate-950/80 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+<span>Endpoint Host: <strong class="text-slate-200">api.scanbeforeeat.com</strong></span>
+<button class="text-emerald-400 hover:text-emerald-300 font-mono inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">content_copy</span> Copy cURL
+                  </button>
+</div>
+</div>
+<!-- Right: Formatted JSON Response Box -->
+<div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl overflow-hidden flex flex-col">
+<div class="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">200 OK</span>
+<span class="text-xs font-mono text-slate-400">24ms</span>
+</div>
+<div class="text-xs font-label text-slate-400 font-semibold tracking-wide uppercase">Response Payload</div>
+</div>
+<div class="p-4 font-mono text-xs text-slate-300 leading-relaxed overflow-x-auto flex-1 custom-scrollbar">
+<pre class="text-slate-200">{
+  <span class="text-purple-400">"status"</span>: <span class="text-emerald-300">"success"</span>,
+  <span class="text-purple-400">"status_code"</span>: <span class="text-amber-400">200</span>,
+  <span class="text-purple-400">"latency_ms"</span>: <span class="text-amber-400">24</span>,
+  <span class="text-purple-400">"product_name"</span>: <span class="text-emerald-300">"Commercial Nacho Chips"</span>,
+  <span class="text-purple-400">"safety_score"</span>: <span class="text-rose-400">38</span>,
+  <span class="text-purple-400">"nova_group"</span>: <span class="text-rose-400">4</span>,
+  <span class="text-purple-400">"processing_tier"</span>: <span class="text-emerald-300">"Ultra-Processed Food"</span>,
+  <span class="text-purple-400">"flagged_additives"</span>: [
+    {
+      <span class="text-purple-400">"code"</span>: <span class="text-emerald-300">"E621"</span>,
+      <span class="text-purple-400">"name"</span>: <span class="text-emerald-300">"Monosodium Glutamate"</span>,
+      <span class="text-purple-400">"risk"</span>: <span class="text-amber-400">"Moderate"</span>,
+      <span class="text-purple-400">"citations"</span>: <span class="text-amber-400">124</span>
+    },
+    {
+      <span class="text-purple-400">"code"</span>: <span class="text-emerald-300">"E110"</span>,
+      <span class="text-purple-400">"name"</span>: <span class="text-emerald-300">"Sunset Yellow FCF"</span>,
+      <span class="text-purple-400">"risk"</span>: <span class="text-rose-400">"High"</span>,
+      <span class="text-purple-400">"eu_warning"</span>: <span class="text-blue-400">true</span>
+    },
+    {
+      <span class="text-purple-400">"code"</span>: <span class="text-emerald-300">"Maltodextrin"</span>,
+      <span class="text-purple-400">"type"</span>: <span class="text-emerald-300">"Bulking Thickener"</span>,
+      <span class="text-purple-400">"gi_impact"</span>: <span class="text-amber-400">110</span>
+    }
+  ],
+  <span class="text-purple-400">"clean_alternatives"</span>: [
+    {
+      <span class="text-purple-400">"name"</span>: <span class="text-emerald-300">"Organic Air-Popped Popcorn"</span>,
+      <span class="text-purple-400">"safety_score"</span>: <span class="text-emerald-400">89</span>,
+      <span class="text-purple-400">"nova_group"</span>: <span class="text-emerald-400">1</span>
+    }
+  ]
+}</pre>
+</div>
+<div class="px-4 py-2.5 bg-slate-950/80 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Verified EFSA / FDA Schema
+                  </span>
+<button class="text-slate-300 hover:text-white font-mono inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">download</span> Raw JSON
+                  </button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: DEVELOPER RATE LIMITS & TIER COMPARISON -->
+<section class="space-y-6" id="rate-limits">
+<div class="border-b border-neutral-200 pb-4">
+<h2 class="text-2xl font-bold font-headline text-neutral-900">Developer Rate Limits &amp; Infrastructure Tiers</h2>
+<p class="text-sm text-neutral-600 mt-1">Select the throughput scale appropriate for your scanner apps, Nutrition apps and public health research pipelines, or health tech pipelines.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Tier 1: Free Developer -->
+<div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col justify-between shadow-xs hover:border-neutral-300 transition-all">
+<div>
+<div class="font-label text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Developer Sandbox</div>
+<h3 class="text-xl font-bold text-neutral-900 font-headline mb-3">Free Tier</h3>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-3xl font-extrabold text-neutral-900 font-label">$0</span>
+<span class="text-xs text-neutral-500 font-medium">/ month forever</span>
+</div>
+<p class="text-xs text-neutral-600 mb-6 leading-relaxed">Perfect for prototyping mobile barcode apps and academic food additive research.</p>
+<ul class="space-y-3 text-xs text-neutral-700 font-body mb-6">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span><strong>1,000</strong> requests / month</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>5 req/sec burst rate</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Standard latency (~80ms)</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Public GitHub Community Support</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-2.5 px-4 rounded-xl border border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 font-headline text-xs font-semibold tracking-tight transition-colors">
+                  Create Free Key
+                </button>
+</div>
+<!-- Tier 2: Community Prototyping (Highlighted) -->
+<div class="bg-white rounded-2xl border-2 border-emerald-600 p-6 flex flex-col justify-between shadow-lg relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-emerald-600 text-white font-label text-[10px] font-bold tracking-wider uppercase">
+                  Most Popular For Apps
+                </div>
+<div>
+<div class="font-label text-xs font-bold uppercase tracking-wider text-emerald-700 mb-1">Commercial Production</div>
+<h3 class="text-xl font-bold text-neutral-900 font-headline mb-3">Community Prototyping</h3>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-3xl font-extrabold text-neutral-900 font-label">$49</span>
+<span class="text-xs text-neutral-500 font-medium">/ month</span>
+</div>
+<p class="text-xs text-neutral-600 mb-6 leading-relaxed">Designed for consumer nutrition apps, digital grocery extensions, and wellness coaches.</p>
+<ul class="space-y-3 text-xs text-neutral-700 font-body mb-6">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span><strong>50,000</strong> requests / month</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>60 req/sec burst allowance</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Sub-30ms global edge routing</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Real-time webhook recalls push</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Priority Email &amp; Discord SLA</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-headline text-xs font-semibold tracking-tight shadow-md shadow-emerald-600/20 transition-all">
+                  Explore Documentation
+                </button>
+</div>
+<!-- Tier 3: Academic &amp; Public Health / Clinical -->
+<div class="bg-white rounded-2xl border border-neutral-200 p-6 flex flex-col justify-between shadow-xs hover:border-neutral-300 transition-all">
+<div>
+<div class="font-label text-xs font-bold uppercase tracking-wider text-neutral-500 mb-1">Open Research Partners</div>
+<h3 class="text-xl font-bold text-neutral-900 font-headline mb-3">Academic &amp; Public Health</h3>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-3xl font-extrabold text-neutral-900 font-label">Custom</span>
+<span class="text-xs text-neutral-500 font-medium">/ billed annually</span>
+</div>
+<p class="text-xs text-neutral-600 mb-6 leading-relaxed">Built for supermarket chains, hospital EHRs, and continuous regulatory compliance pipelines.</p>
+<ul class="space-y-3 text-xs text-neutral-700 font-body mb-6">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span><strong>500,000+</strong> requests / month</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Dedicated ingestion queue cluster</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>99.99% contract SLA guarantee</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>HIPAA &amp; ISO 27001 BAA compliance</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check</span>
+<span>Dedicated Technical Account Manager</span>
+</li>
+</ul>
+</div>
+<button class="w-full py-2.5 px-4 rounded-xl border border-neutral-800 bg-neutral-900 hover:bg-neutral-800 text-white font-headline text-xs font-semibold tracking-tight transition-colors">
+                  Contact Academic &amp; Public Health Sales
+                </button>
+</div>
+</div>
+</section>
+<!-- SECTION 4: DEVELOPER COMMUNITY & SUPPORT BANNER -->
+<section class="bg-gradient-to-r from-neutral-900 via-slate-900 to-neutral-900 rounded-2xl p-8 text-white relative overflow-hidden border border-neutral-800 shadow-md">
+<div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="space-y-2 text-center md:text-left">
+<span class="px-2.5 py-0.5 rounded-full text-[10px] font-label font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  Open Ecosystem
+                </span>
+<h3 class="text-xl md:text-2xl font-bold font-headline">Join 4,200+ Food Scientists &amp; Devs</h3>
+<p class="text-xs md:text-sm text-neutral-400 max-w-xl">
+                  Connect on Discord for real-time schema debates, submit PRs to our open-source Python SDK, or get 24/7 dedicated engineering guidance for your production ingest jobs.
+                </p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<a class="px-4 py-2.5 rounded-xl bg-white text-neutral-900 hover:bg-neutral-100 font-headline text-xs font-semibold tracking-tight inline-flex items-center gap-2 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+<span>Join Discord</span>
+</a>
+<a class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-headline text-xs font-semibold tracking-tight inline-flex items-center gap-2 border border-slate-700 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">code</span>
+<span>GitHub Repos</span>
+</a>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+<!-- CANONICAL FOOTER (from JSON Blueprint) -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>
