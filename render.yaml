@@ -1,7 +1,7 @@
 services:
   # 1. Next.js Static Web Application (100% Free Tier, Zero Cold Start)
   - type: web
-    name: scanbeforeeat-frontend
+    name: scanbeforeeat
     runtime: static
     rootDir: frontend
     branch: main
