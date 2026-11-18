@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 export default function SuccessClient() {
   const searchParams = useSearchParams();
   const plan = searchParams.get("plan") || "annual_pro";
+  const paymentId = searchParams.get("paymentId") || "pay_verified";
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
@@ -38,7 +39,7 @@ export default function SuccessClient() {
           </div>
           <div className="flex justify-between">
             <span className="text-zinc-500">Transaction ID</span>
-            <span className="font-mono text-zinc-600">tx_{Date.now().toString(36)}</span>
+            <span className="font-mono text-zinc-600">{paymentId}</span>
           </div>
         </div>
 

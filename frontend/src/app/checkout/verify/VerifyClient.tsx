@@ -10,7 +10,7 @@ export default function VerifyClient() {
   const searchParams = useSearchParams();
   const planParam = searchParams.get("plan") || "annual_pro";
   const amtParam = searchParams.get("amt") || "1179";
-  const orderIdParam = searchParams.get("orderId") || `ord_${Date.now()}`;
+  const orderIdParam = searchParams.get("orderId") || "order_pending";
   const { user, refreshProfile } = useAuth();
 
   const [otp, setOtp] = useState("");
