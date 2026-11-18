@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Status &amp; Live Operational Telemetry | ScanBeforeEat</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            },
+            slate: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Space Grotesk", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    /* Subtle pulse animation for telemetry radar */
+    @keyframes ping-slow {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.6); opacity: 0; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .animate-ping-slow {
+      animation: ping-slow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 font-body antialiased min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
+<!-- ==================== 1. CANONICAL STICKY HEADER ==================== -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<!-- Spacer for fixed navbar -->
+<div class="h-16"></div>
+<!-- Main Content Container -->
+<main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-10">
+<!-- ==================== 2. HERO & GLOBAL STATUS SUMMARY ==================== -->
+<section class="space-y-6">
+<!-- Breadcrumb navigation -->
+<nav class="flex items-center gap-2 text-xs font-mono text-slate-500">
+<a class="hover:text-slate-800 transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-xs">home</span>
+          Home
+        </a>
+<span class="text-slate-300">/</span>
+<span class="text-emerald-700 font-medium bg-emerald-50/80 px-2 py-0.5 rounded">Network Telemetry &amp; Infrastructure Status</span>
+</nav>
+<!-- Hero Operational Status Banner -->
+<div class="relative overflow-hidden bg-gradient-to-br from-white via-white to-emerald-50/40 rounded-2xl border border-emerald-200/80 p-6 sm:p-8 shadow-sm">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<div class="flex items-start gap-4">
+<!-- Pulsing Radar Status Dot -->
+<div class="relative flex-shrink-0 mt-1">
+<div class="w-4 h-4 bg-emerald-500 rounded-full"></div>
+<div class="absolute inset-0 w-4 h-4 bg-emerald-400 rounded-full animate-ping-slow"></div>
+<div class="absolute -inset-1.5 w-7 h-7 bg-emerald-100 rounded-full opacity-60"></div>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center gap-3 flex-wrap">
+<h1 class="text-xl sm:text-2xl lg:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
+                  All Systems Operational <span class="text-slate-300 font-light">//</span> <span class="text-emerald-600">99.99% Core Service Uptime</span>
+</h1>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                  SLA Compliant
+                </span>
+</div>
+<p class="text-sm sm:text-base text-slate-600 max-w-3xl leading-relaxed">
+                Real-time telemetry, API latency, toxicology database sync intervals, and multi-region infrastructure health for the ScanBeforeEat global network.
+              </p>
+</div>
+</div>
+<!-- Auto-refreshing Telemetry Badge -->
+<div class="flex-shrink-0 flex lg:flex-col items-center lg:items-end justify-between border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-200 text-xs text-slate-500 font-mono gap-1">
+<div class="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-md">
+<span class="material-symbols-outlined text-[14px] animate-spin text-emerald-600" style="animation-duration: 4s;">autorenew</span>
+<span>Auto-refreshing every 30s</span>
+</div>
+<span class="text-[11px] text-slate-400">Telemetry Source: Prometheus &amp; Cloudflare Edge</span>
+</div>
+</div>
+</div>
+<!-- Quick Telemetry Metric Bar (4 Key Metric Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Metric 1: Uptime -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-400 mb-2">
+<span class="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">Current Uptime</span>
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">timer</span>
+</div>
+<div class="text-2xl font-display font-extrabold text-slate-900 tracking-tight">99.988%</div>
+<p class="text-xs text-emerald-700 font-medium mt-1 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Last 90 days • Zero critical downtime
+          </p>
+</div>
+<!-- Metric 2: Latency -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-400 mb-2">
+<span class="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">Global P95 Latency</span>
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">speed</span>
+</div>
+<div class="text-2xl font-display font-extrabold text-slate-900 tracking-tight">24ms</div>
+<p class="text-xs text-slate-500 font-medium mt-1">
+            Sub-30ms SLA achieved across all edge nodes
+          </p>
+</div>
+<!-- Metric 3: Scans Today -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-400 mb-2">
+<span class="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">Total Scans Today</span>
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">qr_code_scanner</span>
+</div>
+<div class="text-2xl font-display font-extrabold text-slate-900 tracking-tight">248,190</div>
+<p class="text-xs text-slate-500 font-medium mt-1">
+            Active barcode lookups &amp; optical label scans
+          </p>
+</div>
+<!-- Metric 4: Toxicology DB Sync -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between text-slate-400 mb-2">
+<span class="text-xs font-label uppercase tracking-wider text-slate-500 font-semibold">Toxicology DB Sync</span>
+<span class="material-symbols-outlined text-emerald-600 text-[20px]">sync</span>
+</div>
+<div class="text-2xl font-display font-extrabold text-slate-900 tracking-tight">14 mins ago</div>
+<p class="text-xs text-emerald-700 font-medium mt-1 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            EFSA, WHO &amp; US FDA harmonized
+          </p>
+</div>
+</div>
+</section>
+<!-- ==================== 3. CORE SUBSYSTEMS HEALTH & 90-DAY UPTIME VISUALIZERS ==================== -->
+<section class="space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-3">
+<div>
+<h2 class="text-lg font-display font-bold text-slate-900 tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600">dns</span>
+            Core Subsystems &amp; Ingestion Pipelines
+          </h2>
+<p class="text-xs text-slate-500">Daily health logs over the preceding 90-day rolling evaluation window</p>
+</div>
+<!-- Legend -->
+<div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-500 inline-block"></span>
+<span>100% Operational</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-[2px] bg-amber-400 inline-block"></span>
+<span>Minor Latency / Degraded</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-[2px] bg-rose-500 inline-block"></span>
+<span>Outage</span>
+</div>
+</div>
+</div>
+<!-- Grid of 6 Detailed Service Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Service 1: Barcode & EAN Lookup Engine -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700 text-lg">barcode_scanner</span>
+<h3 class="font-display text-sm font-bold text-slate-900">Barcode &amp; EAN Lookup Engine</h3>
+</div>
+<p class="text-xs text-slate-500 mt-1">High-concurrency global product GTIN database resolution</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Operational
+            </span>
+</div>
+<!-- Micro-telemetry details -->
+<div class="grid grid-cols-3 gap-2 text-xs py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 font-mono">
+<div>
+<span class="text-slate-400 block text-[10px]">90D UPTIME</span>
+<span class="font-semibold text-slate-800">99.99%</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">AVG P95</span>
+<span class="font-semibold text-emerald-600">18ms</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">THROUGHPUT</span>
+<span class="font-semibold text-slate-800">140 req/sec</span>
+</div>
+</div>
+<!-- 90-day Visual Bar Strip -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+<span>90 days ago</span>
+<span class="text-emerald-700 font-medium">100% Operational Today</span>
+</div>
+<div class="flex items-center gap-[2px] h-6 w-full overflow-hidden" title="90-day daily uptime history">
+<!-- Render 90 green micro bars -->
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px] hover:opacity-80 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Service 2: Optical OCR & Ingredient Parser -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700 text-lg">document_scanner</span>
+<h3 class="font-display text-sm font-bold text-slate-900">Optical OCR &amp; Ingredient Parser</h3>
+</div>
+<p class="text-xs text-slate-500 mt-1">Computer vision &amp; multilingual text parsing inference</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Operational
+            </span>
+</div>
+<!-- Micro-telemetry details -->
+<div class="grid grid-cols-3 gap-2 text-xs py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 font-mono">
+<div>
+<span class="text-slate-400 block text-[10px]">90D UPTIME</span>
+<span class="font-semibold text-slate-800">99.97%</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">AVG P95</span>
+<span class="font-semibold text-emerald-600">42ms</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">THROUGHPUT</span>
+<span class="font-semibold text-slate-800">85 scans/s</span>
+</div>
+</div>
+<!-- 90-day Visual Bar Strip with 1 amber day -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+<span>90 days ago</span>
+<span class="text-emerald-700 font-medium">100% Operational Today</span>
+</div>
+<div class="flex items-center gap-[2px] h-6 w-full overflow-hidden" title="One degraded period on Feb 18">
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<!-- Mid-Feb slight degradation -->
+<div class="flex-1 bg-amber-400 h-full rounded-[1px]" title="Feb 18: Brief 4-minute container latency spike"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+</div>
+</div>
+</div>
+<!-- Service 3: NOVA-4 Algorithmic Scoring Engine -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700 text-lg">science</span>
+<h3 class="font-display text-sm font-bold text-slate-900">NOVA-4 Algorithmic Scoring Engine</h3>
+</div>
+<p class="text-xs text-slate-500 mt-1">Biochemical food processing degree classification</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Operational
+            </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-xs py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 font-mono">
+<div>
+<span class="text-slate-400 block text-[10px]">90D UPTIME</span>
+<span class="font-semibold text-slate-800">100.0%</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">AVG P95</span>
+<span class="font-semibold text-emerald-600">12ms</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">EVAL MODE</span>
+<span class="font-semibold text-slate-800 truncate">Deterministic</span>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+<span>90 days ago</span>
+<span class="text-emerald-700 font-medium">100% Operational Today</span>
+</div>
+<div class="flex items-center gap-[2px] h-6 w-full overflow-hidden">
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+</div>
+</div>
+</div>
+<!-- Service 4: EFSA & FDA Regulatory Sync Pipe -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700 text-lg">policy</span>
+<h3 class="font-display text-sm font-bold text-slate-900">EFSA &amp; FDA Regulatory Sync Pipe</h3>
+</div>
+<p class="text-xs text-slate-500 mt-1">E-number toxicology dossiers, safe intake levels (ADI)</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Operational
+            </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-xs py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 font-mono">
+<div>
+<span class="text-slate-400 block text-[10px]">90D UPTIME</span>
+<span class="font-semibold text-slate-800">99.98%</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">BATCH CADENCE</span>
+<span class="font-semibold text-slate-800">04:00 UTC</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">INDEXED</span>
+<span class="font-semibold text-emerald-600">512 Additives</span>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+<span>90 days ago</span>
+<span class="text-emerald-700 font-medium">100% Operational Today</span>
+</div>
+<div class="flex items-center gap-[2px] h-6 w-full overflow-hidden">
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+</div>
+</div>
+</div>
+<!-- Service 5: Public REST API & Open Data Feeds -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700 text-lg">api</span>
+<h3 class="font-display text-sm font-bold text-slate-900">Public REST API &amp; Open Data Feeds</h3>
+</div>
+<p class="text-xs text-slate-500 mt-1">Public REST endpoints for ingredient analysis and Open Food Facts resolution</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Operational
+            </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-xs py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 font-mono">
+<div>
+<span class="text-slate-400 block text-[10px]">90D UPTIME</span>
+<span class="font-semibold text-slate-800">99.99%</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">AVG P95</span>
+<span class="font-semibold text-emerald-600">21ms</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">RATE LIMIT</span>
+<span class="font-semibold text-slate-800">10k req/min</span>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+<span>90 days ago</span>
+<span class="text-emerald-700 font-medium">100% Operational Today</span>
+</div>
+<div class="flex items-center gap-[2px] h-6 w-full overflow-hidden">
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+</div>
+</div>
+</div>
+<!-- Service 6: PWA Client & Scanning Worker -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between space-y-4">
+<div class="flex items-start justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700 text-lg">notifications_active</span>
+<h3 class="font-display text-sm font-bold text-slate-900">PWA Client &amp; Scanning Worker</h3>
+</div>
+<p class="text-xs text-slate-500 mt-1">PWA service worker caching and client-side OCR runtime worker</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Operational
+            </span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-xs py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 font-mono">
+<div>
+<span class="text-slate-400 block text-[10px]">90D UPTIME</span>
+<span class="font-semibold text-slate-800">100.0%</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">WEBHOOK LATENCY</span>
+<span class="font-semibold text-emerald-600">9ms</span>
+</div>
+<div>
+<span class="text-slate-400 block text-[10px]">PUSH PIPELINE</span>
+<span class="font-semibold text-slate-800">APNs &amp; FCM</span>
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+<span>90 days ago</span>
+<span class="text-emerald-700 font-medium">100% Operational Today</span>
+</div>
+<div class="flex items-center gap-[2px] h-6 w-full overflow-hidden">
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+<div class="flex-1 bg-emerald-500 h-full rounded-[1px]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== 4. REAL-TIME GLOBAL LATENCY BY REGION ==================== -->
+<section class="space-y-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
+<div>
+<h2 class="text-lg font-display font-bold text-slate-900 tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600">public</span>
+            Global Edge Network &amp; POP Latency
+          </h2>
+<p class="text-xs text-slate-500">Live synthetic ping response measurements from distributed Cloudflare &amp; AWS edge points</p>
+</div>
+<div class="text-xs font-mono text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded border border-emerald-200 self-start sm:self-auto">
+          Anycast BGP Active
+        </div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Region 1: US-East -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="text-lg">🇺🇸</span>
+<div>
+<h4 class="font-display font-semibold text-sm text-slate-900 leading-tight">US-East</h4>
+<span class="text-[11px] font-mono text-slate-400">N. Virginia (IAD)</span>
+</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-2 border-t border-slate-100">
+<div class="text-2xl font-mono font-bold text-emerald-600">14<span class="text-xs font-normal text-slate-500">ms</span></div>
+<span class="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Optimal</span>
+</div>
+<div class="text-[11px] text-slate-400 font-mono mt-2">
+            99.99% Routing efficiency
+          </div>
+</div>
+<!-- Region 2: US-West -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="text-lg">🇺🇸</span>
+<div>
+<h4 class="font-display font-semibold text-sm text-slate-900 leading-tight">US-West</h4>
+<span class="text-[11px] font-mono text-slate-400">Oregon (PDX)</span>
+</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-2 border-t border-slate-100">
+<div class="text-2xl font-mono font-bold text-emerald-600">22<span class="text-xs font-normal text-slate-500">ms</span></div>
+<span class="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Optimal</span>
+</div>
+<div class="text-[11px] text-slate-400 font-mono mt-2">
+            Multi-AZ Redundancy Active
+          </div>
+</div>
+<!-- Region 3: EU-Central -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="text-lg">🇩🇪</span>
+<div>
+<h4 class="font-display font-semibold text-sm text-slate-900 leading-tight">EU-Central</h4>
+<span class="text-[11px] font-mono text-slate-400">Frankfurt (FRA)</span>
+</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-2 border-t border-slate-100">
+<div class="text-2xl font-mono font-bold text-emerald-600">18<span class="text-xs font-normal text-slate-500">ms</span></div>
+<span class="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Optimal</span>
+</div>
+<div class="text-[11px] text-slate-400 font-mono mt-2">
+            GDPR Dedicated Sovereign Node
+          </div>
+</div>
+<!-- Region 4: AP-East -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs hover:border-slate-300 transition-all">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="text-lg">🇯🇵</span>
+<div>
+<h4 class="font-display font-semibold text-sm text-slate-900 leading-tight">AP-East</h4>
+<span class="text-[11px] font-mono text-slate-400">Tokyo (NRT)</span>
+</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-2 border-t border-slate-100">
+<div class="text-2xl font-mono font-bold text-emerald-600">48<span class="text-xs font-normal text-slate-500">ms</span></div>
+<span class="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">Optimal</span>
+</div>
+<div class="text-[11px] text-slate-400 font-mono mt-2">
+            Asia-Pacific Core Edge Cache
+          </div>
+</div>
+</div>
+</section>
+<!-- ==================== 5. PAST INCIDENTS & MAINTENANCE HISTORY ==================== -->
+<section class="space-y-4">
+<div class="flex items-center justify-between border-b border-slate-200/80 pb-3">
+<div>
+<h2 class="text-lg font-display font-bold text-slate-900 tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-700">history</span>
+            Incident &amp; Maintenance Log
+          </h2>
+<p class="text-xs text-slate-500">Historical transparency for past 90 days of operations</p>
+</div>
+<span class="text-xs text-slate-400 font-mono hidden sm:inline">All Times UTC</span>
+</div>
+<div class="space-y-4">
+<!-- Incident 1: March 10, 2025 -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs transition-all hover:border-slate-300">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>
+<h3 class="font-display text-sm font-bold text-slate-900">Scheduled Database Migration &amp; Index Optimization</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-slate-100 text-slate-700 border border-slate-200">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                Scheduled Maintenance / Resolved
+              </span>
+<span class="text-xs font-mono text-slate-400">March 10, 2025</span>
+</div>
+</div>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed pl-4 border-l-2 border-slate-200 ml-1">
+            Planned 12-minute read-only maintenance window to re-index 80,000+ chemical synonyms and NOVA category caches. All queries served from replica failover with zero scan dropouts.
+          </p>
+</div>
+<!-- Incident 2: February 18, 2025 -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs transition-all hover:border-slate-300">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<h3 class="font-display text-sm font-bold text-slate-900">Minor Latency Elevation on OCR Parsing Queue</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-amber-50 text-amber-700 border border-amber-200">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+                Performance Degradation / Resolved
+              </span>
+<span class="text-xs font-mono text-slate-400">February 18, 2025</span>
+</div>
+</div>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed pl-4 border-l-2 border-amber-200 ml-1">
+            Upstream optical inference cluster experienced temporary container throttles between 14:22–14:26 UTC. Automated Kubernetes horizontal pod autoscaling deployed 8 additional nodes, recovering sub-50ms P95 latency in 4 minutes.
+          </p>
+</div>
+<!-- Incident 3: January 2025 -->
+<div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-xs transition-all hover:border-slate-300">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<h3 class="font-display text-sm font-bold text-slate-900">All Systems Operational — 100% Uptime</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-[14px]">task_alt</span>
+                Clean Operation
+              </span>
+<span class="text-xs font-mono text-slate-400">January 2025</span>
+</div>
+</div>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed pl-4 border-l-2 border-emerald-200 ml-1">
+            Zero incidents or unplanned disruptions recorded across the entire month.
+          </p>
+</div>
+</div>
+</section>
+<!-- ==================== 6. INCIDENT ALERT & TELEMETRY SUBSCRIPTION WIDGET ==================== -->
+<section class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 text-white rounded-2xl p-6 sm:p-8 border border-emerald-500/30 shadow-md relative overflow-hidden">
+<!-- Glow background accent -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-2xl space-y-6">
+<div>
+<span class="inline-flex items-center gap-1 text-xs font-mono font-medium text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-2.5 py-0.5 rounded-full mb-3">
+<span class="material-symbols-outlined text-[14px]">campaign</span>
+            Live Incident Broadcasts
+          </span>
+<h2 class="text-xl sm:text-2xl font-display font-extrabold tracking-tight text-white">
+            Subscribe to Live Incident &amp; Maintenance Notifications
+          </h2>
+<p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            Receive instant notifications whenever ScanBeforeEat experiences scheduled maintenance, API deprecations, or service disruptions.
+          </p>
+</div>
+<!-- Subscription Channel Tabs -->
+<div class="space-y-3">
+<div class="flex items-center gap-2 text-xs font-mono border-b border-slate-800 pb-2">
+<button class="text-emerald-400 font-semibold border-b-2 border-emerald-400 pb-1 flex items-center gap-1.5 focus:outline-none">
+<span class="material-symbols-outlined text-xs">mail</span> Email Digest
+            </button>
+<button class="text-slate-400 hover:text-slate-200 pb-1 flex items-center gap-1.5 transition-colors focus:outline-none ml-3">
+<span class="material-symbols-outlined text-xs">tag</span> Slack Webhook
+            </button>
+<button class="text-slate-400 hover:text-slate-200 pb-1 flex items-center gap-1.5 transition-colors focus:outline-none ml-3">
+<span class="material-symbols-outlined text-xs">webhook</span> Custom Webhook
+            </button>
+</div>
+<!-- Subscription Input Form -->
+<form class="flex flex-col sm:flex-row gap-2.5 pt-1" onsubmit="event.preventDefault();">
+<input class="bg-slate-800/90 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 text-sm text-white placeholder-slate-400 px-4 py-2.5 rounded-lg flex-grow outline-none transition-all font-mono" placeholder="developer@company.com" required="" type="email"/>
+<button class="bg-emerald-600 hover:bg-emerald-500 text-white font-headline text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-150 shadow-sm active:scale-[0.98] whitespace-nowrap flex items-center justify-center gap-2" type="submit">
+<span>Subscribe to Updates</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</form>
+<p class="text-[11px] text-slate-400 flex items-center gap-1.5 pt-1">
+<span class="material-symbols-outlined text-xs text-emerald-400">verified_user</span>
+<span>We respect your inbox. Zero marketing emails. Opt out anytime with 1-click.</span>
+</p>
+</div>
+</div>
+</section>
+</main>
+<!-- ==================== 7. CANONICAL SCANBEFOREEAT DESKTOP FOOTER ==================== -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

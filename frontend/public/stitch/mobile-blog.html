@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScanBeforeEat Blog - Food Science &amp; Investigative Research</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Inter"],
+            display: ["Inter"],
+            body: ["Inter"],
+            label: ["Space Grotesk"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-white text-slate-900 font-body antialiased min-h-screen flex flex-col justify-between selection:bg-emerald-100 selection:text-emerald-900 max-w-[430px] mx-auto border-x border-slate-100 relative shadow-2xl">
+<!-- ==================== 1. MOBILE NAVBAR (TopAppBar) ==================== -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full px-4 py-3 bg-white/95 backdrop-blur-md border-b border-neutral-100 shadow-sm">
+<div class="flex items-center gap-2.5">
+<button aria-label="Open Navigation Menu" class="p-1 -ml-1 text-neutral-600 hover:text-emerald-700 active:scale-95 transition-transform duration-100 flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-2xl" data-icon="menu">menu</span>
+</button>
+<div class="font-display font-bold text-lg text-neutral-900 flex items-center gap-1.5 tracking-tight">
+<span class="material-symbols-outlined text-emerald-600 text-2xl" data-icon="qr_code_scanner" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+<span>ScanBeforeEat</span>
+</div>
+</div>
+<button class="bg-emerald-600 hover:bg-emerald-700 text-white font-headline text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm hover:text-emerald-50 active:scale-95 transition-all duration-100 flex items-center gap-1" type="button">
+<span>Start Scanning</span>
+</button>
+</header>
+<main class="flex-1 w-full pb-8">
+<!-- ==================== 2. HERO SECTION ==================== -->
+<section class="px-4 pt-6 pb-4">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/60 mb-3">
+<span class="material-symbols-outlined text-emerald-700 text-sm" data-icon="science" style="font-variation-settings: 'FILL' 1;">science</span>
+<span class="font-headline text-[11px] font-semibold text-emerald-800 tracking-wide">Food Science &amp; Investigative Research</span>
+</div>
+<h1 class="font-headline font-bold text-3xl text-slate-900 tracking-tight leading-tight mb-2">
+        ScanBeforeEat Blog
+      </h1>
+<p class="font-body text-slate-600 text-sm leading-relaxed mb-5">
+        Peer-reviewed insights on ultra-processed foods, chemical additives, and independent nutrition science.
+      </p>
+<!-- Scrollable Horizontal Topic Pill Bar -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4">
+<button class="px-3.5 py-1.5 rounded-full bg-emerald-600 text-white font-headline text-xs font-medium whitespace-nowrap shadow-sm" type="button">
+          All Topics
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 font-headline text-xs font-medium whitespace-nowrap transition-colors" type="button">
+          UPF &amp; NOVA
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 font-headline text-xs font-medium whitespace-nowrap transition-colors" type="button">
+          Toxicology
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 font-headline text-xs font-medium whitespace-nowrap transition-colors" type="button">
+          Additives
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 font-headline text-xs font-medium whitespace-nowrap transition-colors" type="button">
+          Regulations
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 font-headline text-xs font-medium whitespace-nowrap transition-colors" type="button">
+          Debunked
+        </button>
+</div>
+</section>
+<!-- ==================== 3. FEATURED POST CARD ==================== -->
+<section class="px-4 py-2">
+<article class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<!-- Hero visual -->
+<div class="relative h-48 w-full overflow-hidden bg-slate-100">
+<img class="w-full h-full object-cover" data-alt="A clean, split photographic composition showcasing crisp raw organic garden vegetables juxtaposed with a complex chemical molecular structure and high-tech smartphone interface displaying ingredient health scores. Crisp high-key studio lighting creates a modern light-mode clinical atmosphere with fresh emerald green accents and crisp slate neutral tones. Pristine editorial clarity and scientific precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2XRYOyuLoVlLTbUYdVrX2IEjHwohPXmCGljPXJn42UDeyyR3_r3mAbZB6vEeEs1t3I4eA-hx1mE1zRNQCNXsLCMEwa_1Apvg7Nbv_llmklfrueAtuhZ0_o9xMgjEkB4CXcz1fe2KGf08WV1zBGxgEyHUAPTVAh3LCtf8HW1O86_Pi0WhZ-UvE0mYlf_2lpw3bEm6zN6LFInw48hMdoBgvPoVvWlYiuzRLQ_mvqNQBw8xc1cM9I-a6EP018-ZlC3jblF3mrBb4CHEC"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-2.5 py-0.5 rounded-full border border-slate-200/80 flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[10px] font-bold text-slate-800 uppercase tracking-wider font-label">Editor's Pick</span>
+</div>
+</div>
+<div class="p-4">
+<!-- Metadata Badges -->
+<div class="flex items-center gap-2 text-xs mb-2.5">
+<span class="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-md border border-emerald-100 text-[11px]">
+              Research
+            </span>
+<span class="text-slate-400">•</span>
+<span class="text-slate-500 font-medium">8 min read</span>
+<span class="text-slate-400">•</span>
+<span class="text-slate-500 font-medium">March 15, 2025</span>
+</div>
+<!-- Title -->
+<h2 class="font-headline font-bold text-lg text-slate-900 leading-snug mb-2 hover:text-emerald-700 transition-colors">
+<a href="#">The Hidden Truth About Ultra-Processed Foods in Your Kitchen</a>
+</h2>
+<!-- Summary -->
+<p class="font-body text-xs text-slate-600 leading-relaxed mb-4">
+            Why 73% of supermarket foods contain industrial additives that bypass traditional calorie labels and impact gut microbiota integrity.
+          </p>
+<!-- Author Info -->
+<div class="flex items-center justify-between pt-3 border-t border-slate-100">
+<div class="flex items-center gap-2.5">
+<div class="relative w-8 h-8 rounded-full overflow-hidden border border-emerald-200">
+<img class="w-full h-full object-cover" data-alt="Close-up professional portrait of Dr Elena Rostova, a clinical toxicologist wearing scientific eyewear and a minimalist white lab coat. The setting is a brightly lit, state-of-the-art analytical chemistry laboratory. High-key natural lighting emphasizes clean slate neutrals and soft emerald studio reflections, expressing scientific authority and thoughtful empathy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBZ6ex_Wcl3waTYwwz0g9uqQpfmdoOIXTuDGUa7QU4qcAYrBZld4fJKpkLVU7Q_umVdxV36yZJrIhx0FqsYzaNTS4oilJN1On3waZrXttJyF03A-2Wlq7Sl_28ipBS-GbFrzT_SjNOK-1X48lTt5WSHcjc2fdXmR5bHPoeUgEvVjDWv78hagPIUl5viKn23Tf91PaYMlG2DYpH4uKwJuFyIOXR0eoosxdupjfz_zTOiOsd-z9AH5hRhrBkSQ_0dkDWp1IBLFH8THH3"/>
+</div>
+<div>
+<div class="flex items-center gap-1">
+<span class="text-xs font-bold text-slate-900 leading-none">Dr. Elena Rostova</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<span class="text-[10px] text-slate-500">PhD Toxicology &amp; Food Safety</span>
+</div>
+</div>
+<a class="inline-flex items-center text-xs font-semibold text-emerald-700 hover:text-emerald-800 gap-0.5" href="#">
+              Read
+              <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+</section>
+<!-- ==================== 4. RECENT ARTICLES ==================== -->
+<section class="px-4 pt-6 pb-2">
+<div class="flex items-center justify-between mb-3.5">
+<h3 class="font-headline font-bold text-base text-slate-900 tracking-tight">Recent Investigations</h3>
+<span class="text-xs text-slate-500 font-medium">6 Articles</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Article 1 -->
+<article class="bg-white border border-slate-200/80 rounded-xl p-3 flex gap-3 hover:border-emerald-300 transition-all shadow-sm active:scale-[0.99]">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Macro photography of a commercial food packaging ingredient list with toxic chemical additives and artificial color numbers highlighted under a yellow magnifying inspection filter. Pure bright light-mode studio ambiance with sharp typography and scientific diagnostic notes on clean white cardstock." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL_VEgO3A97TxA_Bqx6RouGx6OSDM5KVAI3TaIFZExqY30fVKE_xXZyCm9bkplhCnojfm2byzIFB_qrIyUffWUX9Hfq3OhWuwxMCnu4nvi4FJeETZ2UCgry_4oSJZkvLxQxGj7ckEDtviyBDXvUcYSLqd3tlQmM-xuHs70n4gypL2SGkSHCYB7dcrWuyGeWw5aCEkYVakWna4Jx_AEuYJu_lVxjLqvtH_SiP4AH8GcNZ3dWwT_Qm3ihRoAaPetGmfRJMj0fDPXjizh"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/60 rounded">Safety</span>
+<span class="text-[11px] text-slate-400">6 min read</span>
+</div>
+<h4 class="font-headline font-bold text-xs text-slate-900 line-clamp-2 leading-tight">
+                E-Numbers Explained: Which Additives Are Genuinely Harmful?
+              </h4>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+<span>Mar 12, 2025</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</article>
+<!-- Article 2 -->
+<article class="bg-white border border-slate-200/80 rounded-xl p-3 flex gap-3 hover:border-emerald-300 transition-all shadow-sm active:scale-[0.99]">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Modern 3D architectural diagram representing the four tiers of the NOVA food classification framework, moving from whole raw grains to ultra-processed synthetic polymers. Clean slate and white minimalist backdrop illuminated by soft analytical museum spotlights with vivid emerald and amber highlight markers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj8-abmXSaDQ4FI1PmxuHBtf5GpzlMdmRuN8mnyuS6W4_2VwKrA-SfcIUorTinPjMDXy4I9WNCeTODLLr7l-WDq76Rn7DkiIq_bKkfKA1S3PgKCWPX8c33SD53J242X_6siBrTttA1cHayCmZYhqa-9PiaeGtASaOeX2CqIWDaS26Ijg-dcVqdSzPmHbh_KcGNBq_mS3RCNAsPmznuxGCj2pY99LXzB8QM_ST3t7dXFNLol8e4g2XDGurmivycMafyQ8WQYZmufY4A"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded">Education</span>
+<span class="text-[11px] text-slate-400">5 min read</span>
+</div>
+<h4 class="font-headline font-bold text-xs text-slate-900 line-clamp-2 leading-tight">
+                How NOVA Classification Changed Modern Nutrition Science
+              </h4>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+<span>Mar 10, 2025</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</article>
+<!-- Article 3 -->
+<article class="bg-white border border-slate-200/80 rounded-xl p-3 flex gap-3 hover:border-emerald-300 transition-all shadow-sm active:scale-[0.99]">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Editorial comparative split photo contrasting two identical cereal boxes side by side, one with standard US chemical preservatives and one with European safety-compliant organic dyes. Bright light-mode clinical studio desk background with regulatory legal documents, crisp shadows, and emerald green highlight tags." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO8ZR6AxtwCGrVA7ph8Lo0L-HIWRsVmVeXUYyTo6C7QUIIbLBOXZrYmp7Zqb1535l9eeFGZhny6ScEmlb6uzyT6JaERIJ48dpR7PjjRpbDgBKBETotidujiQfbspP7nnu-A-F9R2t3jSFgkEXiu0WFSrpr2oYIvSIB1wURL1Jb7ixsTWD0hIiIL3muxz0-BE4zIfo8qdt6xXNXel4fnYIQCF6Hvs8Wp6uWJkrt7M66PIdayv-LuxzfCS-Qe0WD-VFmtjKkWGSkxBBC"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/60 rounded">Investigation</span>
+<span class="text-[11px] text-slate-400">9 min read</span>
+</div>
+<h4 class="font-headline font-bold text-xs text-slate-900 line-clamp-2 leading-tight">
+                10 Food Additives Permitted in the US but Banned in the EU
+              </h4>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+<span>Mar 08, 2025</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</article>
+<!-- Article 4 -->
+<article class="bg-white border border-slate-200/80 rounded-xl p-3 flex gap-3 hover:border-emerald-300 transition-all shadow-sm active:scale-[0.99]">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="A smartphone screen hovering over a packaged food barcode, with high-tech computational data overlays, nutrition scoring indices, and molecular breakdown diagrams. Clean, daylight-illuminated contemporary grocery store environment rendered in a refined minimalist light aesthetic with cool slate and emerald accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJZl0cmyJrsJzGS0Tme69rQuN1C4oySWUcdCTA9p7QtpTpEnX3_0QHNkY6F3_JFVhddAfOE7ZMhTW7Mfjy7_qJXBMSwEp4ZzCygtvrKTlFmT8YRrpL2osh5z-7LmHbR3LacvhMuRZjcJyVTgXIisRjyeD9pK-tK-ccYFs3nIfcDzTyYRTtbmF7b5TimGnC_aYQ9-r8GiW_RcooDNdnWHZOHrpoZ5Ocg4V0oxk9kPioKoGc96Of2L2Hp-3PTdUQKTfwP3zIDTi7IdK5"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/60 rounded">Guide</span>
+<span class="text-[11px] text-slate-400">4 min read</span>
+</div>
+<h4 class="font-headline font-bold text-xs text-slate-900 line-clamp-2 leading-tight">
+                Reading Food Labels Like a Computational Scientist
+              </h4>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+<span>Mar 05, 2025</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</article>
+<!-- Article 5 -->
+<article class="bg-white border border-slate-200/80 rounded-xl p-3 flex gap-3 hover:border-emerald-300 transition-all shadow-sm active:scale-[0.99]">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="Microscopic close-up of translucent pure crystalline monosodium glutamate mineral grains arranged beside a sterile glass laboratory petri dish. Crisp diffuse high-key daylight lighting creating translucent prismatic reflections on a sterile white lab surface with faint emerald tonal accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4_0Lks39KZiQnObyV3r8x5QU5_TivNFzi96uurL-LvVFLhOzbGwxGDjc9-gsXVMShCVWz6RwCY6Q0dY6e8fRc7KnhGzDSgMPtbPwiF8WTY3r6S586Mwi6ioeEYjCinmjJrZ_MlJv0NQOVGYBdpRwaTfUy1NzFswMMhet8D-2SHIFhQrLdmm8jZbpEEpunSk6P69op8VlVk0cIQeUFTD76fHDyClNcABWgsfbuy_4keQHU_4q-sAjFCmyp_HpDGZIWbLlcTG8bBywh"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200/60 rounded">Debunk</span>
+<span class="text-[11px] text-slate-400">7 min read</span>
+</div>
+<h4 class="font-headline font-bold text-xs text-slate-900 line-clamp-2 leading-tight">
+                Monosodium Glutamate (MSG): Separating Science from Myth
+              </h4>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+<span>Mar 02, 2025</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</article>
+<!-- Article 6 -->
+<article class="bg-white border border-slate-200/80 rounded-xl p-3 flex gap-3 hover:border-emerald-300 transition-all shadow-sm active:scale-[0.99]">
+<div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-100">
+<img class="w-full h-full object-cover" data-alt="A modern mother and young child shopping together in a bright, sunlit organic grocery store cereal aisle, examining cereal boxes with prominent Nutri-Score A green health certifications. Warm natural lighting, peaceful wholesome atmosphere with clean white shelves and vivid healthy green packaging highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsDzOZefZEE8-IUQdwdwqsOFlyYmW022KviUv5L900tSwhlHiNgeAIHjfu0hiPGUAGngYkAUxu9hlUK0YJcjEcEybpbjX1usWv9l8oVi_JlzasCC776eAqxyAjrVf8GrgOE7Vuj2BfRSl3jZFSKkYZaUG8ilPJHpFpetaaMPMI4y-mLmQ1_EUfP2tPLHMF0svP_1OcOyKTJqfg-u0grOHSyWQWF3kSBDHw_ODbtJW4HxbHJZo20hCB-Lv4EIUmXVLLYl-lvHwVzn32"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-1.5 py-0.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 rounded">Family</span>
+<span class="text-[11px] text-slate-400">5 min read</span>
+</div>
+<h4 class="font-headline font-bold text-xs text-slate-900 line-clamp-2 leading-tight">
+                Why Nutri-Score &amp; NOVA Matter for Your Children
+              </h4>
+</div>
+<div class="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+<span>Feb 27, 2025</span>
+<span class="material-symbols-outlined text-emerald-600 text-sm" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Load More / All Articles -->
+<div class="mt-4 text-center">
+<button class="w-full py-2.5 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 active:scale-[0.98] transition-all" type="button">
+          Load More Research Papers
+        </button>
+</div>
+</section>
+<!-- ==================== 5. NEWSLETTER SUBSCRIPTION ==================== -->
+<section class="px-4 py-4">
+<div class="bg-slate-900 rounded-2xl p-5 text-white shadow-xl relative overflow-hidden">
+<!-- Glow decoration -->
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -left-8 -bottom-8 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10">
+<div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center mb-3 text-emerald-400">
+<span class="material-symbols-outlined text-xl" data-icon="mail">mail</span>
+</div>
+<h3 class="font-headline font-bold text-lg text-white mb-1 tracking-tight">
+            Get Weekly Food Science Dossiers
+          </h3>
+<p class="font-body text-slate-400 text-xs leading-relaxed mb-4">
+            Zero marketing spam. Only peer-reviewed ingredient papers and food recall alerts delivered straight from our laboratory analysts.
+          </p>
+<form class="flex flex-col gap-2.5" onsubmit="event.preventDefault();">
+<input class="w-full px-3.5 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl text-white placeholder-slate-400 text-xs focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500" placeholder="Enter your email" required="" type="email"/>
+<button class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-headline text-xs font-semibold rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5" type="submit">
+<span>Subscribe</span>
+<span class="material-symbols-outlined text-sm" data-icon="send">send</span>
+</button>
+</form>
+<p class="text-[10px] text-slate-500 text-center mt-3">
+            Unsubscribe anytime. We never monetize reader data.
+          </p>
+</div>
+</div>
+</section>
+<!-- ==================== 6. BOTTOM PROMO BANNER ==================== -->
+<section class="px-4 py-2">
+<div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 shadow-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-lg" data-icon="barcode_scanner">barcode_scanner</span>
+</div>
+<div>
+<p class="font-headline font-bold text-xs text-slate-900 leading-tight">Ready to audit your kitchen?</p>
+<p class="text-[11px] text-slate-600 leading-snug">Scan any barcode instantly.</p>
+</div>
+</div>
+<a class="px-3 py-1.5 bg-emerald-600 text-white hover:bg-emerald-700 text-xs font-semibold rounded-lg flex-shrink-0 shadow-sm active:scale-95 transition-all" href="#">
+          Scan Now
+        </a>
+</div>
+</section>
+</main>
+<!-- ==================== 7. MOBILE FOOTER ==================== -->
+<footer class="w-full px-6 py-8 flex flex-col items-center gap-4 text-center max-w-lg mx-auto bg-neutral-50 border-t border-neutral-200">
+<div class="font-display font-bold text-sm text-neutral-900 flex items-center gap-1.5 justify-center">
+<span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="qr_code_scanner" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+<span>ScanBeforeEat</span>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-wrap justify-center gap-x-4 gap-y-2 font-body text-xs text-neutral-500">
+<a class="text-neutral-500 hover:text-neutral-900 hover:underline transition-colors duration-150" href="#">Privacy Policy</a>
+<a class="text-neutral-500 hover:text-neutral-900 hover:underline transition-colors duration-150" href="#">Terms of Service</a>
+<a class="text-neutral-500 hover:text-neutral-900 hover:underline transition-colors duration-150" href="#">Methodology</a>
+<a class="text-neutral-500 hover:text-neutral-900 hover:underline transition-colors duration-150" href="#">Contact Support</a>
+</div>
+<div class="space-y-1">
+<p class="font-body text-[11px] text-neutral-400">
+        Disclaimer: Not Medical Advice. For scientific food transparency.
+      </p>
+<p class="font-body text-xs text-neutral-500">
+        © 2025 ScanBeforeEat Inc. All rights reserved. Scientific food transparency.
+      </p>
+</div>
+</footer>
+</body></html>

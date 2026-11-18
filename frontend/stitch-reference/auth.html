@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign In - ScanBeforeEat | AI Food Ingredient Scanner &amp; Toxicology Platform</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter & Space Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22'
+            },
+            slate: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617'
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Subtle decorative bio-grid background */
+    .bg-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-body antialiased selection:bg-emerald-100 selection:text-emerald-900 min-h-screen flex flex-col justify-between relative overflow-x-hidden">
+<!-- Ambient emerald aura gradient layers -->
+<div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-emerald-100/40 via-emerald-50/20 to-transparent pointer-events-none -z-10 blur-3xl"></div>
+<div class="fixed top-20 right-[-10%] w-[500px] h-[500px] bg-emerald-200/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="fixed bottom-0 left-[-10%] w-[450px] h-[450px] bg-slate-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- 1. CANONICAL STICKY TOP APP BAR -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<!-- 2. MAIN AUTHENTICATION HERO SECTION -->
+<main class="flex-grow pt-24 pb-16 lg:pt-28 lg:pb-20 flex items-center relative bg-grid-pattern">
+<div class="max-w-6xl mx-auto px-6 w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+<!-- Left Column: Brand Trust & Feature Showcase (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col justify-center">
+<!-- Security Tag Badge -->
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-semibold rounded-full uppercase tracking-wider mb-5 w-fit shadow-xs font-label">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+<span>SECURE ACCOUNT ACCESS // 256-BIT ENCRYPTION</span>
+</div>
+<!-- Main Value Pitch -->
+<h1 class="text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4 font-headline">
+            Your Personal Food Toxicology Command Center
+          </h1>
+<p class="text-slate-600 text-base leading-relaxed mb-8">
+            Sign in to access your scanned product history, set personalized dietary &amp; allergen watchlists, and receive instant alerts when additives in your pantry items are reclassified by the EFSA.
+          </p>
+<!-- 3 Value Proposition Bullets -->
+<div class="space-y-4 mb-8">
+<!-- Item 1 -->
+<div class="flex items-start gap-3.5 p-3 rounded-xl bg-white/60 backdrop-blur-xs border border-slate-200/60 transition-all hover:bg-white hover:shadow-xs">
+<div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-xl" data-icon="checklist">checklist</span>
+</div>
+<div>
+<h2 class="text-sm font-semibold text-slate-900 font-headline">Personalized Allergen &amp; E-Number Watchlists</h2>
+<p class="text-xs text-slate-500 mt-0.5 leading-normal">Flag specific gums, artificial dyes, or preservatives tailored to your family's health profile.</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-start gap-3.5 p-3 rounded-xl bg-white/60 backdrop-blur-xs border border-slate-200/60 transition-all hover:bg-white hover:shadow-xs">
+<div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-xl" data-icon="sync">sync</span>
+</div>
+<div>
+<h2 class="text-sm font-semibold text-slate-900 font-headline">Cross-Device Scan Synchronization</h2>
+<p class="text-xs text-slate-500 mt-0.5 leading-normal">Seamlessly sync scans between web and mobile camera apps with sub-30ms sync latency.</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-start gap-3.5 p-3 rounded-xl bg-white/60 backdrop-blur-xs border border-slate-200/60 transition-all hover:bg-white hover:shadow-xs">
+<div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-emerald-700 shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-xl" data-icon="shield">shield</span>
+</div>
+<div>
+<h2 class="text-sm font-semibold text-slate-900 font-headline">Zero-Data Monetization Guarantee</h2>
+<p class="text-xs text-slate-500 mt-0.5 leading-normal">Your health preferences remain private and encrypted with zero tracking cookies and zero commercial ads.</p>
+</div>
+</div>
+</div>
+<!-- User Testimonial Card -->
+<div class="p-4 sm:p-5 bg-white border border-slate-200/80 rounded-2xl shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-emerald-100/50 to-transparent rounded-bl-full pointer-events-none"></div>
+<div class="flex items-center justify-between mb-2.5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-md tracking-wider font-label border border-emerald-200/50">
+<span class="material-symbols-outlined text-xs material-symbols-fill" data-icon="verified">verified</span>
+<span>CLINICAL USER VERIFIED</span>
+</span>
+<span class="material-symbols-outlined text-slate-300 text-2xl" data-icon="format_quote">format_quote</span>
+</div>
+<p class="text-xs sm:text-sm text-slate-700 font-normal italic leading-relaxed mb-3">
+              "ScanBeforeEat caught emulsifiers that triggered my Crohn's flares before I bought the dressing. An indispensable daily diagnostic tool."
+            </p>
+<div class="flex items-center gap-3 pt-2 border-t border-slate-100">
+<div class="w-8 h-8 rounded-full bg-slate-900 text-emerald-400 font-label font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                MV
+              </div>
+<div>
+<p class="text-xs font-bold text-slate-900 font-headline leading-tight">Dr. Marcus Vance, MD</p>
+<p class="text-[11px] text-slate-500 font-medium">Gastroenterology &amp; Clinical Nutrition Fellow</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Sign In Card (7 Cols Container, Centered) -->
+<div class="lg:col-span-7 flex justify-center">
+<div class="w-full max-w-md bg-white rounded-2xl border border-slate-200/90 shadow-xl shadow-slate-200/60 p-7 sm:p-9 relative backdrop-blur-xl">
+<!-- Card Header -->
+<div class="mb-6">
+<h2 class="text-2xl font-bold text-slate-900 tracking-tight font-headline">Sign in to ScanBeforeEat</h2>
+<p class="text-xs sm:text-sm text-slate-500 mt-1 leading-normal">Enter your credentials or use single sign-on to continue</p>
+</div>
+<!-- Single Sign-On Buttons -->
+<div class="grid grid-cols-2 gap-3 mb-6">
+<!-- Google SSO -->
+<button class="group border border-slate-200 rounded-xl py-2.5 px-3 flex items-center justify-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-2xs active:scale-[0.98]" type="button">
+<svg class="w-4 h-4 shrink-0" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"></path>
+</svg>
+<span>Google</span>
+</button>
+<!-- Apple SSO -->
+<button class="group border border-slate-200 rounded-xl py-2.5 px-3 flex items-center justify-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-2xs active:scale-[0.98]" type="button">
+<svg class="w-4 h-4 fill-current text-slate-900 shrink-0" viewbox="0 0 170 170">
+<path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.08-7.7-7.98-12.01-14.7-6.02-9.35-10.74-20.17-14.15-32.46-3.41-12.28-5.12-23.77-5.12-34.46 0-14.49 3.56-26.68 10.68-36.57 7.12-9.89 16.27-14.94 27.44-15.17 4.8 0 10.2 1.25 16.2 3.75 6 2.5 9.94 3.82 11.83 3.96 1.34-.14 5.37-1.46 12.09-3.96 6.72-2.5 12.16-3.61 16.32-3.32 12.35.6 22.25 5.23 29.7 13.9-10.9 6.59-16.21 15.69-15.93 27.31.27 9.17 3.79 16.89 10.56 23.16 6.77 6.27 14.86 9.87 24.28 10.8-2.3 6.94-5.23 14.07-8.79 21.39zM119.22 33.15c0-7.3 2.66-14.18 7.98-20.64 5.32-6.46 11.88-10.71 19.68-12.75.25 1.13.38 2.22.38 3.27 0 7.21-2.73 14.13-8.18 20.76-5.46 6.63-12.09 10.76-19.86 12.39v-3.03z"></path>
+</svg>
+<span>Apple</span>
+</button>
+</div>
+<!-- Divider -->
+<div class="relative flex items-center justify-center my-6">
+<div class="border-t border-slate-200 w-full"></div>
+<span class="bg-white px-3 text-[11px] font-semibold text-slate-400 tracking-wider uppercase font-label shrink-0">
+                OR CONTINUE WITH EMAIL
+              </span>
+<div class="border-t border-slate-200 w-full"></div>
+</div>
+<!-- Authentication Form -->
+<form action="#" class="space-y-4" method="POST" onsubmit="event.preventDefault();">
+<!-- Email Input Field -->
+<div>
+<label class="block text-xs font-semibold text-slate-700 mb-1.5 font-headline" for="email">
+                  Email Address
+                </label>
+<div class="relative rounded-xl shadow-2xs">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+</div>
+<input class="block w-full pl-10 pr-4 py-2.5 sm:py-3 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Input Field -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block text-xs font-semibold text-slate-700 font-headline" for="password">
+                    Password
+                  </label>
+<a class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors" href="#">
+                    Forgot password?
+                  </a>
+</div>
+<div class="relative rounded-xl shadow-2xs">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-lg" data-icon="lock">lock</span>
+</div>
+<input class="block w-full pl-10 pr-11 py-2.5 sm:py-3 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all" id="password" name="password" placeholder="••••••••••••" required="" type="password"/>
+<!-- Toggle Password Visibility -->
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" id="togglePasswordBtn" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="visibility" id="eyeIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Options Row: Remember Me & Device Trust -->
+<div class="flex items-center justify-between pt-1 pb-1">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input class="w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500/30 focus:ring-offset-0" id="remember" name="remember" type="checkbox"/>
+<span class="text-xs text-slate-600 font-medium">Remember this device for 30 days</span>
+</label>
+<div class="relative group cursor-help text-slate-400 hover:text-slate-600">
+<span class="material-symbols-outlined text-base" data-icon="help_outline">help_outline</span>
+<!-- Tooltip -->
+<div class="absolute right-0 bottom-full mb-1.5 hidden group-hover:block w-48 p-2 bg-slate-900 text-white text-[11px] rounded-lg shadow-lg z-20 leading-tight">
+                    Keeps your active session token encrypted locally for 30 days on personal machines.
+                  </div>
+</div>
+</div>
+<!-- Primary Submit CTA -->
+<button class="w-full py-3 sm:py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-sm shadow-md shadow-emerald-600/25 transition-all flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer" type="submit">
+<span>Sign In to Dashboard</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Switcher: Sign Up -->
+<div class="text-center text-xs sm:text-sm text-slate-600 mt-6 pt-2">
+              Don't have an account? 
+              <a class="text-emerald-600 font-semibold hover:text-emerald-700 hover:underline transition-colors ml-1" href="#">
+                Create a free account
+              </a>
+</div>
+<!-- Security & Privacy Assurance Footnote -->
+<div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400 font-medium">
+<span class="material-symbols-outlined text-emerald-600 text-sm material-symbols-fill" data-icon="verified_user">verified_user</span>
+<span>Protected by 256-bit encryption. Zero telemetry tracking.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- 3. CANONICAL SCANBEFOREEAT FOOTER -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Micro-interactions: Password Visibility Toggle Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      if (togglePasswordBtn && passwordInput && eyeIcon) {
+        togglePasswordBtn.addEventListener('click', function() {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+        });
+      }
+    });
+  </script>
+</body></html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Complete Guide to Ultra-Processed Foods (UPF) | ScanBeforeEat</title>
+<meta content="Understand NOVA food classification, identify ultra-processed foods (UPF) in grocery aisles, and scan packaged food additives with ScanBeforeEat." name="description"/>
+<meta content="ultra processed food scanner, UPF checker, NOVA food classification, food additive database, NOVA 4 foods" name="keywords"/>
+<!-- Fonts & Google Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22',
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-white text-neutral-900 font-body antialiased selection:bg-emerald-100 selection:text-emerald-900">
+<!-- 1. TopNavBar (Shared Component) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<!-- Brand Logo -->
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2" href="#">
+<span class="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center text-white shadow-sm">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+</span>
+<span>ScanBeforeEat</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">BIO-DATA</span>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden md:flex items-center gap-8 font-headline text-sm font-medium tracking-tight">
+<a class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hover:opacity-90" href="#nova-framework">How It Works</a>
+<a class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hover:opacity-90" href="#clinical-impact">Features</a>
+<a class="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors hover:opacity-90" href="#red-flags">About</a>
+<a class="text-neutral-900 dark:text-white font-semibold" href="#database-section">Blog</a>
+</nav>
+<!-- Trailing Action Buttons -->
+<div class="flex items-center gap-3 font-headline text-sm font-medium">
+<a class="hidden sm:inline-flex px-3.5 py-2 text-neutral-700 hover:text-neutral-900 transition-colors font-medium hover:opacity-90" href="#">
+          Sign In
+        </a>
+<a class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-lg font-medium shadow-sm transition-all duration-150" href="#scan-cta">
+<span class="material-symbols-outlined text-base">center_focus_strong</span>
+<span>Start Scanning</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 overflow-hidden">
+<!-- 2. Hero Section -->
+<section class="relative pt-12 pb-16 md:pt-18 md:pb-24 border-b border-neutral-100 grid-pattern">
+<div class="max-w-7xl mx-auto px-6 relative z-10">
+<!-- Breadcrumb / SEO Eyebrow -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-mono font-medium tracking-wide mb-6">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Clinical Nutrition &amp; Food Informatics // SEO Hub</span>
+<span class="text-emerald-300">|</span>
+<span class="text-emerald-700">NOVA food classification</span>
+</div>
+<!-- H1 Headline -->
+<h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-neutral-900 max-w-4xl leading-[1.1] mb-6">
+          The Complete Guide to Ultra-Processed Foods <span class="text-emerald-600">(UPF)</span>
+</h1>
+<!-- Subtitle -->
+<p class="font-body text-lg sm:text-xl text-neutral-600 max-w-3xl leading-relaxed mb-10">
+          Understand NOVA classification, identify UPF in your grocery cart, and learn why food matrix disruption and industrial additives matter far more than calorie count alone.
+        </p>
+<!-- Search / Scan Quick Bar Input Widget -->
+<div class="max-w-3xl bg-white p-2.5 sm:p-3 rounded-xl border border-neutral-300 shadow-xl shadow-neutral-100 mb-6">
+<form class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2" onsubmit="event.preventDefault();">
+<div class="flex-1 flex items-center gap-3 px-3 py-2">
+<span class="material-symbols-outlined text-neutral-400 text-2xl" data-icon="search">search</span>
+<input class="w-full border-none p-0 focus:ring-0 text-sm sm:text-base text-neutral-900 placeholder:text-neutral-400 font-body outline-none" placeholder="Search 80,000+ foods or additives (e.g. maltodextrin, Doritos, emulsifiers)..." type="text"/>
+</div>
+<button class="px-6 py-3 bg-neutral-900 hover:bg-black text-white font-headline text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm" type="submit">
+<span class="material-symbols-outlined text-sm text-emerald-400">biotech</span>
+<span>Check Food</span>
+</button>
+</form>
+<!-- Quick Filter Chips -->
+<div class="mt-3 pt-3 border-t border-neutral-100 flex flex-wrap items-center gap-2 text-xs font-mono text-neutral-500">
+<span class="font-sans font-semibold text-neutral-400 uppercase tracking-wider text-[11px] mr-1">Trending Checks:</span>
+<a class="px-2.5 py-1 rounded-md bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 border border-neutral-200 transition-colors" href="#database-section">NOVA 4 Foods</a>
+<a class="px-2.5 py-1 rounded-md bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 border border-neutral-200 transition-colors" href="#database-section">Emulsifiers</a>
+<a class="px-2.5 py-1 rounded-md bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 border border-neutral-200 transition-colors" href="#database-section">Synthetic Dyes</a>
+<a class="px-2.5 py-1 rounded-md bg-neutral-100 hover:bg-emerald-50 hover:text-emerald-700 text-neutral-700 border border-neutral-200 transition-colors" href="#database-section">Seed Oils</a>
+</div>
+</div>
+<!-- Meta Trust Badges -->
+<div class="flex flex-wrap items-center gap-6 text-xs text-neutral-600 pt-2 font-mono">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-medium">Peer-Reviewed Citations</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-base" style="font-variation-settings: 'FILL' 1;">update</span>
+<span class="font-medium">Updated BMJ 2024 Data</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-600 text-base" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-medium">Independent &amp; Unbiased</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. What is UPF? & NOVA Classification Framework -->
+<section class="py-16 md:py-24 border-b border-neutral-200/80 bg-neutral-50/50" id="nova-framework">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+<div class="max-w-3xl">
+<div class="text-xs font-mono font-bold tracking-wider text-emerald-700 uppercase mb-2">Deterministic Classification</div>
+<h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900">
+              The Scientific NOVA Framework
+            </h2>
+<p class="font-body text-neutral-600 mt-3 text-base leading-relaxed">
+              Formulated by epidemiologist Professor Carlos Monteiro and his public health team at the University of São Paulo, endorsed by the UN Food and Agriculture Organization (FAO) and the World Health Organization. NOVA classifies foods not by chemical macronutrients, but by the physical, biological, and chemical processes used in their manufacture.
+            </p>
+</div>
+<div class="mt-4 md:mt-0 font-mono text-xs text-neutral-500 bg-white px-3 py-2 rounded-lg border border-neutral-200 shadow-sm self-start">
+            Standard: FAO Guidelines (2019)
+          </div>
+</div>
+<!-- 4-Column NOVA Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Group 1 -->
+<div class="bg-white rounded-xl border-2 border-emerald-500/80 p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-0 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-4">
+<span class="px-2.5 py-1 rounded bg-emerald-100 text-emerald-800 font-mono font-bold text-xs">NOVA 1</span>
+<span class="material-symbols-outlined text-emerald-600 text-2xl" data-icon="eco">eco</span>
+</div>
+<h3 class="font-display text-lg font-bold text-neutral-900 mb-1">Unprocessed &amp; Minimally Processed</h3>
+<p class="text-xs font-mono text-emerald-700 font-medium mb-3">Fresh fruits, vegetables, eggs, raw meat, legumes, whole grains</p>
+<p class="text-sm text-neutral-600 leading-relaxed">
+                Edible parts of plants or animals with zero industrial processing, or processed strictly by drying, crushing, filtering, roasting, boiling, or non-alcoholic fermentation without adding salt, sugar, or fats.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
+<span>Cellular Matrix: Intact</span>
+<span class="text-emerald-600 font-semibold">Recommended</span>
+</div>
+</div>
+<!-- Group 2 -->
+<div class="bg-white rounded-xl border-2 border-amber-400 p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-bl-full -z-0 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-4">
+<span class="px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-mono font-bold text-xs">NOVA 2</span>
+<span class="material-symbols-outlined text-amber-600 text-2xl" data-icon="oil_barrel">oil_barrel</span>
+</div>
+<h3 class="font-display text-lg font-bold text-neutral-900 mb-1">Processed Culinary Ingredients</h3>
+<p class="text-xs font-mono text-amber-700 font-medium mb-3">Oils, butter, lard, sugar, salt</p>
+<p class="text-sm text-neutral-600 leading-relaxed">
+                Substances obtained directly from Group 1 foods or from nature by processes like pressing, refining, grinding, or mining. Used in domestic and restaurant kitchens to season and cook Group 1 foods.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
+<span>Form: Extracted</span>
+<span class="text-amber-700 font-semibold">Use In Moderation</span>
+</div>
+</div>
+<!-- Group 3 -->
+<div class="bg-white rounded-xl border-2 border-orange-500 p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full -z-0 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-4">
+<span class="px-2.5 py-1 rounded bg-orange-100 text-orange-800 font-mono font-bold text-xs">NOVA 3</span>
+<span class="material-symbols-outlined text-orange-600 text-2xl" data-icon="lunch_dining">lunch_dining</span>
+</div>
+<h3 class="font-display text-lg font-bold text-neutral-900 mb-1">Processed Foods</h3>
+<p class="text-xs font-mono text-orange-700 font-medium mb-3">Canned vegetables with salt, artisanal cheese, freshly baked bread, cured fish</p>
+<p class="text-sm text-neutral-600 leading-relaxed">
+                Simple food products manufactured essentially by adding salt, sugar, oil, or other Group 2 substances to Group 1 foods to enhance durability or sensory qualities. Most contain 2 to 3 ingredients.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
+<span>Ingredients: 2-3 items</span>
+<span class="text-orange-700 font-semibold">Acceptable</span>
+</div>
+</div>
+<!-- Group 4 -->
+<div class="bg-white rounded-xl border-2 border-rose-500 p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-rose-50 rounded-bl-full -z-0 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-4">
+<span class="px-2.5 py-1 rounded bg-rose-100 text-rose-800 font-mono font-bold text-xs">NOVA 4</span>
+<span class="material-symbols-outlined text-rose-600 text-2xl" data-icon="warning">warning</span>
+</div>
+<h3 class="font-display text-lg font-bold text-rose-950 mb-1">Ultra-Processed Foods (UPF)</h3>
+<p class="text-xs font-mono text-rose-700 font-medium mb-3">Instant noodles, carbonated soft drinks, mass snacks, reconstituted meat</p>
+<p class="text-sm text-neutral-600 leading-relaxed">
+                Industrial formulations manufactured mostly or entirely from substances derived from foods and additives, with little or no intact Group 1 food. Characterized by high palatability and synthetic emulsifiers.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between text-xs font-mono text-neutral-500">
+<span>Bio-Impact: Disruptive</span>
+<span class="text-rose-600 font-bold">Restrict / Avoid</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Why UPF Matters: Clinical Evidence & Epidemiological Data -->
+<section class="py-16 md:py-24 border-b border-neutral-200/80 bg-white" id="clinical-impact">
+<div class="max-w-7xl mx-auto px-6">
+<div class="max-w-3xl mb-12">
+<div class="text-xs font-mono font-bold tracking-wider text-emerald-700 uppercase mb-2">Clinical Impact &amp; Bio-Informatics</div>
+<h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900">
+            Why Food Matrix Disruption Matters
+          </h2>
+<p class="font-body text-neutral-600 mt-3 text-base leading-relaxed">
+            Ultra-processed foods dismantle the natural physical food matrix—accelerating digestion rates, blunting normal satiety hormones (leptin and GLP-1), disrupting gut microbiome diversity, and elevating systemic micro-inflammation.
+          </p>
+</div>
+<!-- 3 Big Impact Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+<div class="p-8 rounded-xl border border-neutral-200 bg-neutral-50/60 shadow-sm relative">
+<div class="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-2">Dietary Prevalence</div>
+<div class="font-display text-5xl sm:text-6xl font-extrabold text-neutral-900 tracking-tight mb-3">57%</div>
+<p class="text-sm text-neutral-700 leading-relaxed font-body">
+              of total daily caloric intake in standard US adult diets derives directly from Ultra-Processed Foods according to national NHANES cohort bio-surveillance datasets.
+            </p>
+<div class="mt-4 pt-4 border-t border-neutral-200 text-xs font-mono text-neutral-500">
+              Dataset: CDC / NHANES Epidemiological Survey
+            </div>
+</div>
+<div class="p-8 rounded-xl border border-rose-200 bg-rose-50/40 shadow-sm relative">
+<div class="text-xs font-mono text-rose-600 uppercase tracking-wider mb-2 font-semibold">Associated Pathologies</div>
+<div class="font-display text-5xl sm:text-6xl font-extrabold text-rose-600 tracking-tight mb-3">32</div>
+<p class="text-sm text-neutral-700 leading-relaxed font-body">
+              distinct health conditions directly associated with elevated UPF exposure, including cardiovascular disease mortality, clinical anxiety, and type 2 diabetes onset.
+            </p>
+<div class="mt-4 pt-4 border-t border-rose-200/80 text-xs font-mono text-rose-700">
+              BMJ Umbrella Review (9.9 Million Participants)
+            </div>
+</div>
+<div class="p-8 rounded-xl border border-neutral-200 bg-neutral-50/60 shadow-sm relative">
+<div class="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-2">Supermarket Saturation</div>
+<div class="font-display text-5xl sm:text-6xl font-extrabold text-neutral-900 tracking-tight mb-3">80%</div>
+<p class="text-sm text-neutral-700 leading-relaxed font-body">
+              of packaged supermarket shelf products in standard North American &amp; UK grocery aisles classify as NOVA Group 3 or 4, making manual avoidance difficult without tools.
+            </p>
+<div class="mt-4 pt-4 border-t border-neutral-200 text-xs font-mono text-neutral-500">
+              Lancet Planetary Health Shelf-Audit
+            </div>
+</div>
+</div>
+<!-- Citation Footnote Box -->
+<div class="p-4 rounded-lg bg-neutral-100/70 border border-neutral-200 text-xs font-mono text-neutral-600 flex items-start gap-3">
+<span class="material-symbols-outlined text-neutral-500 text-lg flex-shrink-0 mt-0.5">menu_book</span>
+<div>
+<span class="font-bold text-neutral-800">Primary References:</span> Lane MM, Gamage E, Du S, et al. <em>Ultra-processed food exposure and adverse health outcomes: umbrella review of epidemiological meta-analyses</em>. BMJ 2024;384:e077310. | FAO Rome Guidelines on Food Classification by Processing Grade (2019).
+          </div>
+</div>
+</div>
+</section>
+<!-- 5. Common UPF Examples & Nutritional Alternatives Database -->
+<section class="py-16 md:py-24 border-b border-neutral-200/80 bg-neutral-50/50" id="database-section">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+<div>
+<div class="text-xs font-mono font-bold tracking-wider text-emerald-700 uppercase mb-2">Ingredient &amp; Product Taxonomy</div>
+<h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900">
+              UPF Catalog &amp; Clean Alternatives
+            </h2>
+<p class="font-body text-neutral-600 mt-2 text-sm sm:text-base max-w-2xl">
+              Inspect typical shelf-stable items, understand their exact chemical markers, and swap them for intact culinary equivalents.
+            </p>
+</div>
+<div class="mt-4 md:mt-0 flex items-center gap-3">
+<span class="text-xs font-mono text-neutral-500">8 Items Sampled</span>
+<span class="px-2.5 py-1 rounded bg-neutral-200 text-neutral-800 font-mono text-xs font-medium">80,000+ in Full Index</span>
+</div>
+</div>
+<!-- Search & Filter Controls Mockup -->
+<div class="bg-white p-4 rounded-xl border border-neutral-200 shadow-sm mb-6 flex flex-col md:flex-row items-center gap-4">
+<div class="relative w-full md:w-80">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-neutral-400 text-lg">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 text-sm rounded-lg border border-neutral-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 font-body outline-none" placeholder="Filter by product name..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+<label class="text-xs font-mono text-neutral-500">Category:</label>
+<select class="text-xs font-mono rounded-lg border-neutral-300 py-1.5 pl-2.5 pr-8 focus:border-emerald-500 focus:ring-0 bg-white">
+<option>All Categories</option>
+<option>Snacks</option>
+<option>Beverages</option>
+<option>Bakery</option>
+<option>Convenience Food</option>
+</select>
+<label class="text-xs font-mono text-neutral-500 ml-2">Classification:</label>
+<select class="text-xs font-mono rounded-lg border-neutral-300 py-1.5 pl-2.5 pr-8 focus:border-emerald-500 focus:ring-0 bg-white">
+<option>NOVA 4 Only</option>
+<option>All NOVA Tiers</option>
+</select>
+</div>
+</div>
+<!-- Data-Dense Table Container -->
+<div class="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse text-sm">
+<thead>
+<tr class="bg-neutral-100/80 border-b border-neutral-200 text-neutral-700 font-mono text-xs uppercase tracking-wider">
+<th class="py-3.5 px-4 font-semibold">Product / Item Name</th>
+<th class="py-3.5 px-4 font-semibold">Category</th>
+<th class="py-3.5 px-4 font-semibold">NOVA Group</th>
+<th class="py-3.5 px-4 font-semibold">Key UPF Markers &amp; Additives</th>
+<th class="py-3.5 px-4 font-semibold text-emerald-800">Healthier Alternative</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-neutral-200/70 font-body text-neutral-800">
+<!-- Row 1: Coca-Cola -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Coca-Cola</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Beverages</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    High-Fructose Corn Syrup, Caramel Color E150d, Phosphoric Acid
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Sparkling water infused with real lemon / cold-pressed citrus
+                  </td>
+</tr>
+<!-- Row 2: Doritos -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Doritos</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Snacks</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    Maltodextrin, MSG, Yellow 5 (E102), Red 40, Disodium Inosinate
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Oven-baked stoneground corn tortilla chips with sea salt
+                  </td>
+</tr>
+<!-- Row 3: Instant Ramen -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Instant Ramen</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Instant Meals</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    TBHQ (E319), Palm oil, MSG, Sodium hexametaphosphate
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Soba or brown rice noodles with scratch miso broth
+                  </td>
+</tr>
+<!-- Row 4: Frozen Pizza -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Frozen Pizza</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Convenience Food</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    Modified food starch, Potassium bromate, Polysorbate 60, Reconstituted meat
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Fresh sourdough flatbread with whole milk mozzarella &amp; raw passata
+                  </td>
+</tr>
+<!-- Row 5: Breakfast Cereal -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Breakfast Cereal (Froot Loops)</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Breakfast</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    BHT, Hydrogenated vegetable oil, Red 40, Blue 1, Refined sugar syrup
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Sprouted rolled oats with fresh blueberries &amp; raw honey
+                  </td>
+</tr>
+<!-- Row 6: Protein Bar -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Protein Bar (Commercial)</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Sports Nutrition</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    Soy protein isolate, Sucralose, Palm kernel oil, Fractionated oils
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Raw almonds, pumpkin seeds, and medjool date paste
+                  </td>
+</tr>
+<!-- Row 7: Margarine -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Margarine</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Spreads</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    Interesterified soybean oil, Mono- and diglycerides, Artificial butter flavor, Beta-carotene
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    Grass-fed organic pasture butter (NOVA 2) or cold-pressed extra virgin olive oil
+                  </td>
+</tr>
+<!-- Row 8: Packaged White Bread -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-3.5 px-4 font-semibold text-neutral-900 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-rose-500"></span>
+<span>Packaged White Bread</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-neutral-600">Bakery</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                      NOVA 4
+                    </span>
+</td>
+<td class="py-3.5 px-4 font-mono text-xs text-rose-700">
+                    Calcium propionate, DATEM, Azodicarbonamide, Mono-glycerides
+                  </td>
+<td class="py-3.5 px-4 text-emerald-700 font-medium text-xs">
+                    3-ingredient traditional sourdough bread (flour, water, salt)
+                  </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between text-xs font-mono text-neutral-500">
+<span>Showing 8 of 80,000+ cataloged records</span>
+<span class="text-emerald-700 font-medium">Use the scanner below for offline verification</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. How to Identify UPF: The Scientific Red Flags Checklist -->
+<section class="py-16 md:py-24 border-b border-neutral-200/80 bg-white" id="red-flags">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<div class="lg:col-span-5">
+<div class="text-xs font-mono font-bold tracking-wider text-emerald-700 uppercase mb-2">Grocery Aisle Heuristics</div>
+<h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-4">
+              Scientific Red Flags Checklist
+            </h2>
+<p class="font-body text-neutral-600 leading-relaxed mb-6">
+              When inspecting an ingredients panel without a barcode scanner handy, apply these laboratory-backed heuristics to identify cosmetic food modifications and hyper-palatability formulations.
+            </p>
+<!-- Pro Tip Callout Card -->
+<div class="p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 shadow-sm">
+<div class="flex items-center gap-2 font-headline font-bold text-sm text-emerald-900 mb-2">
+<span class="material-symbols-outlined text-emerald-600">lightbulb</span>
+<span>The Golden Rule</span>
+</div>
+<p class="font-body text-sm leading-relaxed text-emerald-800">
+                “If an 11-year-old child cannot recreate it with ingredients found in a 19th-century kitchen garden, it is almost certainly NOVA 4.”
+              </p>
+<div class="mt-3 text-xs font-mono text-emerald-700">— Clinical Nutrition Consensus Guideline</div>
+</div>
+</div>
+<!-- Red Flags Checklist Card -->
+<div class="lg:col-span-7 bg-neutral-50 rounded-2xl border border-neutral-200 p-6 sm:p-8 shadow-sm">
+<div class="space-y-4">
+<!-- Item 1 -->
+<div class="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-neutral-200/80">
+<div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">warning</span>
+</div>
+<div>
+<h4 class="font-headline font-semibold text-neutral-900 text-sm">Industrial Pantry Disconnect</h4>
+<p class="font-body text-xs sm:text-sm text-neutral-600 mt-0.5">
+                    Contains 5+ ingredients you cannot pronounce or find in a standard kitchen pantry (e.g. isolate powders, invert hydrolysates).
+                  </p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-neutral-200/80">
+<div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">warning</span>
+</div>
+<div>
+<h4 class="font-headline font-semibold text-neutral-900 text-sm">Synthetic Simple Carbohydrates</h4>
+<p class="font-body text-xs sm:text-sm text-neutral-600 mt-0.5">
+                    Includes high-fructose corn syrup, dextrose, invert sugar, or maltodextrin designed for rapid glycemic spiking.
+                  </p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-neutral-200/80">
+<div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">warning</span>
+</div>
+<div>
+<h4 class="font-headline font-semibold text-neutral-900 text-sm">Cosmetic Azo Food Colorants</h4>
+<p class="font-body text-xs sm:text-sm text-neutral-600 mt-0.5">
+                    Has artificial food colorants (e.g. Tartrazine E102, Sunset Yellow E110, Allura Red E129) added strictly to disguise processing loss.
+                  </p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-neutral-200/80">
+<div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">warning</span>
+</div>
+<div>
+<h4 class="font-headline font-semibold text-neutral-900 text-sm">Industrial Emulsifiers &amp; Thickeners</h4>
+<p class="font-body text-xs sm:text-sm text-neutral-600 mt-0.5">
+                    Contains industrial emulsifiers, thickeners, or stabilizers (Polysorbate 80, Carboxymethylcellulose, Soy Lecithin) that thin gut mucus lining.
+                  </p>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-neutral-200/80">
+<div class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-base">warning</span>
+</div>
+<div>
+<h4 class="font-headline font-semibold text-neutral-900 text-sm">Abnormal Shelf Life Resilience</h4>
+<p class="font-body text-xs sm:text-sm text-neutral-600 mt-0.5">
+                    Shelf life exceeds 12 to 24 months without requiring refrigeration, preserved via chemical sequestrants and BHT/TBHQ.
+                  </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. High-Converting CTA Banner -->
+<section class="py-16 md:py-20 bg-white" id="scan-cta">
+<div class="max-w-7xl mx-auto px-6">
+<div class="relative bg-slate-900 rounded-3xl p-8 sm:p-12 lg:p-16 overflow-hidden shadow-2xl border border-slate-800">
+<!-- Background Glow Gradients -->
+<div class="absolute -top-32 -right-32 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-32 -left-32 w-96 h-96 bg-emerald-700/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 font-mono text-xs mb-6">
+<span class="material-symbols-outlined text-sm">camera</span>
+<span>Computer Vision Food Intelligence</span>
+</div>
+<h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4">
+              Scan any product to check its NOVA classification instantly.
+            </h2>
+<p class="font-body text-slate-300 text-base sm:text-lg mb-8 leading-relaxed max-w-2xl">
+              Point your phone camera at any supermarket barcode or ingredient label for immediate scientific deconstruction, additive detection, and whole food swaps.
+            </p>
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+<a class="px-6 py-3.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-white font-headline text-base font-semibold shadow-lg shadow-emerald-950/40 flex items-center justify-center gap-2 transition-all" href="#">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span>Scan Product Free</span>
+</a>
+<a class="px-6 py-3.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-headline text-base font-medium border border-slate-700 flex items-center justify-center gap-2 transition-colors" href="#database-section">
+<span class="material-symbols-outlined text-sm">database</span>
+<span>Browse Ingredient Index</span>
+</a>
+</div>
+<div class="mt-8 flex items-center gap-4 text-xs font-mono text-slate-400">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-emerald-400 text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                No Account Required
+              </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-emerald-400 text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Instant Camera Parsing
+              </span>
+<span>•</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-emerald-400 text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                100% Free
+              </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- 8. Footer (Shared Component) -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<span class="w-5 h-5 rounded bg-emerald-600 flex items-center justify-center text-white text-xs">
+<span class="material-symbols-outlined text-xs">qr_code_scanner</span>
+</span>
+<span>ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Independent food informatics and biomedical product deconstruction platform. Providing real-time NOVA classification and additive profiling for grocery transparency.
+          </p>
+<div class="font-mono text-[11px] text-neutral-400 dark:text-neutral-500">
+            Disclaimer: Not Medical Advice. Clinical research aggregation.
+          </div>
+</div>
+<!-- Links Column 1 -->
+<div>
+<h5 class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white mb-3">Navigation</h5>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#database-section">Ingredient Database</a></li>
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#nova-framework">Methodology</a></li>
+</ul>
+</div>
+<!-- Links Column 2 -->
+<div>
+<h5 class="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-900 dark:text-white mb-3">Developer &amp; Trust</h5>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+<li><a class="hover:text-neutral-900 dark:hover:text-white transition-colors duration-150" href="#">Clinical Advisory</a></li>
+</ul>
+</div>
+</div>
+<!-- Bottom Bar -->
+<div class="pt-8 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs font-body text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="mt-4 sm:mt-0 flex items-center gap-6 font-mono text-[11px]">
+<span class="inline-flex items-center gap-1.5 text-emerald-600">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            NOVA Engine v4.2 Active
+          </span>
+<span>Indexed: 84,219 items</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

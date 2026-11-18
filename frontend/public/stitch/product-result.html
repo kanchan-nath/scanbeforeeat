@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScanBeforeEat - Product Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              500: '#10b981',
+              400: '#34d399',
+              600: '#059669',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #090d10;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .gauge-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+  </style>
+</head>
+<body class="bg-[#080c0e] text-slate-100 min-h-screen pb-28 flex flex-col justify-start selection:bg-emerald-500/30 selection:text-emerald-300">
+
+  <!-- Mobile Top App Bar -->
+  <header class="sticky top-0 z-40 bg-[#080c0e]/90 backdrop-blur-md border-b border-neutral-800/80 px-4 py-3 flex items-center justify-between">
+    <button class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors py-1 px-2.5 rounded-lg bg-emerald-950/40 border border-emerald-800/50">
+      <svg class="w-3.5 h-3.5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      Scanner
+    </button>
+    <div class="text-center truncate px-2 max-w-[180px]">
+      <div class="text-[10px] tracking-wider uppercase font-mono text-neutral-400">Analysis Result</div>
+      <div class="text-xs font-bold text-white truncate">Doritos Nacho Cheese</div>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <button class="p-2 text-neutral-400 hover:text-white rounded-lg bg-neutral-900 border border-neutral-800 transition-colors" aria-label="Bookmark">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+      </button>
+      <button class="p-2 text-neutral-400 hover:text-white rounded-lg bg-neutral-900 border border-neutral-800 transition-colors" aria-label="Share">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="px-4 py-4 space-y-4 max-w-md mx-auto w-full">
+
+    <!-- Live Telemetry Status Banner -->
+    <div class="flex items-center justify-between text-[11px] font-mono text-neutral-400 bg-neutral-900/60 px-3 py-1.5 rounded-lg border border-neutral-800">
+      <span class="flex items-center gap-1.5 text-emerald-400">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        EFSA & FDA Harmonized
+      </span>
+      <span class="text-neutral-500">EAN: 028400064187</span>
+    </div>
+
+    <!-- Product Summary Card -->
+    <section class="bg-neutral-900/80 rounded-2xl p-4 border border-neutral-800 shadow-xl relative overflow-hidden backdrop-blur-sm">
+      <div class="absolute -top-12 -right-12 w-36 h-36 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="flex gap-4 items-start">
+        <div class="relative w-24 h-28 flex-shrink-0 bg-neutral-950 rounded-xl border border-neutral-800/80 overflow-hidden flex items-center justify-center p-1">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPREOk3uHrdcdJlDJzQy6hEc3pkXOMmx8K6PaMUhvMJc8JdCs4N5o3crqiIdMQLMmOd-_4NgUoZOx6-8Wn-ycD_MxWWatBytsYZgFs8gI4GPnSQ0UsuPFQSs-RJKkcwuUyg65hpUtr_0Xi7ltA4YjjiUkRGc-09vsF0Kn9jlp_51EmYJjmzx2qY_1XwnBi3smPLK2_esC3kroOx-Kwiv15YbnLwu3r-eSOPcHB-hot93YRZCVZcxRNTzyHRgRUwXfaXSTfVqF1Ranv" alt="Doritos Nacho Cheese Tortilla Chips" class="w-full h-full object-contain drop-shadow-md">
+          <span class="absolute bottom-1 right-1 bg-black/80 font-mono text-[9px] px-1 rounded text-neutral-400 border border-neutral-800">150g</span>
+        </div>
+        
+        <div class="flex-1 min-w-0">
+          <div class="text-[11px] font-mono text-neutral-400 tracking-tight truncate">Frito-Lay / PepsiCo</div>
+          <h1 class="text-base font-bold text-white leading-snug tracking-tight mt-0.5">Doritos Nacho Cheese</h1>
+          <p class="text-[12px] text-neutral-400 mt-0.5">Flavored Tortilla Chips</p>
+          <div class="mt-2.5 flex items-center gap-1.5">
+            <span class="inline-flex items-center text-[10px] font-medium px-2 py-0.5 rounded-md bg-neutral-800 text-neutral-300 border border-neutral-700">
+              Savory Snacks
+            </span>
+            <span class="text-[11px] font-mono text-neutral-500">Verified OCR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dual Hero Badges -->
+      <div class="mt-4 pt-3.5 border-t border-neutral-800/80 grid grid-cols-2 gap-2.5">
+        <!-- Radial Health Score Badge -->
+        <div class="bg-[#12080a] border border-rose-900/40 rounded-xl p-3 flex items-center gap-3">
+          <div class="relative w-12 h-12 flex-shrink-0 flex items-center justify-center">
+            <svg class="w-12 h-12 gauge-circle" viewBox="0 0 36 36">
+              <path class="text-neutral-800" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+              <path class="text-rose-500 stroke-current" stroke-width="3.5" stroke-dasharray="32, 100" stroke-linecap="round" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+              <span class="text-xs font-mono font-extrabold text-rose-400 leading-none">32</span>
+            </div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase font-mono tracking-wider text-neutral-400">Health Score</div>
+            <div class="text-xs font-bold text-rose-400">32 / 100 POOR</div>
+          </div>
+        </div>
+
+        <!-- Processing Tier NOVA Badge -->
+        <div class="bg-[#170a0d] border border-rose-950 rounded-xl p-3 flex flex-col justify-center">
+          <div class="flex items-center gap-1 text-[10px] font-mono text-rose-300 font-semibold uppercase tracking-wider">
+            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+            NOVA Group 4
+          </div>
+          <div class="text-xs font-bold text-rose-200 mt-1 leading-snug">Ultra-Processed Food</div>
+          <div class="text-[10px] text-neutral-400 mt-0.5">High Industrial Disruption</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transparent Score Deduction Breakdown -->
+    <section class="bg-neutral-900/80 rounded-2xl p-4 border border-neutral-800 backdrop-blur-sm">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="p-1 rounded-md bg-emerald-500/10 text-emerald-400">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          </div>
+          <h2 class="text-xs font-bold uppercase tracking-wider font-mono text-neutral-200">Score Deduction Engine</h2>
+        </div>
+        <span class="text-[11px] font-mono text-neutral-400">Deterministic Model</span>
+      </div>
+
+      <div class="mt-3.5 space-y-2.5 font-mono text-xs">
+        <!-- Baseline -->
+        <div class="flex items-center justify-between py-1 border-b border-neutral-800/60">
+          <span class="text-neutral-400 flex items-center gap-1.5 font-sans">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Raw Baseline Score
+          </span>
+          <span class="text-emerald-400 font-semibold">100 / 100</span>
+        </div>
+
+        <!-- Deduction 1 -->
+        <div class="flex items-start justify-between py-1">
+          <div class="font-sans pr-2">
+            <div class="text-slate-200 text-xs font-medium">Ultra-Processing Formulation</div>
+            <div class="text-[10px] text-neutral-400">Industrial extrusion & cosmetic flavorings</div>
+          </div>
+          <span class="text-rose-400 font-bold font-mono whitespace-nowrap">-30 pts</span>
+        </div>
+
+        <!-- Deduction 2 -->
+        <div class="flex items-start justify-between py-1">
+          <div class="font-sans pr-2">
+            <div class="text-slate-200 text-xs font-medium">High-Risk Synthetics & Additives</div>
+            <div class="text-[10px] text-neutral-400">MSG (E621), Yellow 5 (E102), Yellow 6 (E110)</div>
+          </div>
+          <span class="text-rose-400 font-bold font-mono whitespace-nowrap">-24 pts</span>
+        </div>
+
+        <!-- Deduction 3 -->
+        <div class="flex items-start justify-between py-1">
+          <div class="font-sans pr-2">
+            <div class="text-slate-200 text-xs font-medium">Excess Sodium Density</div>
+            <div class="text-[10px] text-neutral-400">42% WHO daily reference intake per 50g</div>
+          </div>
+          <span class="text-amber-400 font-bold font-mono whitespace-nowrap">-14 pts</span>
+        </div>
+
+        <!-- Net Calculation -->
+        <div class="mt-2 pt-2.5 border-t border-neutral-800 flex items-center justify-between font-bold">
+          <span class="text-xs uppercase tracking-wider text-neutral-300 font-mono">Net Evaluated Score</span>
+          <span class="text-rose-400 text-sm font-mono bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800/40">32 / 100</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Allergen & Sensitivity Warnings -->
+    <section class="bg-rose-950/30 border border-rose-700/50 rounded-2xl p-3.5 relative overflow-hidden">
+      <div class="flex items-start gap-2.5">
+        <div class="p-1.5 rounded-lg bg-rose-500/20 text-rose-400 mt-0.5 flex-shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-xs font-bold text-rose-300 uppercase tracking-wide font-mono">Allergen & Cross-Contact Alert</h3>
+          <p class="text-xs text-rose-200/90 mt-1 leading-relaxed">
+            Contains <span class="font-bold underline decoration-rose-400">Milk / Lactose</span> and <span class="font-bold underline decoration-rose-400">Soy</span>.
+          </p>
+          <div class="mt-1.5 text-[11px] text-rose-300/70 flex items-center gap-1 font-mono">
+            <span>⚠️ Facility risk:</span> Wheat & Gluten cross-contamination.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flagged Additives & Ingredients List (Tabular Accordion) -->
+    <section class="bg-neutral-900/80 rounded-2xl p-4 border border-neutral-800 backdrop-blur-sm">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="p-1 rounded-md bg-amber-500/10 text-amber-400">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+          </div>
+          <h2 class="text-xs font-bold uppercase tracking-wider font-mono text-neutral-200">Flagged Additives (4 Detected)</h2>
+        </div>
+        <span class="text-[10px] font-mono text-rose-400 bg-rose-950 px-2 py-0.5 rounded border border-rose-800/40">3 High/Mod</span>
+      </div>
+
+      <div class="space-y-2.5">
+        <!-- Row 1: MSG -->
+        <div class="bg-neutral-950/70 border border-neutral-800/90 rounded-xl p-3 transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-white">Monosodium Glutamate</span>
+                <span class="font-mono text-[10px] text-neutral-400 bg-neutral-800 px-1.5 py-0.2 rounded">E621</span>
+              </div>
+              <div class="text-[11px] text-neutral-400 mt-0.5">Flavor Enhancer • Neuro-active salt</div>
+            </div>
+            <span class="text-[10px] font-semibold font-mono text-amber-400 bg-amber-950/60 border border-amber-800/50 px-2 py-0.5 rounded-full">
+              Moderate Risk
+            </span>
+          </div>
+          <div class="mt-2 pt-2 border-t border-neutral-800/60 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+            <span class="text-emerald-400/90">PubMed: 124 studies indexed</span>
+            <span>GRAS (FDA) / ADI Re-evaluation</span>
+          </div>
+        </div>
+
+        <!-- Row 2: Tartrazine / Yellow 5 -->
+        <div class="bg-rose-950/20 border border-rose-900/40 rounded-xl p-3 transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-rose-200">Tartrazine (Yellow 5)</span>
+                <span class="font-mono text-[10px] text-rose-300/80 bg-rose-950 px-1.5 py-0.2 rounded border border-rose-800/40">E102</span>
+              </div>
+              <div class="text-[11px] text-neutral-400 mt-0.5">Synthetic Azo Dye • Petroleum derived</div>
+            </div>
+            <span class="text-[10px] font-semibold font-mono text-rose-400 bg-rose-950/80 border border-rose-700/60 px-2 py-0.5 rounded-full">
+              High Risk
+            </span>
+          </div>
+          <div class="mt-2 pt-2 border-t border-rose-900/30 text-[10px] text-rose-300/90 leading-snug">
+            <span class="font-semibold text-rose-400 font-mono">EU Warning:</span> "May have an adverse effect on activity and attention in children"
+          </div>
+        </div>
+
+        <!-- Row 3: Sunset Yellow -->
+        <div class="bg-rose-950/20 border border-rose-900/40 rounded-xl p-3 transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-rose-200">Sunset Yellow FCF</span>
+                <span class="font-mono text-[10px] text-rose-300/80 bg-rose-950 px-1.5 py-0.2 rounded border border-rose-800/40">E110</span>
+              </div>
+              <div class="text-[11px] text-neutral-400 mt-0.5">Synthetic Colorant • Coal tar derivative</div>
+            </div>
+            <span class="text-[10px] font-semibold font-mono text-rose-400 bg-rose-950/80 border border-rose-700/60 px-2 py-0.5 rounded-full">
+              High Risk
+            </span>
+          </div>
+          <div class="mt-2 pt-2 border-t border-rose-900/30 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+            <span class="text-rose-400">EFSA Restricted Dosage</span>
+            <span>Hyperactivity marker</span>
+          </div>
+        </div>
+
+        <!-- Row 4: Disodium Inosinate & Guanylate -->
+        <div class="bg-neutral-950/70 border border-neutral-800/90 rounded-xl p-3 transition-all">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-white">Disodium Inosinate & Guanylate</span>
+                <span class="font-mono text-[10px] text-neutral-400 bg-neutral-800 px-1.5 py-0.2 rounded">E631, E627</span>
+              </div>
+              <div class="text-[11px] text-neutral-400 mt-0.5">Synergistic Umami Enhancer salts</div>
+            </div>
+            <span class="text-[10px] font-semibold font-mono text-amber-400 bg-amber-950/60 border border-amber-800/50 px-2 py-0.5 rounded-full">
+              Moderate Risk
+            </span>
+          </div>
+          <div class="mt-2 pt-2 border-t border-neutral-800/60 text-[10px] text-neutral-400">
+            Triggers uric acid synthesis; not recommended for individuals with gout or hyperuricemia.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Healthier Alternative Recommendation -->
+    <section class="bg-emerald-950/30 border border-emerald-600/40 rounded-2xl p-4 relative overflow-hidden backdrop-blur-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold tracking-wider uppercase text-emerald-400 bg-emerald-950 px-2 py-0.8 rounded-full border border-emerald-800/60">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          Healthier Clean Alternative
+        </span>
+        <span class="text-[11px] font-mono font-bold text-emerald-400">+54 pts boost</span>
+      </div>
+
+      <div class="flex gap-3.5 items-center">
+        <div class="w-16 h-20 bg-neutral-900 rounded-xl border border-emerald-700/40 overflow-hidden flex items-center justify-center p-1 flex-shrink-0">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuANienCoVRWDPPCe3Ri6KDHYIaCi59C065U2m8OKeBG22gAMU1oHDAqR2T9AWE0SK0_g2g9wLuDMe5JwA1AmFE8RpBUDrIKjOr5DzLFwozi1V7itc6a2c8qqjTxvsS-A9F5nVjLienc3C-yju6AaL2Nfz35knM577DjGkw_jBiozsWXvjyKVOjkdPzrW2mNwWLKGuWnL6lLiGz8mVWo7DlbBb8peQYnG5qRr-h_plMw14x-i0oKGWFBttzTbp4QtrRK2itkyCjJWlqS" alt="LesserEvil Organic Popcorn" class="w-full h-full object-contain">
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="text-sm font-bold text-white truncate">LesserEvil Organic Popcorn</h3>
+          <p class="text-[11px] text-neutral-300 mt-0.5">Himalayan Gold • Avocado Oil</p>
+          
+          <div class="mt-2 flex items-center gap-2">
+            <span class="font-mono text-xs font-extrabold text-emerald-300 bg-emerald-900/60 px-2 py-0.5 rounded border border-emerald-600/60">
+              86 / 100
+            </span>
+            <span class="font-mono text-[10px] text-emerald-400 bg-emerald-950 px-1.5 py-0.5 rounded border border-emerald-800">
+              NOVA 1
+            </span>
+            <span class="text-[10px] text-neutral-400 font-mono">0 Additives</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="mt-3.5 w-full py-2.5 px-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors active:scale-[0.99]">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        Compare Side-by-Side
+      </button>
+    </section>
+
+  </main>
+
+  <!-- Sticky Bottom Action Bar -->
+  <aside class="fixed bottom-0 left-0 right-0 z-40 bg-[#080c0e]/95 backdrop-blur-lg border-t border-neutral-800/80 px-4 py-3 max-w-md mx-auto">
+    <div class="grid grid-cols-2 gap-3">
+      <button class="w-full py-3 px-3 rounded-xl border border-neutral-700 bg-neutral-900 hover:bg-neutral-800 text-neutral-200 text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
+        <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+        Save to History
+      </button>
+      <button class="w-full py-3 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-neutral-950 text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-[0.98]">
+        <svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+        Scan Next Product
+      </button>
+    </div>
+  </aside>
+
+</body>
+</html>

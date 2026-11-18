@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>ScanBeforeEat Mobile</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Inter"],
+            display: ["Inter"],
+            body: ["Inter"],
+            label: ["Space Grotesk"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    /* Smooth custom scanning animation */
+    @keyframes scanLaser {
+      0% {
+        top: 6%;
+        opacity: 0.15;
+      }
+      15% {
+        opacity: 0.9;
+      }
+      85% {
+        opacity: 0.9;
+      }
+      100% {
+        top: 92%;
+        opacity: 0.15;
+      }
+    }
+    
+    .scan-laser-line {
+      animation: scanLaser 2.4s ease-in-out infinite alternate;
+    }
+
+    /* Subtle grid pattern for HUD background */
+    .hud-grid-overlay {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+    }
+
+    /* Hide scrollbar for carousel */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-neutral-950 text-neutral-100 font-body antialiased flex justify-center items-center min-h-screen p-0 sm:py-6 sm:px-4 selection:bg-emerald-500 selection:text-neutral-950">
+<!-- Mobile Container Mockup (approx 390px width) -->
+<main class="w-full max-w-[412px] h-[884px] max-h-[890px] bg-[#070b09] rounded-none sm:rounded-[42px] flex flex-col relative overflow-hidden shadow-2xl border-0 sm:border sm:border-neutral-800/80">
+<!-- Ambient Tech Glow Behind HUD -->
+<div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<!-- 1. Top Status Bar & App Header -->
+<header class="relative z-20 pt-3 px-5 pb-2 bg-[#070b09]/80 backdrop-blur-md border-b border-emerald-950/40">
+<!-- iOS Status Bar Preview -->
+<div class="flex items-center justify-between text-xs font-label text-neutral-400 font-medium px-1.5 pt-0.5 pb-2">
+<span class="tracking-tight text-neutral-200 font-semibold text-[13px]">9:41</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[15px] text-neutral-300">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[15px] text-neutral-300">wifi</span>
+<div class="flex items-center gap-0.5">
+<div class="w-5 h-2.5 rounded-[3px] border border-neutral-400 p-[1.5px] flex items-center">
+<div class="w-2.5 h-full bg-emerald-400 rounded-[1px]"></div>
+</div>
+<div class="w-0.5 h-1 bg-neutral-400 rounded-r-sm"></div>
+</div>
+</div>
+</div>
+<!-- App Header Bar -->
+<div class="flex items-center justify-between mt-1">
+<!-- Left: Profile Avatar with Active Ring -->
+<div class="relative flex items-center justify-center">
+<div class="w-9 h-9 rounded-full ring-2 ring-emerald-500/40 p-0.5 bg-neutral-900 overflow-hidden relative cursor-pointer active:scale-95 transition-transform duration-150">
+<img class="w-full h-full object-cover rounded-full" data-alt="Close up editorial portrait of a tech-savvy nutrition specialist wearing minimalist glasses, styled in dark atmospheric emerald studio lighting, sleek and hyper modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsW6blWuZtoNOJGJxu3dArU8k-wmYRftiCVT7TFdcm8dvUlCGgV40LkuIAkXmCb_qIQ2g2rHxJYrxH-ASdh5JSiuHtm1_0rMHdvUeDsGfhZntmUiIHoejPPwvQBa6ObvRYz7XQIwzPhKsuiE8YnBQwP7YKtEfIRx7AfM_81tJ32XAKxEy7DMRRoZ9SYbFoW6CfZn5mmWCY1qJ71r6-2vqaZI0Tf99qo8NcgYqNyHU3gbiBQh4znuwwuV5o276TXi1EB8s-VBa8Yl44"/>
+</div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[#070b09] shadow-[0_0_8px_rgba(16,185,129,0.9)]"></span>
+</div>
+<!-- Center: ScanBeforeEat Logo Mark -->
+<div class="flex items-center gap-2 cursor-pointer">
+<div class="relative flex items-center justify-center w-7 h-7 rounded-lg bg-emerald-950/80 border border-emerald-500/30">
+<span class="material-symbols-outlined text-emerald-400 text-lg">qr_code_scanner</span>
+<span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+<span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400"></span>
+</div>
+<span class="font-display font-extrabold tracking-tight text-neutral-100 text-base leading-none">
+            Scan<span class="text-emerald-400">BeforeEat</span>
+</span>
+</div>
+<!-- Right: Quota Pill Counter Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-950/50 border border-emerald-500/30 shadow-[0_0_10px_rgba(5,150,105,0.15)]">
+<!-- Circular mini meter -->
+<div class="relative w-4 h-4 flex items-center justify-center">
+<svg class="w-4 h-4 -rotate-90 transform" viewbox="0 0 24 24">
+<circle class="text-neutral-800" cx="12" cy="12" fill="transparent" r="9" stroke="currentColor" stroke-width="3"></circle>
+<circle class="text-emerald-400" cx="12" cy="12" fill="transparent" r="9" stroke="currentColor" stroke-dasharray="56.5" stroke-dashoffset="11.3" stroke-linecap="round" stroke-width="3"></circle>
+</svg>
+</div>
+<span class="font-label text-[11px] font-semibold text-emerald-300 tracking-tight">12/15 Free</span>
+</div>
+</div>
+</header>
+<!-- 2. Mode Switcher Segmented Control -->
+<div class="relative z-20 px-5 pt-3 pb-2 bg-[#070b09]/40 backdrop-blur-sm">
+<div class="p-1 rounded-xl bg-neutral-900/90 border border-neutral-800/80 flex items-center gap-1 shadow-inner">
+<!-- Tab 1: Barcode (Active) -->
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-semibold tracking-wide transition-all shadow-[0_0_12px_rgba(16,185,129,0.2)]" type="button">
+<span class="material-symbols-outlined text-[16px]">barcode_scanner</span>
+<span>Barcode</span>
+</button>
+<!-- Tab 2: Label OCR -->
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg text-neutral-400 hover:text-neutral-200 text-xs font-medium tracking-wide transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">document_scanner</span>
+<span>Label OCR</span>
+</button>
+<!-- Tab 3: Manual -->
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-lg text-neutral-400 hover:text-neutral-200 text-xs font-medium tracking-wide transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">manage_search</span>
+<span>Manual</span>
+</button>
+</div>
+</div>
+<!-- 3. Central Viewfinder / Camera HUD -->
+<div class="relative flex-1 w-full min-h-[310px] overflow-hidden flex flex-col items-center justify-between p-4">
+<!-- Simulated Camera Background with Realistic Depth Bokeh -->
+<div class="absolute inset-0 bg-cover bg-center brightness-[0.38] contrast-125 filter" data-alt="Atmospheric modern supermarket grocery aisle shelves with soft out-of-focus organic packaging illuminated by cool high-tech ambient grocery lights, deep green and neutral moody cinematic shadows." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuSHq192x8EaYzLqeoa5r1C-lLOeDHssTaQFlXlH9-Twp1fgdYvqhSgCXfVBy7QKK7DGx-eHH9km9-tAzLV8mPfMn-qLajt5EXtY4tG8rgud2d5S5DAyrNWX3klIZ_Plo3KV8woN7c3OU4-m1paunt1wf3vU3Q9qUlDtxALeSefzgDi3YeJlZzFpSnmpMIHd7GZ10GsHjv9hn2xt8p3ifrTpelUOfrXsNCG_bR7bV6i2zyL9OYSFbQNe1Ei66D0TqBhXys6bFEmE-2')"></div>
+<!-- High-Tech HUD Grid & Lens vignette -->
+<div class="absolute inset-0 hud-grid-overlay pointer-events-none opacity-60"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-[#070b09] via-transparent to-[#070b09]/80 pointer-events-none"></div>
+<!-- Top HUD Floating Controls -->
+<div class="relative z-10 w-full flex items-center justify-between px-2 pt-1">
+<button aria-label="Toggle Flashlight" class="w-10 h-10 rounded-full bg-neutral-900/80 border border-neutral-700/70 text-neutral-200 flex items-center justify-center backdrop-blur-md active:scale-95 transition-all shadow-md hover:border-emerald-500/50 hover:text-emerald-400" id="torchToggle" onclick="this.classList.toggle('text-emerald-400'); this.classList.toggle('border-emerald-500'); this.classList.toggle('bg-emerald-950/60');">
+<span class="material-symbols-outlined text-[20px]">flashlight_on</span>
+</button>
+<!-- Dynamic Detection Status Capsule -->
+<div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-900/80 border border-emerald-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-[10px] uppercase font-label tracking-wider text-emerald-300 font-bold">Spectral AI Active</span>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Upload Photo" class="w-10 h-10 rounded-full bg-neutral-900/80 border border-neutral-700/70 text-neutral-200 flex items-center justify-center backdrop-blur-md active:scale-95 transition-all shadow-md hover:border-emerald-500/50 hover:text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">photo_library</span>
+</button>
+<button aria-label="Flip Camera" class="w-10 h-10 rounded-full bg-neutral-900/80 border border-neutral-700/70 text-neutral-200 flex items-center justify-center backdrop-blur-md active:scale-95 transition-all shadow-md hover:border-emerald-500/50 hover:text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">flip_camera_ios</span>
+</button>
+</div>
+</div>
+<!-- Main Camera Target Reticle (High Contrast HUD) -->
+<div class="relative w-[268px] h-[195px] my-auto flex items-center justify-center">
+<!-- Corner Brackets with Emerald Shadows -->
+<!-- Top Left -->
+<div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-emerald-400 rounded-tl-lg shadow-[0_0_12px_rgba(16,185,129,0.8)]"></div>
+<!-- Top Right -->
+<div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-emerald-400 rounded-tr-lg shadow-[0_0_12px_rgba(16,185,129,0.8)]"></div>
+<!-- Bottom Left -->
+<div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-emerald-400 rounded-bl-lg shadow-[0_0_12px_rgba(16,185,129,0.8)]"></div>
+<!-- Bottom Right -->
+<div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-emerald-400 rounded-br-lg shadow-[0_0_12px_rgba(16,185,129,0.8)]"></div>
+<!-- Fine Reticle Center Tick Marks -->
+<div class="absolute inset-0 m-auto w-3 h-0.5 bg-emerald-500/50"></div>
+<div class="absolute inset-0 m-auto w-0.5 h-3 bg-emerald-500/50"></div>
+<!-- Animated Laser Scanning Beam -->
+<div class="scan-laser-line absolute left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-emerald-300 to-transparent shadow-[0_0_15px_#10b981,0_0_30px_#10b981] z-10">
+<div class="w-full h-8 -mt-4 bg-gradient-to-b from-emerald-500/20 via-emerald-400/10 to-transparent pointer-events-none"></div>
+</div>
+<!-- Live Barcode Ghost Graphic Inside Viewport -->
+<div class="opacity-30 flex flex-col items-center justify-center space-y-1">
+<span class="material-symbols-outlined text-4xl text-neutral-400">barcode</span>
+<span class="font-label text-[10px] tracking-widest uppercase text-neutral-400">Align Optical Code</span>
+</div>
+<!-- Real-time target acquisition badge overlay -->
+<div class="absolute -bottom-5 left-1/2 -translate-x-1/2 whitespace-nowrap flex items-center gap-1.5 px-3 py-1 bg-emerald-950/90 border border-emerald-400/70 rounded-full shadow-[0_0_16px_rgba(16,185,129,0.4)] backdrop-blur-md">
+<span class="material-symbols-outlined text-emerald-400 text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label text-[11px] font-bold text-emerald-200 tracking-tight">UPC 8901058852331 acquired</span>
+</div>
+</div>
+<!-- Real-time target guidance text -->
+<div class="relative z-10 pb-1 text-center">
+<p class="font-headline text-xs font-medium text-neutral-300 flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-emerald-400">speed</span>
+<span>Align barcode within frame for sub-200ms detection</span>
+</p>
+</div>
+</div>
+<!-- 4. Quick Scan History Drawer (Bottom Sheet Preview) -->
+<section class="relative z-20 bg-neutral-900/95 border-t border-neutral-800/90 rounded-t-2xl pt-2.5 pb-2 shadow-2xl backdrop-blur-xl">
+<!-- Subtle Pull Handle -->
+<div class="w-10 h-1 bg-neutral-700/80 rounded-full mx-auto mb-2"></div>
+<!-- Drawer Header -->
+<div class="flex items-center justify-between px-5 mb-2.5">
+<div class="flex items-center gap-2">
+<h2 class="font-headline text-xs font-bold uppercase tracking-wider text-neutral-300">Recent Scans</h2>
+<span class="px-1.5 py-0.2 rounded bg-neutral-800 text-[10px] font-semibold text-emerald-400">Live</span>
+</div>
+<a class="text-xs font-headline font-semibold text-emerald-400 hover:text-emerald-300 flex items-center gap-0.5 transition-colors" href="#view-all">
+          View All (42)
+          <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<!-- Horizontal Swipeable Carousel Cards -->
+<div class="flex items-stretch gap-3 overflow-x-auto no-scrollbar px-5 pb-2 snap-x snap-mandatory">
+<!-- Card 1: Oat Milk (Clean) -->
+<article class="snap-start shrink-0 w-[240px] p-3 rounded-xl bg-neutral-950/80 border border-neutral-800/90 hover:border-emerald-500/40 transition-all flex flex-col justify-between shadow-lg relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-emerald-500/5 rounded-full blur-xl pointer-events-none"></div>
+<div>
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<div class="flex-1 min-w-0">
+<span class="font-label text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Oatly Organic</span>
+<h3 class="font-headline text-sm font-bold text-neutral-100 truncate">Oat Milk Barista</h3>
+</div>
+<!-- Health Score Pill -->
+<div class="flex flex-col items-end">
+<div class="px-2 py-0.5 rounded-md bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 font-label font-bold text-xs flex items-center gap-1 shadow-[0_0_8px_rgba(16,185,129,0.2)]">
+<span>88</span>
+<span class="text-[9px] text-emerald-500/70">/100</span>
+</div>
+</div>
+</div>
+<!-- NOVA Tag & Status -->
+<div class="flex items-center gap-1.5 mt-2">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-800 text-neutral-300 font-label">NOVA 2</span>
+<span class="text-[11px] font-medium text-neutral-400">Processed Culinary</span>
+</div>
+</div>
+<div class="mt-2.5 pt-2 border-t border-neutral-800/70 flex items-center justify-between text-[11px]">
+<span class="flex items-center gap-1 text-emerald-400 font-medium">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+              Clean &amp; Non-UPF
+            </span>
+<span class="text-neutral-500 text-[10px]">2m ago</span>
+</div>
+</article>
+<!-- Card 2: Protein Bar (Moderate Flag) -->
+<article class="snap-start shrink-0 w-[240px] p-3 rounded-xl bg-neutral-950/80 border border-neutral-800/90 hover:border-amber-500/40 transition-all flex flex-col justify-between shadow-lg relative overflow-hidden group">
+<div>
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<div class="flex-1 min-w-0">
+<span class="font-label text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Grenade Carb</span>
+<h3 class="font-headline text-sm font-bold text-neutral-100 truncate">Protein Bar Peanut</h3>
+</div>
+<!-- Health Score Pill -->
+<div class="flex flex-col items-end">
+<div class="px-2 py-0.5 rounded-md bg-amber-950/80 border border-amber-500/50 text-amber-400 font-label font-bold text-xs flex items-center gap-1">
+<span>54</span>
+<span class="text-[9px] text-amber-500/70">/100</span>
+</div>
+</div>
+</div>
+<!-- NOVA Tag & Status -->
+<div class="flex items-center gap-1.5 mt-2">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-800 text-neutral-300 font-label">NOVA 4</span>
+<span class="text-[11px] font-medium text-amber-400/90 truncate">Ultra-Processed</span>
+</div>
+</div>
+<div class="mt-2.5 pt-2 border-t border-neutral-800/70 flex items-center justify-between text-[11px]">
+<span class="flex items-center gap-1 text-amber-400 font-medium truncate max-w-[170px]">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+              3 Flagged: Sucralose, Palm
+            </span>
+<span class="text-neutral-500 text-[10px]">14m</span>
+</div>
+</article>
+<!-- Card 3: Diet Cola (High Risk UPF) -->
+<article class="snap-start shrink-0 w-[240px] p-3 rounded-xl bg-neutral-950/80 border border-neutral-800/90 hover:border-rose-500/40 transition-all flex flex-col justify-between shadow-lg relative overflow-hidden group">
+<div>
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<div class="flex-1 min-w-0">
+<span class="font-label text-[10px] uppercase font-bold text-neutral-400 tracking-wider">Classic Zero</span>
+<h3 class="font-headline text-sm font-bold text-neutral-100 truncate">Diet Cola 330ml</h3>
+</div>
+<!-- Health Score Pill -->
+<div class="flex flex-col items-end">
+<div class="px-2 py-0.5 rounded-md bg-rose-950/80 border border-rose-500/50 text-rose-400 font-label font-bold text-xs flex items-center gap-1">
+<span>41</span>
+<span class="text-[9px] text-rose-500/70">/100</span>
+</div>
+</div>
+</div>
+<!-- NOVA Tag & Status -->
+<div class="flex items-center gap-1.5 mt-2">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-800 text-neutral-300 font-label">NOVA 4</span>
+<span class="text-[11px] font-medium text-rose-400/90 truncate">Ultra-Processed</span>
+</div>
+</div>
+<div class="mt-2.5 pt-2 border-t border-neutral-800/70 flex items-center justify-between text-[11px]">
+<span class="flex items-center gap-1 text-rose-400 font-medium truncate max-w-[170px]">
+<span class="material-symbols-outlined text-[14px]">dangerous</span>
+              Aspartame (E951) &amp; IV
+            </span>
+<span class="text-neutral-500 text-[10px]">1h</span>
+</div>
+</article>
+</div>
+</section>
+<!-- 5. Mobile Bottom Navigation Bar -->
+<nav aria-label="Bottom Navigation" class="relative z-30 bg-[#070b09]/95 backdrop-blur-xl border-t border-neutral-800/90 px-4 pt-2 pb-1">
+<div class="flex items-center justify-around">
+<!-- Tab 1: Scanner (Active) -->
+<a class="flex flex-col items-center gap-1 py-1 px-3 text-emerald-400 transition-all duration-150 group" href="#scanner">
+<div class="relative flex items-center justify-center w-10 h-7 rounded-full bg-emerald-500/15 group-active:scale-95 shadow-[0_0_12px_rgba(16,185,129,0.3)]">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+</div>
+<span class="font-headline text-[10px] font-bold tracking-tight">Scanner</span>
+</a>
+<!-- Tab 2: History -->
+<a class="flex flex-col items-center gap-1 py-1 px-3 text-neutral-400 hover:text-neutral-200 transition-colors group" href="#history">
+<div class="flex items-center justify-center w-10 h-7 group-active:scale-95">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+</div>
+<span class="font-headline text-[10px] font-medium tracking-tight">History</span>
+</a>
+<!-- Tab 3: Compare -->
+<a class="flex flex-col items-center gap-1 py-1 px-3 text-neutral-400 hover:text-neutral-200 transition-colors group" href="#compare">
+<div class="flex items-center justify-center w-10 h-7 group-active:scale-95">
+<span class="material-symbols-outlined text-[20px]">view_column</span>
+</div>
+<span class="font-headline text-[10px] font-medium tracking-tight">Compare</span>
+</a>
+<!-- Tab 4: Settings -->
+<a class="flex flex-col items-center gap-1 py-1 px-3 text-neutral-400 hover:text-neutral-200 transition-colors group" href="#settings">
+<div class="flex items-center justify-center w-10 h-7 group-active:scale-95">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</div>
+<span class="font-headline text-[10px] font-medium tracking-tight">Settings</span>
+</a>
+</div>
+<!-- iOS Home Indicator Pill -->
+<div class="mt-2 mb-1 flex justify-center">
+<div class="w-32 h-1 bg-neutral-600/70 rounded-full"></div>
+</div>
+</nav>
+</main>
+</body></html>

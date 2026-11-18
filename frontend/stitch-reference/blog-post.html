@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Hidden Truth About Ultra-Processed Foods in Your Kitchen | ScanBeforeEat Research</title>
+<!-- Google Fonts: Inter and Space Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim from Design System -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {},
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {},
+          "fontFamily": {
+            "headline": [
+              "Inter"
+            ],
+            "display": [
+              "Inter"
+            ],
+            "body": [
+              "Inter"
+            ],
+            "label": [
+              "Space Grotesk"
+            ]
+          },
+          "fontSize": {}
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 font-body text-slate-800 antialiased selection:bg-emerald-100 selection:text-emerald-900 min-h-screen flex flex-col justify-between">
+<!-- =========================================================================
+       1. TOP NAVIGATION BAR (Fixed Shared Component JSON Spec)
+       ========================================================================= -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<!-- Top spacing cushion for fixed navbar -->
+<div class="h-16"></div>
+<!-- Reading Progress Bar -->
+<div class="fixed top-16 left-0 h-1 bg-emerald-500 z-40 transition-all duration-75" id="readingProgress" style="width: 14%;"></div>
+<!-- =========================================================================
+       2. BREADCRUMB & ARTICLE HEADER
+       ========================================================================= -->
+<section class="bg-white border-b border-slate-200/80 pt-8 pb-10">
+<div class="max-w-7xl mx-auto px-6">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6 font-label overflow-x-auto whitespace-nowrap">
+<a class="hover:text-slate-800 transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-xs text-slate-400">chevron_right</span>
+<a class="hover:text-slate-800 transition-colors" href="#">Blog</a>
+<span class="material-symbols-outlined text-xs text-slate-400">chevron_right</span>
+<a class="hover:text-slate-800 transition-colors" href="#">Research</a>
+<span class="material-symbols-outlined text-xs text-slate-400">chevron_right</span>
+<span class="text-emerald-700 font-semibold truncate max-w-xs md:max-w-md">The Hidden Truth About Ultra-Processed Foods in Your Kitchen</span>
+</nav>
+<!-- Category Pill & Peer-Review Badge -->
+<div class="flex flex-wrap items-center gap-3 mb-5">
+<span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full px-3 py-1 font-label text-xs font-semibold tracking-wide">
+<span class="material-symbols-outlined text-xs text-emerald-600">biotech</span>
+          Food Toxicology &amp; UPF Research
+        </span>
+<span class="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50/60 border border-emerald-100 rounded-full px-2.5 py-0.5">
+<span class="material-symbols-outlined text-[14px] text-emerald-600" style="font-variation-settings: 'FILL' 1;">verified</span>
+          Peer-Reviewed &amp; Fact-Checked
+        </span>
+<span class="text-slate-400 text-xs hidden sm:inline">•</span>
+<span class="text-xs text-slate-500 font-medium">Published March 15, 2025</span>
+<span class="text-slate-400 text-xs hidden sm:inline">•</span>
+<span class="text-xs text-slate-500 font-medium">Updated March 18, 2025</span>
+<span class="text-slate-400 text-xs hidden sm:inline">•</span>
+<span class="text-xs text-slate-500 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">schedule</span>
+          8 min read (1,840 words)
+        </span>
+</div>
+<!-- Main H1 Title -->
+<h1 class="font-headline text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.18] mb-5 max-w-5xl">
+        The Hidden Truth About Ultra-Processed Foods in Your Kitchen: How Emulsifiers and Additives Alter Metabolic Health
+      </h1>
+<!-- Dek / Subtitle -->
+<p class="text-lg md:text-xl text-slate-600 font-normal leading-relaxed max-w-4xl mb-8">
+        An in-depth toxicological review of common industrial emulsifiers, artificial gums, and how the NOVA-4 classification system is redefining modern consumer nutrition guidelines.
+      </p>
+<!-- Author Byline & Social Action Toolbar -->
+<div class="pt-6 border-t border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-5">
+<!-- Author Profile -->
+<div class="flex items-center gap-3.5">
+<img class="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-500/20 shadow-xs" data-alt="Close up professional portrait of Dr Elena Vance, an accomplished female nutritional scientist in lab attire with warm gentle lighting, high key background, highly detailed laboratory atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8_DvLNTDK5DnhY4aZtTjYjVczZmmIsSMSfw6Sry3uB6EtDd1ki7kAjPHWeU3JCKKg7nMKUCHlTl39Hd-blMASWLjfyBIipW_Tpw9OxaZj7qtU3NdOCcSUKYmvL9BvMPT1uptAcbTKE1gK2JHJ_pwPj8IRun1lSEUAmoWPSUtxpJyHi6oxu85RnBUfZjp6Qy-Mnj1NN2luDJpdM4MfiOBUJRxLKQ2yhD5L-pYGKyS4QHi3vuSQP2QB9UMh7bSdrAc2-ZagYqW4cL1x"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-slate-900 font-headline">Dr. Elena Vance, PhD</span>
+<span class="text-[11px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200">Lead Author</span>
+</div>
+<p class="text-xs text-slate-500 leading-tight">Chief Nutrition Scientist, ScanBeforeEat Labs • Former Senior Fellow at Harvard T.H. Chan School of Public Health</p>
+<p class="text-[11px] text-emerald-700 font-medium mt-0.5 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">format_image_left</span>
+              Reviewed by ScanBeforeEat Medical Advisory Board
+            </p>
+</div>
+</div>
+<!-- Social Action Toolbar -->
+<div class="flex items-center gap-2 self-start md:self-auto">
+<div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+<button class="p-1.5 hover:bg-white text-slate-700 rounded-lg transition-colors" onclick="adjustProseSize(-1)" title="Decrease font size">
+<span class="font-bold text-xs">A-</span>
+</button>
+<span class="text-slate-300">|</span>
+<button class="p-1.5 hover:bg-white text-slate-700 rounded-lg transition-colors" onclick="adjustProseSize(1)" title="Increase font size">
+<span class="font-bold text-xs">A+</span>
+</button>
+</div>
+<button class="flex items-center gap-1 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:border-slate-300 rounded-xl px-3 py-2 shadow-xs transition-colors" id="copyLinkBtn" onclick="copyArticleLink()">
+<span class="material-symbols-outlined text-sm">link</span>
+<span id="copyLinkText">Copy Link</span>
+</button>
+<button class="flex items-center gap-1 text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:border-slate-300 rounded-xl px-3 py-2 shadow-xs transition-colors">
+<span class="material-symbols-outlined text-sm">bookmark</span>
+<span>Save</span>
+</button>
+<a class="p-2 text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:border-slate-300 rounded-xl transition-colors shadow-xs" href="#" title="Share on Twitter/X">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       3. FEATURED HERO IMAGE
+       ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 pt-8 pb-4">
+<div class="relative rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm bg-slate-900">
+<img alt="High-performance liquid chromatography bio-informatics lab mapping food additives" class="w-full h-72 sm:h-96 md:h-[480px] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxsoQjejzsk6-SUddGzbxhEPHIwlcOvRz4Uc0awKLpULQ4hnIOUSN-rDbLnHPl7wNDfjny0RghRHagtIn-s9_ju2Sk10_3ciGe_XbspHmn6KJAlFT4nrbRms-jMYuCjubpSyv644Y9Xz5mTzmpK9PB-KFr0b1eys-Ah_Zz1QvNNRipv3rSGdR7kggRogdiMauicu8gcThtyynhoipjyDYHpeHcLf9JeNbvL67tHl8rHEon7Vn3oOf-0MBy3lTjK7m4Llit7ie8Bbsq"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-6 right-6 text-white text-xs md:text-sm font-medium flex items-center justify-between">
+<p class="text-slate-200/90 drop-shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-emerald-400 text-base">science</span>
+          Figure 1.0 — High-performance liquid chromatography and computational toxicology assay mapping emulsifier permeation through epithelial cellular membranes.
+        </p>
+<span class="hidden sm:inline-block font-label text-[11px] text-slate-300 bg-white/10 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/20">ScanBeforeEat Bio-informatics Lab</span>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       4. 3-COLUMN CONTENT CANVAS
+       ========================================================================= -->
+<main class="max-w-7xl mx-auto px-6 py-10 w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- ----------------------------------------------------
+           LEFT COLUMN: Sticky TOC, Audio Player & Micro Tools (3 Cols)
+           ---------------------------------------------------- -->
+<aside class="hidden lg:block lg:col-span-3 sticky top-24 space-y-6">
+<!-- Table of Contents Card -->
+<div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs">
+<div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+<h2 class="text-xs font-bold uppercase tracking-wider text-slate-900 font-label flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-sm">format_list_bulleted</span>
+              Table of Contents
+            </h2>
+<span class="text-[11px] font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">6 Chapters</span>
+</div>
+<nav class="space-y-2 text-xs font-medium text-slate-600">
+<a class="flex items-start gap-2 p-1.5 rounded-lg hover:bg-slate-50 hover:text-emerald-700 transition-colors" href="#section-1">
+<span class="font-mono text-emerald-600 font-bold">01</span>
+<span>What Qualifies as Ultra-Processed?</span>
+</a>
+<a class="flex items-start gap-2 p-1.5 rounded-lg hover:bg-slate-50 hover:text-emerald-700 transition-colors" href="#section-2">
+<span class="font-mono text-emerald-600 font-bold">02</span>
+<span>The Emulsifier Dilemma (Polysorbates &amp; CMC)</span>
+</a>
+<a class="flex items-start gap-2 p-1.5 rounded-lg hover:bg-slate-50 hover:text-emerald-700 transition-colors" href="#section-3">
+<span class="font-mono text-emerald-600 font-bold">03</span>
+<span>Gut Microbiome Barrier Erosion</span>
+</a>
+<a class="flex items-start gap-2 p-1.5 rounded-lg hover:bg-slate-50 hover:text-emerald-700 transition-colors" href="#section-4">
+<span class="font-mono text-emerald-600 font-bold">04</span>
+<span>Clinical Trial Evidence &amp; Metabolic Impact</span>
+</a>
+<a class="flex items-start gap-2 p-1.5 rounded-lg hover:bg-slate-50 hover:text-emerald-700 transition-colors" href="#section-5">
+<span class="font-mono text-emerald-600 font-bold">05</span>
+<span>The 5-Point Supermarket Checklist</span>
+</a>
+<a class="flex items-start gap-2 p-1.5 rounded-lg hover:bg-slate-50 hover:text-emerald-700 transition-colors" href="#section-6">
+<span class="font-mono text-emerald-600 font-bold">06</span>
+<span>Peer-Reviewed Academic Citations</span>
+</a>
+</nav>
+</div>
+<!-- Article Audio Player Mini-Widget -->
+<div class="bg-gradient-to-br from-emerald-950 to-slate-900 rounded-2xl p-5 text-white shadow-xs">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[11px] font-bold uppercase tracking-wider font-label text-emerald-400 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">headphones</span>
+              Audio Synthesis
+            </span>
+<span class="text-[11px] text-slate-400">8:24 min</span>
+</div>
+<p class="text-xs font-semibold text-white mb-3">Listen to this research dossier</p>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full bg-emerald-500 hover:bg-emerald-400 flex items-center justify-center text-slate-950 transition-colors shrink-0 shadow-md">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="flex-1 space-y-1">
+<div class="flex items-center gap-1 h-5">
+<span class="w-1 h-3 bg-emerald-400 rounded-full animate-pulse"></span>
+<span class="w-1 h-5 bg-emerald-300 rounded-full"></span>
+<span class="w-1 h-2 bg-emerald-500/50 rounded-full"></span>
+<span class="w-1 h-4 bg-emerald-400 rounded-full"></span>
+<span class="w-1 h-6 bg-emerald-300 rounded-full"></span>
+<span class="w-1 h-3 bg-emerald-400 rounded-full"></span>
+<span class="w-1 h-5 bg-emerald-200 rounded-full"></span>
+<span class="w-1 h-2 bg-slate-600 rounded-full"></span>
+<span class="w-1 h-4 bg-slate-600 rounded-full"></span>
+<span class="w-1 h-3 bg-slate-600 rounded-full"></span>
+<span class="w-1 h-5 bg-slate-600 rounded-full"></span>
+<span class="w-1 h-2 bg-slate-600 rounded-full"></span>
+</div>
+<div class="text-[10px] text-slate-400">AI Narration by ScanBeforeEat AudioLab</div>
+</div>
+</div>
+</div>
+<!-- Social Share Mini-Pills -->
+<div class="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs">
+<p class="text-[11px] font-bold uppercase text-slate-400 tracking-wider mb-2.5 font-label">Disseminate Research</p>
+<div class="grid grid-cols-2 gap-2 text-xs">
+<a class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+<span>Twitter</span>
+</a>
+<a class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">work</span>
+<span>LinkedIn</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- ----------------------------------------------------
+           MIDDLE COLUMN: Article Body Prose (6 Cols)
+           ---------------------------------------------------- -->
+<article class="col-span-1 lg:col-span-6 space-y-9 leading-relaxed text-slate-700 text-base md:text-lg" id="articleContent">
+<!-- Key Takeaways Box (TL;DR) -->
+<div class="bg-emerald-50/70 border border-emerald-200 border-l-4 border-l-emerald-600 rounded-r-2xl p-6 shadow-xs">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-emerald-700 text-xl" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<h3 class="text-sm font-bold uppercase tracking-wider text-emerald-950 font-label">Executive Summary &amp; Key Takeaways</h3>
+</div>
+<ul class="space-y-2.5 text-sm text-emerald-950/90 leading-normal">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-base shrink-0 mt-0.5">check_circle</span>
+<span><strong>NOVA-4 Hegemony:</strong> Ultra-processed foods now account for over 57% of daily caloric intake in high-income nations, replacing bio-intact cell matrices with molecular isolates.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-base shrink-0 mt-0.5">check_circle</span>
+<span><strong>Synthetic Emulsifiers:</strong> Chemical stabilizers including Polysorbate 80 (E433) and Carboxymethylcellulose (E466) act like biological detergents on intestinal mucosal lining.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-base shrink-0 mt-0.5">check_circle</span>
+<span><strong>Mucin Layer Degradation:</strong> Clinical biopsies demonstrate a dramatic reduction in gut barrier thickness, predisposing tissue to endotoxemia and systemic inflammatory spikes.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-base shrink-0 mt-0.5">check_circle</span>
+<span><strong>Algorithmic Screening:</strong> Modern computer vision pipelines can identify hidden industrial synthetic gums from ingredient declarations in under 400 milliseconds.</span>
+</li>
+</ul>
+</div>
+<!-- Section 1 -->
+<section class="space-y-4 pt-2" id="section-1">
+<h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-mono flex items-center justify-center font-bold">01</span>
+            What Qualifies as Ultra-Processed?
+          </h2>
+<p>
+            For decades, nutritional science evaluated human diet through the simplistic lens of isolated macronutrients—fat, carbohydrates, protein, and caloric density. However, pioneering epidemiological work led by Professor Carlos Monteiro at the University of São Paulo introduced the <strong class="text-slate-900">NOVA classification framework</strong>, demonstrating that the degree and industrial nature of food processing correlates far more strongly with chronic non-communicable disease than macronutrient balance alone.
+          </p>
+<p>
+            Unlike minimally processed culinary ingredients (Group 1 and 2), ultra-processed foods (Group 4) are not foods in the conventional biological sense. Instead, they represent industrial formulations generated by deconstructing whole agricultural raw materials into protein isolates, high-fructose syrups, hydrogenated fats, and interesterified oils, which are subsequently combined with laboratory-synthesized colorants, bleaching agents, artificial flavor enhancers, and synthetic emulsifying matrices.
+          </p>
+</section>
+<!-- Stat Callout Cards (2-Column Grid) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-2">
+<div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-5 text-emerald-900">
+<span class="material-symbols-outlined text-8xl">nutrition</span>
+</div>
+<div class="text-3xl sm:text-4xl font-extrabold text-emerald-600 font-label mb-1">57.9%</div>
+<div class="text-xs font-bold uppercase text-slate-800 tracking-wider mb-2 font-headline">Average Daily Calorie Share</div>
+<p class="text-xs text-slate-500 leading-normal">
+              Represented by UPF formulations in contemporary American and British adult nutritional surveys (CDC / NHANES dataset).
+            </p>
+</div>
+<div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-5 text-emerald-900">
+<span class="material-symbols-outlined text-8xl">warning</span>
+</div>
+<div class="text-3xl sm:text-4xl font-extrabold text-amber-600 font-label mb-1">3.2x</div>
+<div class="text-xs font-bold uppercase text-slate-800 tracking-wider mb-2 font-headline">Systemic Inflammation Hazard</div>
+<p class="text-xs text-slate-500 leading-normal">
+              Elevated hazard ratio for micro-vascular low-grade systemic inflammation and metabolic dysregulation documented in the 2024 BMJ umbrella review.
+            </p>
+</div>
+</div>
+<!-- Section 2 -->
+<section class="space-y-4 pt-4" id="section-2">
+<h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-mono flex items-center justify-center font-bold">02</span>
+            The Emulsifier Dilemma: Polysorbates &amp; Carboxymethylcellulose
+          </h2>
+<p>
+            Among the chemical additives permitted in modern consumer packaged goods, synthetic surfactants and emulsifiers hold a uniquely disruptive biological status. Industrial food production uses these molecules to prevent liquid phase separation—keeping water and oil molecules stably suspended in salad dressings, dairy-free creamers, commercial baked goods, and ice creams.
+          </p>
+<p>
+            The two most extensively scrutinized compounds are <strong class="text-slate-900">Polysorbate 80 (E433)</strong> and <strong class="text-slate-900">Sodium Carboxymethylcellulose (E466)</strong>. Because both substances possess potent amphiphilic properties, their chemical mechanism does not cease when swallowed. Instead, they interact directly with the lipid-rich protective mucus layer that lines the human intestinal epithelium.
+          </p>
+</section>
+<!-- Pull Quote -->
+<div class="my-6 border-l-4 border-emerald-500 bg-white p-6 rounded-r-2xl shadow-xs border border-slate-200/70">
+<blockquote class="italic text-lg md:text-xl font-medium text-slate-800 leading-relaxed font-headline">
+            “When whole food matrices are fractured, bleached, and reconstituted with industrial synthetic binders, the human gastrointestinal tract treats it not as biological fuel, but as a chronic mucosal irritant.”
+          </blockquote>
+<div class="mt-3 text-xs font-bold text-emerald-700 tracking-wide font-label uppercase">
+            — Dr. Elena Vance, ScanBeforeEat Toxicology Whitepaper (2025)
+          </div>
+</div>
+<!-- Comparison Table: Covert UPF Additives vs Clean Alternatives -->
+<div class="space-y-3 pt-2">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-slate-900 font-headline">Covert UPF Additives vs Clean Whole Food Alternatives</h3>
+<span class="text-[11px] font-label text-slate-500">ScanBeforeEat Toxicology Matrix</span>
+</div>
+<div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs">
+<table class="w-full text-left border-collapse text-xs md:text-sm">
+<thead>
+<tr class="bg-slate-50/80 border-b border-slate-200 text-slate-700 font-label">
+<th class="p-3.5 font-bold">Industrial Additive</th>
+<th class="p-3.5 font-bold">Function &amp; Products</th>
+<th class="p-3.5 font-bold">Risk Level</th>
+<th class="p-3.5 font-bold">Clean Whole Alternative</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-slate-600">
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="p-3.5 font-semibold text-slate-900">
+<div>Polysorbate 80 (E433)</div>
+<span class="text-[11px] text-slate-400 font-mono">Polyoxyethylene sorbitan</span>
+</td>
+<td class="p-3.5">Commercial ice creams, salad dressings, whipped foams</td>
+<td class="p-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">
+                      High Alert
+                    </span>
+</td>
+<td class="p-3.5 text-emerald-800 font-medium">Egg yolk lecithin, whole milk fat</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="p-3.5 font-semibold text-slate-900">
+<div>Sodium CMC (E466)</div>
+<span class="text-[11px] text-slate-400 font-mono">Carboxymethyl cellulose</span>
+</td>
+<td class="p-3.5">Oat milk, protein shakes, low-fat yogurts, keto breads</td>
+<td class="p-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                      Moderate-High
+                    </span>
+</td>
+<td class="p-3.5 text-emerald-800 font-medium">Whole crushed oats, chia seed gel</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="p-3.5 font-semibold text-slate-900">
+<div>Carrageenan (E407)</div>
+<span class="text-[11px] text-slate-400 font-mono">Red seaweed extract</span>
+</td>
+<td class="p-3.5">Dairy-free plant milks, infant formulas, processed deli meats</td>
+<td class="p-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                      Moderate
+                    </span>
+</td>
+<td class="p-3.5 text-emerald-800 font-medium">Unfiltered mechanical nut milk</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="p-3.5 font-semibold text-slate-900">
+<div>Maltodextrin</div>
+<span class="text-[11px] text-slate-400 font-mono">Hydrolyzed starch polymer</span>
+</td>
+<td class="p-3.5">Electrolyte powders, seasoning packets, potato chips</td>
+<td class="p-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">
+                      High Glycemic
+                    </span>
+</td>
+<td class="p-3.5 text-emerald-800 font-medium">Dehydrated whole root powders</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Section 3 -->
+<section class="space-y-4 pt-4" id="section-3">
+<h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-mono flex items-center justify-center font-bold">03</span>
+            Gut Microbiome Barrier Erosion
+          </h2>
+<p>
+            Under homeostatic physiological conditions, the gut is coated by a continuous dual-layer sheet of viscous mucus consisting mainly of the mucin glycoprotein MUC2. The inner layer is virtually sterile, physically preventing commensal bacteria and opportunistic pathogens from directly contacting epithelial colonocytes.
+          </p>
+<p>
+            When synthetic detergent-like emulsifiers enter this microenvironment, they thin this critical protective zone by up to 50% within 12 weeks of consistent ingestion. Consequently, bacteria migrate directly against cell membranes, triggering the overexpression of zonulin and loosening intestinal tight junctions (claudin-1 and occludin). This sequence is the molecular gateway to systemic endotoxemia, where bacterial lipopolysaccharides (LPS) leak directly into portal blood circulation.
+          </p>
+</section>
+<!-- Section 4 -->
+<section class="space-y-4 pt-4" id="section-4">
+<h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-mono flex items-center justify-center font-bold">04</span>
+            Clinical Trial Evidence &amp; Metabolic Impact
+          </h2>
+<p>
+            In a landmark randomized, double-blind crossover human intervention trial published in <em class="text-slate-900 font-medium">Gastroenterology</em>, healthy adult participants were placed on diets controlled for macro- and micro-nutrients, varying only by the addition of 15 grams of carboxymethylcellulose daily. 
+          </p>
+<p>
+            Within just 11 days, participants receiving CMC exhibited a marked reduction in microbial diversity, a steep decline in beneficial short-chain fatty acid (SCFA) producing taxa such as <em>Faecalibacterium prausnitzii</em>, and notable increases in postprandial glycemic excursions.
+          </p>
+</section>
+<!-- Section 5: The 5-Point Supermarket Checklist -->
+<section class="space-y-4 pt-4" id="section-5">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight font-headline flex items-center gap-3">
+<span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-mono flex items-center justify-center font-bold">05</span>
+              The 5-Point Supermarket Checklist
+            </h2>
+</div>
+<p class="text-sm text-slate-600">
+            Use these interactive heuristics when reviewing nutrition ingredient declarations in your grocery aisle:
+          </p>
+<div class="space-y-3 pt-2">
+<!-- Checklist Item 1 -->
+<label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer group">
+<input checked="" class="mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" type="checkbox"/>
+<div class="text-sm">
+<span class="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">1. The Rule of 5: Five or fewer primary ingredients</span>
+<p class="text-xs text-slate-500 mt-0.5">True culinary items rarely necessitate industrial chemical stabilizer arrays.</p>
+</div>
+</label>
+<!-- Checklist Item 2 -->
+<label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer group">
+<input checked="" class="mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" type="checkbox"/>
+<div class="text-sm">
+<span class="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">2. The Kitchen Test: Would your grandmother own this in a pantry?</span>
+<p class="text-xs text-slate-500 mt-0.5">If you cannot buy potassium bromate, silicon dioxide, or DATEM in a domestic spice market, it is NOVA-4.</p>
+</div>
+</label>
+<!-- Checklist Item 3 -->
+<label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer group">
+<input class="mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" type="checkbox"/>
+<div class="text-sm">
+<span class="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">3. Check Plant Milk Emulsion Fillers</span>
+<p class="text-xs text-slate-500 mt-0.5">Select almond and oat milks with only two ingredients: filtered water and organic oats/almonds.</p>
+</div>
+</label>
+<!-- Checklist Item 4 -->
+<label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer group">
+<input class="mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" type="checkbox"/>
+<div class="text-sm">
+<span class="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">4. Avoid Covert Sugars Under 60+ Disguises</span>
+<p class="text-xs text-slate-500 mt-0.5">Dextrose, inverted cane syrup, malt extract, and isoglucose artificially disguise glycemic density.</p>
+</div>
+</label>
+<!-- Checklist Item 5 -->
+<label class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer group">
+<input class="mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" type="checkbox"/>
+<div class="text-sm">
+<span class="font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">5. Scan Before You Eat with Optical AI</span>
+<p class="text-xs text-slate-500 mt-0.5">Use real-time toxicology analysis to identify micro-dosed excipients not listed on primary marketing labels.</p>
+</div>
+</label>
+</div>
+</section>
+<!-- Section 6: Citations -->
+<section class="space-y-4 pt-4 border-t border-slate-200" id="section-6">
+<h2 class="text-xl font-bold text-slate-900 tracking-tight font-headline flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600 text-lg">menu_book</span>
+            Peer-Reviewed Academic Citations &amp; DOIs
+          </h2>
+<div class="space-y-3 text-xs text-slate-600">
+<div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs">
+<p class="font-medium text-slate-900">
+                1. Monteiro, C. A., Cannon, G., Levy, R. B., et al. (2019). Ultra-processed foods: what they are and how to identify them. <em>Public Health Nutrition</em>, 22(5), 936-941.
+              </p>
+<a class="text-emerald-600 font-semibold hover:underline inline-flex items-center gap-1 mt-1" href="#">
+<span>doi:10.1017/S136898001900077X</span>
+<span class="material-symbols-outlined text-xs">open_in_new</span>
+</a>
+</div>
+<div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs">
+<p class="font-medium text-slate-900">
+                2. Chassaing, B., Koren, O., Goodrich, J. K., et al. (2015). Dietary emulsifiers impact the mouse gut microbiota promoting colitis and metabolic syndrome. <em>Nature</em>, 519(7541), 92-96.
+              </p>
+<a class="text-emerald-600 font-semibold hover:underline inline-flex items-center gap-1 mt-1" href="#">
+<span>doi:10.1038/nature14232</span>
+<span class="material-symbols-outlined text-xs">open_in_new</span>
+</a>
+</div>
+<div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs">
+<p class="font-medium text-slate-900">
+                3. Lane, M. M., Gamage, E., Du, S., et al. (2024). Ultra-processed food exposure and adverse health outcomes: umbrella review of epidemiological meta-analyses. <em>The BMJ</em>, 384:e077310.
+              </p>
+<a class="text-emerald-600 font-semibold hover:underline inline-flex items-center gap-1 mt-1" href="#">
+<span>doi:10.1136/bmj-2023-077310</span>
+<span class="material-symbols-outlined text-xs">open_in_new</span>
+</a>
+</div>
+</div>
+</section>
+</article>
+<!-- ----------------------------------------------------
+           RIGHT COLUMN: Interactive Scanner Widget & Author Card (3 Cols)
+           ---------------------------------------------------- -->
+<aside class="col-span-1 lg:col-span-3 sticky top-24 space-y-6">
+<!-- Interactive Pantry Scanner Mockup Widget -->
+<div class="bg-white rounded-2xl p-5 border border-emerald-200/90 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-28 h-28 bg-emerald-50 rounded-full filter blur-xl -z-0"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-3">
+<div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">document_scanner</span>
+</div>
+<div>
+<h3 class="text-sm font-bold text-slate-900 font-headline">Test Your Pantry</h3>
+<p class="text-[11px] text-slate-500">Live AI Toxicology Lookup</p>
+</div>
+</div>
+<p class="text-xs text-slate-600 mb-3">
+              Type any suspicious food additive or barcode below to analyze its European toxicology score:
+            </p>
+<form class="space-y-2 mb-3" onsubmit="event.preventDefault(); triggerDemoScan();">
+<div class="relative">
+<input class="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-2 text-slate-900 focus:ring-emerald-500 focus:border-emerald-500 transition-all font-mono" id="demoScanInput" placeholder="e.g. E407, Polysorbate 80" type="text" value="Polysorbate 80"/>
+<span class="material-symbols-outlined text-slate-400 absolute left-2.5 top-2 text-sm">search</span>
+</div>
+<button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-3 rounded-xl transition-all shadow-xs flex items-center justify-center gap-1.5 active:scale-[0.98]" type="submit">
+<span class="material-symbols-outlined text-sm">bolt</span>
+<span>Analyze Additive</span>
+</button>
+</form>
+<!-- Dynamic Scan Result Feedback Preview -->
+<div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-1.5 transition-all" id="demoResultBox">
+<div class="flex items-center justify-between">
+<span class="font-bold text-slate-900 font-mono">E433 (Polysorbate 80)</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800">NOVA 4 Flag</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-snug">
+                Known synthetic detergent additive associated with mucin barrier thinning and elevated gut permeability.
+              </p>
+<div class="pt-1 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-200/60 font-mono">
+<span>Toxicology Score: 24/100</span>
+<span class="text-emerald-700 font-semibold cursor-pointer hover:underline">Full Profile →</span>
+</div>
+</div>
+<!-- Launch Live Scanner Mobile Link -->
+<div class="mt-4 pt-3 border-t border-slate-100 text-center">
+<a class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm">camera_alt</span>
+<span>Launch Live Camera Scanner</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Author Bio Card -->
+<div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs">
+<div class="flex items-center gap-3 mb-3">
+<img class="w-11 h-11 rounded-full object-cover border border-emerald-300" data-alt="Close up professional portrait of Dr Elena Vance, an accomplished female nutritional scientist in lab attire with warm gentle lighting, high key background, highly detailed laboratory atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHg9j7kp6sOKUeqGop2_N2bYZBBfG9CqQZZMbkJWHKsoj5utDOteRofv8Uo6h1ekiHNXbiM31vPt3yy6AnBlTsWM-F3dndqq3y_zoiEs_X4bSVqEO3WzgMye53YigFir6IDTA8IYj_AO5WvWd5uAt0RK1YMamGn0L56DmU0M3P-UMt7f78LHF7OsLIj1weAHraZromtQ7hF4qdVKu5MhxMFme7nYbJETwOh6obMF3BREBdmE57lwj3i16A5SklCqH3uioN9z1i2OyJ"/>
+<div>
+<h4 class="text-sm font-bold text-slate-900 font-headline leading-tight">Dr. Elena Vance</h4>
+<p class="text-[11px] text-emerald-700 font-medium">Head of Research &amp; Toxicology</p>
+</div>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed mb-3">
+            Dr. Vance has authored over 42 peer-reviewed studies on epithelial mucosal biology at Harvard T.H. Chan and Karolinska Institutet.
+          </p>
+<a class="text-xs font-bold text-slate-800 hover:text-emerald-600 flex items-center gap-1.5 transition-colors" href="#">
+<span class="material-symbols-outlined text-sm text-emerald-600">school</span>
+<span>Follow on PubMed &amp; Google Scholar</span>
+</a>
+</div>
+<!-- Trending Food Science Mini-Feed -->
+<div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs">
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 font-label mb-3.5">
+            Trending Food Science
+          </h4>
+<div class="space-y-3 text-xs">
+<a class="block group" href="#">
+<span class="text-[10px] font-mono text-emerald-600 font-bold uppercase">Regulatory Alert</span>
+<p class="font-semibold text-slate-800 group-hover:text-emerald-600 transition-colors leading-snug">
+                Why Titanium Dioxide (E171) was Banned across the EU but remains in US Candies
+              </p>
+</a>
+<a class="block group pt-2.5 border-t border-slate-100" href="#">
+<span class="text-[10px] font-mono text-emerald-600 font-bold uppercase">Lipid Chemistry</span>
+<p class="font-semibold text-slate-800 group-hover:text-emerald-600 transition-colors leading-snug">
+                Is Seed Oil Oxidation Real? The Bio-chemical Truth Behind Canola &amp; Soybean Oil
+              </p>
+</a>
+<a class="block group pt-2.5 border-t border-slate-100" href="#">
+<span class="text-[10px] font-mono text-emerald-600 font-bold uppercase">Database Benchmarking</span>
+<p class="font-semibold text-slate-800 group-hover:text-emerald-600 transition-colors leading-snug">
+                NOVA 1 vs NOVA 4: 140 Popular Breakfast Cereals Tested &amp; Ranked
+              </p>
+</a>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- =========================================================================
+       5. POST-ARTICLE ENGAGEMENT SECTION
+       ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 py-8 w-full">
+<div class="bg-white rounded-2xl p-6 md:p-8 border border-slate-200/90 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+<!-- Feedback Widget -->
+<div class="space-y-1.5 text-center md:text-left">
+<h4 class="text-base font-bold text-slate-900 font-headline">Was this toxicological review helpful?</h4>
+<p class="text-xs text-slate-500">Your feedback helps our clinical review board prioritize subsequent additive dossiers.</p>
+<div class="flex items-center gap-3 pt-2 justify-center md:justify-start">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-200 transition-all" onclick="recordFeedback(true)">
+<span class="material-symbols-outlined text-sm">thumb_up</span>
+<span>Yes, helpful &amp; clear</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all" onclick="recordFeedback(false)">
+<span class="material-symbols-outlined text-sm">help</span>
+<span>Needs more clinical data</span>
+</button>
+</div>
+</div>
+<!-- Topic Tags Mini-Cluster -->
+<div class="flex flex-wrap gap-2 max-w-md justify-center md:justify-end">
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#UltraProcessedFoods</span>
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#FoodScience</span>
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#Emulsifiers</span>
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#NOVA4</span>
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#GutHealth</span>
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#Toxicology</span>
+<span class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium px-3 py-1 rounded-full cursor-pointer transition-colors">#CleanEating</span>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       6. RELATED RESEARCH ARTICLES (3-Card Bento Grid)
+       ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 py-10 w-full">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-2xl font-extrabold text-slate-900 font-headline tracking-tight">Related Research Dossiers</h3>
+<p class="text-xs text-slate-500 mt-0.5">Complementary investigative reporting by the ScanBeforeEat science team</p>
+</div>
+<a class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 font-label" href="#">
+<span>Explore All Articles</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Related Card 1 -->
+<a class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="h-44 w-full bg-slate-100 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Laboratory glassware with colorful chemical analytical indicators on high tech laboratory bench, soft studio lighting, ultra sharp focus on molecular food testing equipment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi1tqaIt7OEf58981w_3p68ZE1Ag7EpRye0mr32yZpDhQhu7SckqrBG8XHlXHj7hkNGDhM-K0fTWlV91pqvHfmaXK9YDyiyiXcpT96h9C_k3JjyMo5tsXCmuVY-a3VZMpa75UygV8mxj8c-Vv5JhQOpTzFcwx525-z1NGXld79QoLNPqL_ekMYNIo0Swv_ga0eHrPUx4NYnWpXIUb4IXLloPqhro6s8ogIk29OOMcLYZVEKBc9bdmVDWxE7PBqjc3ItHzpafD8ujT1"/>
+<span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full font-label">E-Numbers Guide</span>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 text-slate-400 text-xs mb-2">
+<span>6 min read</span>
+<span>•</span>
+<span>Updated Feb 2025</span>
+</div>
+<h4 class="font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-headline text-base leading-snug">
+              E-Numbers Explained: Which Additives Are Genuinely Harmful vs Benign
+            </h4>
+<p class="text-xs text-slate-500 mt-2 line-clamp-2">
+              A comprehensive chemical taxonomy separating harmless antioxidant salts like ascorbic acid from endocrine-disrupting artificial preservatives.
+            </p>
+</div>
+</div>
+<div class="px-5 pb-5 pt-0">
+<span class="text-xs font-bold text-emerald-600 group-hover:translate-x-1 inline-flex items-center gap-1 transition-transform">
+            Read Research →
+          </span>
+</div>
+</a>
+<!-- Related Card 2 -->
+<a class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="h-44 w-full bg-slate-100 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Modern supermarket aisle illuminated with bright crisp lighting, colorful rows of whole fresh fruits contrasting with packaged snacks, elegant depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVPaf6gLWprXuWWZWzVSKodqy0fNyaS1ieEuO1EdDZL52Y8CFCyk-EU4DDLM0W92rhRHdfLf7g1emeD3P_IvHdABG-H-aTRqm_neGI27W8CU3mudaITgJwgYkIwZJQauOX2WVa0JumzYhYDcAktZqwRsqWW4M8DyOWI6klhtUfAiV4yWKZU1FE1BWPkBs-pdx45LRObkczQKvoFPf8_GpGxVzndZB9PuyQHMDFB_1bPUY-zFZmgqzaTBpUqEiluW69-HUZCRlc3K88"/>
+<span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full font-label">Classification</span>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 text-slate-400 text-xs mb-2">
+<span>10 min read</span>
+<span>•</span>
+<span>Updated Jan 2025</span>
+</div>
+<h4 class="font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-headline text-base leading-snug">
+              How the NOVA Classification System Disrupted Modern Nutrition Science
+            </h4>
+<p class="text-xs text-slate-500 mt-2 line-clamp-2">
+              Why evaluating biological food matrix integrity matters infinitely more than tracking gross carbohydrate and caloric counts alone.
+            </p>
+</div>
+</div>
+<div class="px-5 pb-5 pt-0">
+<span class="text-xs font-bold text-emerald-600 group-hover:translate-x-1 inline-flex items-center gap-1 transition-transform">
+            Read Research →
+          </span>
+</div>
+</a>
+<!-- Related Card 3 -->
+<a class="group bg-white rounded-2xl overflow-hidden border border-slate-200/90 hover:border-emerald-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between" href="#">
+<div>
+<div class="h-44 w-full bg-slate-100 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Close up of food packaging label being analyzed under ultraviolet scientific inspection lamp in modern food security laboratory, cinematic subtle emerald green glow." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoUOqpWeHQMVJS5JPb2Gjp78XsdSHsyXTBVflV5McASGuTdv64G1-Ni3ZXSrHbnhDq-z8y8N5yRv4WxiKBPugfFwR0KqRefE1NmQ9yAYgIcAvP6J4Y1OqAle5S8NL7uabMP7Lw-1Bz5aoEdHJ8c3MTj-Rkn9iEsJlybWWiz7J6XtOWerehnGQfolu4L7UZsT42Q9gcUdbEJo_u2M22IEnzpQnQFljB_rmY_D-LYTkPP5UeU9-S1OQ2qzEY0ywrJzN4zvVyf0_CLFsx"/>
+<span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full font-label">Policy &amp; Law</span>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-2 text-slate-400 text-xs mb-2">
+<span>7 min read</span>
+<span>•</span>
+<span>Updated Mar 2025</span>
+</div>
+<h4 class="font-bold text-slate-900 group-hover:text-emerald-600 transition-colors font-headline text-base leading-snug">
+              10 Food Additives Permitted in the US but Strictly Banned in the European Union
+            </h4>
+<p class="text-xs text-slate-500 mt-2 line-clamp-2">
+              Analyzing potassium bromate, BHA, azodicarbonamide, and yellow dye #5 through the precautionary principle of EFSA.
+            </p>
+</div>
+</div>
+<div class="px-5 pb-5 pt-0">
+<span class="text-xs font-bold text-emerald-600 group-hover:translate-x-1 inline-flex items-center gap-1 transition-transform">
+            Read Research →
+          </span>
+</div>
+</a>
+</div>
+</section>
+<!-- =========================================================================
+       7. NEWSLETTER CAPTURE BANNER
+       ========================================================================= -->
+<section class="max-w-7xl mx-auto px-6 py-10 w-full">
+<div class="relative rounded-3xl bg-slate-900 text-white p-8 md:p-12 overflow-hidden shadow-xl border border-slate-800">
+<!-- Ambient Glow Circles -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl">
+<span class="inline-flex items-center gap-1.5 bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full font-label mb-4">
+<span class="material-symbols-outlined text-xs">mail</span>
+          Weekly Clinical Toxicology Dispatch
+        </span>
+<h3 class="text-2xl sm:text-3xl md:text-4xl font-extrabold font-headline tracking-tight mb-3">
+          Get Weekly Peer-Reviewed Food Science Dossiers
+        </h3>
+<p class="text-slate-300 text-sm md:text-base mb-6 leading-relaxed">
+          Zero marketing spam. Direct clinical toxicology alerts, FDA/EFSA additive recalls, and verified clean food alternatives delivered straight to your inbox every Tuesday morning.
+        </p>
+<form class="flex flex-col sm:flex-row gap-3 max-w-md" onsubmit="event.preventDefault(); alert('Subscribed to ScanBeforeEat Research Dossier!');">
+<input class="bg-slate-800/90 border border-slate-700 text-white placeholder-slate-400 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-400 flex-1 font-body" placeholder="Enter your work or personal email" required="" type="email"/>
+<button class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-md hover:shadow-emerald-500/20 active:scale-95 shrink-0 flex items-center justify-center gap-2" type="submit">
+<span>Subscribe</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</form>
+<p class="text-[11px] text-slate-400 mt-2.5">
+          Join 84,000+ clinicians, food technologists, and conscious eaters. Unsubscribe anytime.
+        </p>
+</div>
+</div>
+</section>
+<!-- =========================================================================
+       8. GLOBAL FOOTER (Conforms to Shared Components JSON)
+       ========================================================================= -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- =========================================================================
+       INLINE INTERACTION JAVASCRIPT
+       ========================================================================= -->
+<script>
+    // Dynamic Reading Progress Bar Calculation
+    window.addEventListener('scroll', () => {
+      const article = document.getElementById('articleContent');
+      if (!article) return;
+      const rect = article.getBoundingClientRect();
+      const totalHeight = article.scrollHeight;
+      const progress = Math.min(100, Math.max(0, ((window.innerHeight - rect.top) / (totalHeight + window.innerHeight)) * 100));
+      const progressBar = document.getElementById('readingProgress');
+      if (progressBar) {
+        progressBar.style.width = progress + '%';
+      }
+    });
+
+    // Copy Link feedback
+    function copyArticleLink() {
+      navigator.clipboard.writeText(window.location.href);
+      const textSpan = document.getElementById('copyLinkText');
+      if (textSpan) {
+        const original = textSpan.innerText;
+        textSpan.innerText = 'Copied!';
+        setTimeout(() => {
+          textSpan.innerText = original;
+        }, 2000);
+      }
+    }
+
+    // Dynamic Text Size Switcher
+    let currentSizeTier = 1; // 0 = small, 1 = normal, 2 = large
+    function adjustProseSize(delta) {
+      const article = document.getElementById('articleContent');
+      if (!article) return;
+      currentSizeTier = Math.max(0, Math.min(2, currentSizeTier + delta));
+      article.classList.remove('text-sm', 'text-base', 'text-lg', 'text-xl');
+      if (currentSizeTier === 0) {
+        article.classList.add('text-base');
+      } else if (currentSizeTier === 1) {
+        article.classList.add('text-lg');
+      } else {
+        article.classList.add('text-xl');
+      }
+    }
+
+    // Demo Live Scanner trigger
+    function triggerDemoScan() {
+      const input = document.getElementById('demoScanInput');
+      const resultBox = document.getElementById('demoResultBox');
+      if (!input || !resultBox) return;
+
+      const query = input.value.trim().toLowerCase();
+      resultBox.innerHTML = `
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-900 font-mono">${input.value.toUpperCase()}</span>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Scanned & Verified</span>
+        </div>
+        <p class="text-[11px] text-slate-600 leading-snug">
+          Matched chemical formulation against European Food Safety Authority database. Potential biological mucosal impact identified.
+        </p>
+        <div class="pt-1 flex items-center justify-between text-[10px] text-slate-500 border-t border-slate-200 font-mono">
+          <span>NOVA 4 Category Marker</span>
+          <span class="text-emerald-700 font-semibold cursor-pointer hover:underline">Inspect Pathway &rarr;</span>
+        </div>
+      `;
+    }
+
+    // Feedback acknowledgment
+    function recordFeedback(isHelpful) {
+      alert(isHelpful ? "Thank you! Your feedback has been sent to our Medical Advisory Board." : "Thank you for letting us know. We are adding deeper clinical references to this section.");
+    }
+  </script>
+</body></html>

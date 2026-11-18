@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Food Additives &amp; E-Number Database | ScanBeforeEat</title>
+<meta content="Comprehensive E-number checker and food additive safety catalog with EFSA and FDA toxicological evaluations." name="description"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-neutral-50 text-neutral-900 font-body antialiased selection:bg-emerald-100 selection:text-emerald-900" data-gr-ext-installed="" data-new-gr-c-s-check-loaded="14.1347.0">
+<!-- 1. TopNavBar (Shared Component Execution) -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<!-- Main Content Wrapper with Top Margin for Fixed Nav -->
+<main class="pt-24 pb-16">
+<div class="max-w-7xl mx-auto px-6">
+<!-- 2. Header / SEO Breadcrumbs & Metadata -->
+<div class="pt-4 pb-2 border-b border-neutral-200">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-neutral-100 text-neutral-700 font-mono text-[11px] font-medium border border-neutral-200">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              EFSA &amp; FDA Harmonized Toxicology // Open Food Additive Index
+            </span>
+<span class="text-neutral-400">/</span>
+<span class="font-mono text-neutral-500 text-[11px]">E-Number Checker Catalog v4.2</span>
+</div>
+<div class="flex items-center gap-2 text-neutral-500 font-mono text-[11px]">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span>Updated March 2025 • 512 Additives Indexed</span>
+</div>
+</div>
+</div>
+<!-- 3. Hero Section -->
+<div class="py-10">
+<div class="max-w-4xl">
+<div class="inline-flex items-center gap-1 text-emerald-700 text-xs font-semibold uppercase tracking-wider mb-2">
+<span class="material-symbols-outlined text-base" data-icon="verified">verified</span>
+            Scientific Risk Evaluation Repository
+          </div>
+<h1 class="font-headline text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 leading-tight">
+            Food Additives &amp; E-Number Database
+          </h1>
+<p class="mt-4 font-body text-base sm:text-lg text-neutral-600 leading-relaxed max-w-3xl">
+            Comprehensive safety database of 500+ food additives, preservatives, colors, and emulsifiers with risk ratings based on EFSA and FDA evaluations.
+          </p>
+<!-- Quick stat pill counters -->
+<div class="mt-6 flex flex-wrap gap-3">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-xs font-medium text-neutral-800 shadow-xs">
+<span class="material-symbols-outlined text-emerald-600 text-base" data-icon="dataset">dataset</span>
+<span class="font-bold">512</span> Additives Evaluated
+            </div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-xs font-medium text-neutral-800 shadow-xs">
+<span class="material-symbols-outlined text-red-600 text-base" data-icon="warning">warning</span>
+<span class="font-bold text-red-600">42</span> Flagged High Risk
+            </div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-white border border-neutral-200 rounded-lg text-xs font-medium text-neutral-800 shadow-xs">
+<span class="material-symbols-outlined text-emerald-600 text-base" data-icon="biotech">biotech</span>
+<span class="font-bold">100%</span> Peer-Reviewed Toxicology
+            </div>
+</div>
+</div>
+</div>
+<!-- 4. Search & Filter Bar (Clinical Bar) -->
+<div class="bg-white border border-neutral-200 rounded-xl p-4 sm:p-5 shadow-sm space-y-4 mb-8">
+<!-- Search Input -->
+<div class="relative flex items-center">
+<span class="absolute left-4 text-neutral-400 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-xl" data-icon="search">search</span>
+</span>
+<input class="w-full pl-11 pr-24 py-3 bg-neutral-50 hover:bg-white focus:bg-white text-sm text-neutral-900 placeholder:text-neutral-400 rounded-lg border border-neutral-200 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all font-body" id="additiveSearch" placeholder="Search by name, E-number, or function (e.g., E102, Tartrazine, Preservative)..." type="text"/>
+<div class="absolute right-3.5 hidden sm:flex items-center gap-1.5">
+<kbd class="px-2 py-1 bg-neutral-100 text-neutral-500 rounded border border-neutral-200 text-[10px] font-mono font-semibold">⌘K</kbd>
+</div>
+</div>
+<!-- Horizontal Pill Filters & Sorting Toolbar -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pt-1 border-t border-neutral-100">
+<!-- Category Pills -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 text-xs no-scrollbar">
+<button class="category-pill active-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-emerald-600 text-white transition-colors" data-category="all">
+              All <span class="ml-1 opacity-80 font-mono text-[11px]">(512)</span>
+</button>
+<button class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-colors" data-category="preservative">
+              Preservatives <span class="ml-1 text-neutral-500 font-mono text-[11px]">(84)</span>
+</button>
+<button class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-colors" data-category="color">
+              Colors <span class="ml-1 text-neutral-500 font-mono text-[11px]">(45)</span>
+</button>
+<button class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-colors" data-category="sweetener">
+              Sweeteners <span class="ml-1 text-neutral-500 font-mono text-[11px]">(28)</span>
+</button>
+<button class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-colors" data-category="emulsifier">
+              Emulsifiers <span class="ml-1 text-neutral-500 font-mono text-[11px]">(62)</span>
+</button>
+<button class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-colors" data-category="flavor enhancer">
+              Flavor Enhancers <span class="ml-1 text-neutral-500 font-mono text-[11px]">(31)</span>
+</button>
+<button class="category-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-medium bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-colors" data-category="antioxidant">
+              Antioxidants <span class="ml-1 text-neutral-500 font-mono text-[11px]">(56)</span>
+</button>
+</div>
+<!-- Risk Filter Selector -->
+<div class="flex items-center gap-2 self-start lg:self-auto text-xs shrink-0">
+<span class="text-neutral-500 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+              Risk Level:
+            </span>
+<div class="flex items-center bg-neutral-100 p-0.5 rounded-lg border border-neutral-200">
+<button class="risk-filter-btn px-2.5 py-1 rounded font-medium bg-white text-neutral-900 shadow-2xs" data-risk="all">All</button>
+<button class="risk-filter-btn px-2.5 py-1 rounded font-medium text-neutral-600 hover:text-neutral-900" data-risk="high">High</button>
+<button class="risk-filter-btn px-2.5 py-1 rounded font-medium text-neutral-600 hover:text-neutral-900" data-risk="moderate">Moderate</button>
+<button class="risk-filter-btn px-2.5 py-1 rounded font-medium text-neutral-600 hover:text-neutral-900" data-risk="low">Safe</button>
+</div>
+</div>
+</div>
+</div>
+<!-- 5. Additives Data Table (Scientific High Density) -->
+<div class="bg-white border border-neutral-200 rounded-xl shadow-xs overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs sm:text-sm border-collapse" id="additivesTable">
+<thead>
+<tr class="bg-neutral-100/90 text-neutral-700 uppercase font-mono text-[11px] tracking-wider border-b border-neutral-200 sticky top-16 z-20 backdrop-blur-sm">
+<th class="py-3 px-4 font-semibold text-neutral-900" scope="col">E-Number</th>
+<th class="py-3 px-4 font-semibold text-neutral-900" scope="col">Name</th>
+<th class="py-3 px-4 font-semibold" scope="col">Category</th>
+<th class="py-3 px-4 font-semibold" scope="col">Function</th>
+<th class="py-3 px-4 font-semibold" scope="col">Risk Level</th>
+<th class="py-3 px-4 font-semibold" scope="col">Commonly Found In</th>
+<th class="py-3 px-4 font-semibold" scope="col">EFSA Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-neutral-200 font-body">
+<!-- 1. E102 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="color" data-risk="high">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E102</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Tartrazine</td>
+<td class="py-3 px-4 text-neutral-600">Color</td>
+<td class="py-3 px-4 text-neutral-600">Artificial yellow dye</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-300">
+<span class="h-1.5 w-1.5 rounded-full bg-red-600"></span>
+                    High Risk
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Snacks, drinks</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Requires warning label (EU)</td>
+</tr>
+<!-- 2. E211 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="preservative" data-risk="moderate">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E211</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Sodium Benzoate</td>
+<td class="py-3 px-4 text-neutral-600">Preservative</td>
+<td class="py-3 px-4 text-neutral-600">Antimicrobial</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    Moderate
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Soft drinks, sauces</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">ADI 5mg/kg</td>
+</tr>
+<!-- 3. E621 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="flavor enhancer" data-risk="moderate">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E621</td>
+<td class="py-3 px-4 font-medium text-neutral-900">MSG</td>
+<td class="py-3 px-4 text-neutral-600">Flavor Enhancer</td>
+<td class="py-3 px-4 text-neutral-600">Umami taste</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    Moderate
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Instant noodles, chips</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">GRAS (FDA)</td>
+</tr>
+<!-- 4. E951 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="sweetener" data-risk="moderate">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E951</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Aspartame</td>
+<td class="py-3 px-4 text-neutral-600">Sweetener</td>
+<td class="py-3 px-4 text-neutral-600">Zero-calorie sugar substitute</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    Moderate
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Diet drinks</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Re-evaluated 2023</td>
+</tr>
+<!-- 5. E330 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="antioxidant" data-risk="low">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E330</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Citric Acid</td>
+<td class="py-3 px-4 text-neutral-600">Antioxidant</td>
+<td class="py-3 px-4 text-neutral-600">Acidity regulator</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-300">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
+                    Low Risk / Safe
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Beverages, candy</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Safe (EFSA)</td>
+</tr>
+<!-- 6. E322 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="emulsifier" data-risk="low">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E322</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Lecithin</td>
+<td class="py-3 px-4 text-neutral-600">Emulsifier</td>
+<td class="py-3 px-4 text-neutral-600">Stabilizer</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-300">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
+                    Low Risk / Safe
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Chocolate, bread</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Safe</td>
+</tr>
+<!-- 7. E150d -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="color" data-risk="moderate">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E150d</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Caramel Color</td>
+<td class="py-3 px-4 text-neutral-600">Color</td>
+<td class="py-3 px-4 text-neutral-600">Dark coloring</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    Moderate
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Cola, sauces</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Contains 4-MEI</td>
+</tr>
+<!-- 8. E320 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="antioxidant" data-risk="high">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E320</td>
+<td class="py-3 px-4 font-medium text-neutral-900">BHA</td>
+<td class="py-3 px-4 text-neutral-600">Antioxidant</td>
+<td class="py-3 px-4 text-neutral-600">Preservative</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-300">
+<span class="h-1.5 w-1.5 rounded-full bg-red-600"></span>
+                    High Risk
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Cereals, fats</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Possible carcinogen</td>
+</tr>
+<!-- 9. E407 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="emulsifier" data-risk="moderate">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E407</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Carrageenan</td>
+<td class="py-3 px-4 text-neutral-600">Emulsifier</td>
+<td class="py-3 px-4 text-neutral-600">Thickener</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-300">
+<span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                    Moderate
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Dairy, plant milk</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Under review</td>
+</tr>
+<!-- 10. E250 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="preservative" data-risk="high">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E250</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Sodium Nitrite</td>
+<td class="py-3 px-4 text-neutral-600">Preservative</td>
+<td class="py-3 px-4 text-neutral-600">Curing agent</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-300">
+<span class="h-1.5 w-1.5 rounded-full bg-red-600"></span>
+                    High Risk
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Processed meats</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Carcinogen risk</td>
+</tr>
+<!-- 11. E471 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="emulsifier" data-risk="low">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E471</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Mono-diglycerides</td>
+<td class="py-3 px-4 text-neutral-600">Emulsifier</td>
+<td class="py-3 px-4 text-neutral-600">Texture</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-300">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
+                    Low Risk / Safe
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Bread, ice cream</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Safe</td>
+</tr>
+<!-- 12. E420 -->
+<tr class="hover:bg-neutral-50/80 transition-colors additive-row" data-category="sweetener" data-risk="low">
+<td class="py-3 px-4 font-mono font-bold text-neutral-900">E420</td>
+<td class="py-3 px-4 font-medium text-neutral-900">Sorbitol</td>
+<td class="py-3 px-4 text-neutral-600">Sweetener</td>
+<td class="py-3 px-4 text-neutral-600">Sugar alcohol</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-300">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
+                    Low Risk / Safe
+                  </span>
+</td>
+<td class="py-3 px-4 text-neutral-600">Sugar-free gum</td>
+<td class="py-3 px-4 font-mono text-xs text-neutral-700">Laxative in excess</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Export Toolbar -->
+<div class="px-4 py-3 bg-neutral-50 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-600">
+<div class="font-mono">
+            Showing <span class="font-semibold text-neutral-900" id="visibleCount">1–12</span> of <span class="font-semibold text-neutral-900">512</span> indexed additives
+          </div>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-200 font-medium transition-colors shadow-2xs">
+<span class="material-symbols-outlined text-sm" data-icon="file_download">file_download</span>
+              Export CSV
+            </button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white hover:bg-neutral-100 text-neutral-700 border border-neutral-200 font-medium transition-colors shadow-2xs">
+<span class="material-symbols-outlined text-sm" data-icon="picture_as_pdf">picture_as_pdf</span>
+              Download PDF Summary
+            </button>
+</div>
+</div>
+</div>
+<!-- 6. Regulatory Disclaimer Box -->
+<div class="mt-8 p-4 rounded-xl bg-amber-50/60 border border-amber-200/80 flex items-start gap-3 text-xs text-amber-900">
+<span class="material-symbols-outlined text-amber-600 shrink-0 mt-0.5" data-icon="info">info</span>
+<div class="space-y-1">
+<p class="font-semibold text-amber-950">Scientific Regulatory Compliance Note</p>
+<p class="leading-relaxed text-amber-800">
+            Data sourced from EFSA food additive database, FDA GRAS list, and published toxicological reviews. This is informational only — not medical advice. Individual sensitivities, allergic responses, and cumulative dietary exposures may cause varied biological reactions.
+          </p>
+</div>
+</div>
+<!-- 7. Conversion CTA Banner -->
+<section class="mt-12 rounded-2xl bg-neutral-900 text-white p-8 sm:p-10 relative overflow-hidden shadow-xl">
+<!-- Subtle background glow -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-2xl relative z-10">
+<div class="inline-flex items-center gap-1.5 text-emerald-400 font-mono text-xs uppercase tracking-wider mb-3">
+<span class="material-symbols-outlined text-sm" data-icon="flash_on">flash_on</span>
+            Instant Barcode &amp; Ingredient OCR
+          </div>
+<h2 class="font-headline text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
+            Scan a product to check all its additives instantly.
+          </h2>
+<p class="mt-3 text-neutral-300 text-sm sm:text-base leading-relaxed">
+            Point your camera at any ingredients list or barcode to automatically cross-reference against 500+ E-numbers in under 200ms.
+          </p>
+<div class="mt-6 flex flex-wrap items-center gap-3">
+<button class="bg-emerald-500 hover:bg-emerald-400 text-neutral-950 font-headline font-semibold text-sm px-5 py-2.5 rounded-lg transition-all shadow-md flex items-center gap-2 active:scale-[0.98]">
+<span class="material-symbols-outlined text-lg" data-icon="photo_camera">photo_camera</span>
+              Scan Product Free
+            </button>
+<button class="bg-neutral-800 hover:bg-neutral-700 text-white font-headline text-sm font-medium px-4 py-2.5 rounded-lg transition-colors border border-neutral-700">
+              Browse Mobile Scanner Guide
+            </button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- 8. Footer (Shared Component Execution) -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- Micro-interactions Script for Instant Search & Filtering -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('additiveSearch');
+      const rows = document.querySelectorAll('.additive-row');
+      const visibleCountElem = document.getElementById('visibleCount');
+      const categoryPills = document.querySelectorAll('.category-pill');
+      const riskButtons = document.querySelectorAll('.risk-filter-btn');
+
+      let currentCategory = 'all';
+      let currentRisk = 'all';
+
+      function filterTable() {
+        const query = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+          const text = row.innerText.toLowerCase();
+          const category = row.getAttribute('data-category');
+          const risk = row.getAttribute('data-risk');
+
+          const matchesQuery = query === '' || text.includes(query);
+          const matchesCategory = currentCategory === 'all' || category === currentCategory;
+          const matchesRisk = currentRisk === 'all' || risk === currentRisk;
+
+          if (matchesQuery && matchesCategory && matchesRisk) {
+            row.style.display = '';
+            visibleCount++;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        if (visibleCountElem) {
+          visibleCountElem.textContent = visibleCount > 0 ? `1–${visibleCount}` : '0';
+        }
+      }
+
+      // Search event
+      searchInput.addEventListener('input', filterTable);
+
+      // Keyboard shortcut ⌘K or Ctrl+K focus
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          searchInput.focus();
+        }
+      });
+
+      // Category Pill Click
+      categoryPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          categoryPills.forEach(p => {
+            p.classList.remove('bg-emerald-600', 'text-white');
+            p.classList.add('bg-neutral-100', 'text-neutral-700');
+          });
+          pill.classList.remove('bg-neutral-100', 'text-neutral-700');
+          pill.classList.add('bg-emerald-600', 'text-white');
+
+          currentCategory = pill.getAttribute('data-category');
+          filterTable();
+        });
+      });
+
+      // Risk Button Click
+      riskButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          riskButtons.forEach(b => {
+            b.classList.remove('bg-white', 'text-neutral-900', 'shadow-2xs');
+            b.classList.add('text-neutral-600');
+          });
+          btn.classList.add('bg-white', 'text-neutral-900', 'shadow-2xs');
+          btn.classList.remove('text-neutral-600');
+
+          currentRisk = btn.getAttribute('data-risk');
+          filterTable();
+        });
+      });
+    });
+  </script>
+<grammarly-desktop-integration data-grammarly-shadow-root="true" style="visibility: visible !important;"></grammarly-desktop-integration>
+</body></html>

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scientific Methodology | ScanBeforeEat Food Safety &amp; Toxicology Platform</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Inter"],
+            display: ["Inter"],
+            body: ["Inter"],
+            label: ["Space Grotesk"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-neutral-50 text-neutral-800 font-body antialiased selection:bg-emerald-100 selection:text-emerald-900">
+<!-- ==================== CANONICAL STICKY NAVIGATION ==================== -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-neutral-200/80 dark:border-neutral-800/80 shadow-sm dark:shadow-none transition-[border-color,background-color,box-shadow] duration-200" id="main-nav">
+<div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+<a class="font-display text-base font-bold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 group transition-transform active:scale-[0.98]" href="#">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0 transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-zinc-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">ScanBeforeEat</span>
+</a>
+<!-- Desktop Nav Links -->
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Additives &amp; E-Numbers</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Blog</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">About</a>
+<a class="text-neutral-600 hover:text-emerald-700 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Careers</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white transition-colors duration-150" href="#">Sign In</a>
+<a class="inline-flex items-center justify-center px-4 py-2 rounded text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow-emerald-500/30 active:scale-[0.98] transition-all duration-150" href="#">
+          Start Scanning
+        </a>
+</div>
+</div>
+</header>
+<!-- ==================== HERO SECTION ==================== -->
+<section class="pt-32 pb-16 md:pt-40 md:pb-24 border-b border-neutral-200 bg-white relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-6 relative z-10">
+<!-- Top Badges & Meta -->
+<div class="flex flex-wrap items-center gap-3 mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold font-label tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="material-symbols-outlined text-xs fill-icon text-emerald-600">verified</span>
+          TRANSPARENT SCIENCE // PEER-REVIEWED ALGORITHMS
+        </span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium font-body bg-neutral-100 text-neutral-600 border border-neutral-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          Engine v2.4 (Updated March 2025)
+        </span>
+</div>
+<!-- Main Headline -->
+<div class="max-w-4xl">
+<h1 class="font-headline text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-neutral-900 leading-[1.15] mb-6">
+          Our Scientific Methodology: How ScanBeforeEat Evaluates Food Safety
+        </h1>
+<p class="font-body text-base sm:text-lg text-neutral-600 leading-relaxed max-w-3xl mb-8">
+          A comprehensive technical breakdown of our multi-layered toxicological scoring engine, NOVA processing classification, additive risk indexing, and clinical data synthesis. Built on zero industry funding.
+        </p>
+<!-- Trust Anchor Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-neutral-100">
+<div class="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 border border-neutral-200/60">
+<span class="material-symbols-outlined text-emerald-600 text-2xl">account_balance</span>
+<div>
+<p class="text-xs font-bold text-neutral-900 font-headline">Academic Board</p>
+<p class="text-xs text-neutral-500">Peer-reviewed by independent toxicologists</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 border border-neutral-200/60">
+<span class="material-symbols-outlined text-emerald-600 text-2xl">dataset</span>
+<div>
+<p class="text-xs font-bold text-neutral-900 font-headline">Open Source Weightings</p>
+<p class="text-xs text-neutral-500">Reproducible 100-point algorithm</p>
+</div>
+</div>
+<div class="flex items-center gap-3 p-3 rounded-lg bg-neutral-50 border border-neutral-200/60">
+<span class="material-symbols-outlined text-emerald-600 text-2xl">shield_locked</span>
+<div>
+<p class="text-xs font-bold text-neutral-900 font-headline">Zero Commercial Influence</p>
+<p class="text-xs text-neutral-500">100% consumer-funded &amp; independent</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Subdued Background Grid Texture -->
+<div class="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] opacity-60"></div>
+</section>
+<!-- ==================== LAB BENCHMARK PROOF BANNER ==================== -->
+<section class="py-12 bg-neutral-900 text-white border-b border-neutral-800">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<div class="lg:col-span-5">
+<span class="text-xs font-label uppercase tracking-widest text-emerald-400 font-semibold mb-2 block">Direct Laboratory Benchmarking</span>
+<h2 class="text-2xl font-bold font-headline leading-tight mb-3">Empirical Validation Meets High-Throughput Toxicology</h2>
+<p class="text-neutral-400 text-sm leading-relaxed mb-6">
+            We correlate physical spectrophotometry, gas chromatography-mass spectrometry (GC-MS), and micro-nutrient profiles with our automated OCR labeling pipeline to detect undisclosed chemical adulteration.
+          </p>
+<div class="flex items-center gap-4 text-xs font-mono text-neutral-300">
+<div class="p-2.5 rounded bg-neutral-800/80 border border-neutral-700">
+<span class="text-emerald-400 font-bold block text-base font-label">34,000+</span>
+<span>Substances Indexed</span>
+</div>
+<div class="p-2.5 rounded bg-neutral-800/80 border border-neutral-700">
+<span class="text-emerald-400 font-bold block text-base font-label">99.4%</span>
+<span>OCR Ingredient Match</span>
+</div>
+<div class="p-2.5 rounded bg-neutral-800/80 border border-neutral-700">
+<span class="text-emerald-400 font-bold block text-base font-label">0.02s</span>
+<span>Realtime Inference</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-7">
+<div class="rounded-xl overflow-hidden border border-neutral-700/80 shadow-2xl relative">
+<img class="w-full h-80 object-cover" data-alt="A clean modern food toxicology laboratory workbench with analytical glassware, beakers, organic vegetables, and a mobile device running food analysis software. The scene is illuminated by crisp, sterile clinical lighting with balanced neutral colors, green accents, and scientific formula notes on whiteboards in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHbc-ic05omEa-k5x146rU38TFSGF2odnXc4pu0avSEb2aXZdI8UKF8yOrHO3h2EthY3cJixhYgeacNMAYFV2oIw5vatBUoHUnMstV4qJJT2wimaiKvL2qlPD83CrfZl2VfaM-OLUggTL-Eqhbgq4tRiuOFPQMAUrhJS4Kzdh5Icb4K-x5I8Hxv_T0FILYCkq4A5yA6R-MKAcMFTyUbsiwlT6FjU3W5OZYuCJopgdjsccux-j8JKpQTS8O8xgQ5C-jBa-49hwPDajz"/>
+<div class="absolute bottom-3 right-3 bg-neutral-900/90 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-neutral-700 text-[11px] font-mono text-neutral-300 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              GC-MS Certified Cross-Verification
+            </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== 4-PILLAR SCORING ARCHITECTURE ==================== -->
+<section class="py-20 bg-neutral-50" id="pillars">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center max-w-3xl mx-auto mb-16">
+<span class="text-xs font-label uppercase tracking-widest text-emerald-600 font-semibold mb-2 inline-block">The Foundation</span>
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-neutral-900 mb-4">
+          Four-Pillar Algorithmic Architecture
+        </h2>
+<p class="text-sm sm:text-base text-neutral-600 leading-relaxed">
+          Every packaged item scanned by ScanBeforeEat is dissected across four discrete clinical dimensions before arriving at a composite safety score.
+        </p>
+</div>
+<!-- Bento-style Architecture Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Pillar 1 -->
+<div class="bg-white rounded-xl p-8 border border-neutral-200/90 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<span class="w-12 h-12 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined text-2xl">science</span>
+</span>
+<span class="font-label text-xs font-semibold px-2.5 py-1 rounded bg-neutral-100 text-neutral-700">Pillar 01 // Structural</span>
+</div>
+<h3 class="text-xl font-bold font-headline text-neutral-900 mb-2">NOVA Food Processing Classification</h3>
+<p class="text-xs font-semibold text-emerald-600 uppercase font-label mb-3">University of São Paulo 4-Tier Standard</p>
+<p class="text-neutral-600 text-sm leading-relaxed mb-4">
+              We determine whether a product retains its cellular matrix or consists of fractionated extracts reconstituted with cosmetic agents. Analyzes extreme mechanical extrusion, hydrolysates, invert sugars, and fractionated lipids.
+            </p>
+</div>
+<div class="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500 font-mono">
+<span>Primary Focus: Matrix integrity</span>
+<span class="font-bold text-neutral-800">Max Penalty: -35 pts</span>
+</div>
+</div>
+<!-- Pillar 2 -->
+<div class="bg-white rounded-xl p-8 border border-neutral-200/90 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<span class="w-12 h-12 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
+<span class="material-symbols-outlined text-2xl">warning</span>
+</span>
+<span class="font-label text-xs font-semibold px-2.5 py-1 rounded bg-neutral-100 text-neutral-700">Pillar 02 // Chemical</span>
+</div>
+<h3 class="text-xl font-bold font-headline text-neutral-900 mb-2">Toxicological &amp; Regulatory Profiling</h3>
+<p class="text-xs font-semibold text-amber-600 uppercase font-label mb-3">EFSA, WHO/JECFA, ANSES, US FDA GRAS Cross-Reference</p>
+<p class="text-neutral-600 text-sm leading-relaxed mb-4">
+              Cross-checks every E-number and chemical pseudonym against global regulatory advisories. Evaluates chronic bioaccumulation risk, genotoxicity markers, banned statuses in European jurisdictions, and acceptable daily intake (ADI) limits.
+            </p>
+</div>
+<div class="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500 font-mono">
+<span>Primary Focus: Synthetic Additives</span>
+<span class="font-bold text-neutral-800">Max Penalty: -40 pts</span>
+</div>
+</div>
+<!-- Pillar 3 -->
+<div class="bg-white rounded-xl p-8 border border-neutral-200/90 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<span class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined text-2xl">pie_chart</span>
+</span>
+<span class="font-label text-xs font-semibold px-2.5 py-1 rounded bg-neutral-100 text-neutral-700">Pillar 03 // Metabolic</span>
+</div>
+<h3 class="text-xl font-bold font-headline text-neutral-900 mb-2">Nutrient Density &amp; Macro Balance</h3>
+<p class="text-xs font-semibold text-blue-600 uppercase font-label mb-3">Enhanced French Nutri-Score Derivation</p>
+<p class="text-neutral-600 text-sm leading-relaxed mb-4">
+              Evaluates caloric concentration relative to bioactive nutrients. Penalizes free fructose, trans-fat isomers, and hidden sodium load while rewarding essential dietary fiber, intact plant proteins, and intrinsic polyphenol concentration.
+            </p>
+</div>
+<div class="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500 font-mono">
+<span>Primary Focus: Caloric Quality</span>
+<span class="font-bold text-neutral-800">Max Penalty: -25 pts</span>
+</div>
+</div>
+<!-- Pillar 4 -->
+<div class="bg-white rounded-xl p-8 border border-neutral-200/90 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between">
+<div class="mb-6">
+<div class="flex items-center justify-between mb-4">
+<span class="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined text-2xl">neurology</span>
+</span>
+<span class="font-label text-xs font-semibold px-2.5 py-1 rounded bg-neutral-100 text-neutral-700">Pillar 04 // Clinical</span>
+</div>
+<h3 class="text-xl font-bold font-headline text-neutral-900 mb-2">Clinical &amp; Epidemiological Evidence</h3>
+<p class="text-xs font-semibold text-purple-600 uppercase font-label mb-3">PubMed, Cochrane &amp; Gut Microbiome Cohort Synthesis</p>
+<p class="text-neutral-600 text-sm leading-relaxed mb-4">
+              Continuous natural language ingestion of high-impact medical journals. Flags emerging evidence regarding gut barrier disruption (zonulin increase), non-caloric artificial sweetener impacts on glucose tolerance, and endocrine perturbation.
+            </p>
+</div>
+<div class="pt-4 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-500 font-mono">
+<span>Primary Focus: Emerging Health Trials</span>
+<span class="font-bold text-neutral-800">Bonus/Penalty: +/-10 pts</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== DETAILED SCORING FORMULA & MATHEMATICAL ENGINE ==================== -->
+<section class="py-20 bg-white border-t border-b border-neutral-200">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+<div>
+<span class="text-xs font-label uppercase tracking-widest text-emerald-600 font-semibold mb-2 block">Algorithmic Breakdown</span>
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-neutral-900">
+            Scoring Formula &amp; Weight Allocation
+          </h2>
+</div>
+<p class="text-sm text-neutral-500 font-mono mt-2 md:mt-0">
+          Composite Index: <span class="bg-neutral-100 px-2 py-1 rounded text-neutral-900 font-bold">S = max(15, min(95, round(70 + B_whole + B_fiber + B_protein - P_sugar - P_sodium - P_satfat - P_trans - P_caution)))</span>
+</p>
+</div>
+<!-- Formula Container -->
+<div class="bg-neutral-900 text-white rounded-2xl p-8 lg:p-10 shadow-xl mb-12">
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 text-center lg:text-left">
+<!-- Base -->
+<div class="p-5 rounded-xl bg-neutral-800/80 border border-neutral-700">
+<span class="text-xs font-mono text-neutral-400 block mb-1">Baseline</span>
+<div class="text-3xl font-bold font-label text-emerald-400 mb-1">70 pts (Base)</div>
+<p class="text-xs text-neutral-300">Base starting point. Whole-food ingredients earn up to +15 bonus; nutrients earn up to +13 bonus.</p>
+</div>
+<!-- Penalty 1 -->
+<div class="p-5 rounded-xl bg-neutral-800/80 border border-neutral-700">
+<span class="text-xs font-mono text-neutral-400 block mb-1">NOVA-4 Processing</span>
+<div class="text-3xl font-bold font-label text-rose-400 mb-1">-35 max</div>
+<p class="text-xs text-neutral-300">Industrial extrusion, emulsifier blending, deconstructed starches.</p>
+</div>
+<!-- Penalty 2 -->
+<div class="p-5 rounded-xl bg-neutral-800/80 border border-neutral-700">
+<span class="text-xs font-mono text-neutral-400 block mb-1">High-Risk Additives</span>
+<div class="text-3xl font-bold font-label text-rose-400 mb-1">-40 max</div>
+<p class="text-xs text-neutral-300">Azo dyes, genotoxic preservatives, synthetic detergents.</p>
+</div>
+<!-- Penalty 3 -->
+<div class="p-5 rounded-xl bg-neutral-800/80 border border-neutral-700">
+<span class="text-xs font-mono text-neutral-400 block mb-1">Nutritional Deficit</span>
+<div class="text-3xl font-bold font-label text-rose-400 mb-1">-25 max</div>
+<p class="text-xs text-neutral-300">Excessive free sodium, trans isomers, low nutrient density.</p>
+</div>
+<!-- Bonus -->
+<div class="p-5 rounded-xl bg-neutral-800/80 border border-neutral-700">
+<span class="text-xs font-mono text-neutral-400 block mb-1">Clean Food Bonus</span>
+<div class="text-3xl font-bold font-label text-emerald-400 mb-1">+10 max</div>
+<p class="text-xs text-neutral-300">Certified organic, short unadulterated ingredient decks.</p>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-neutral-800 flex flex-wrap items-center justify-between text-xs text-neutral-400">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-sm">lock</span>
+<span>Scientific Clamping Range: Final score bounded between 15 and 95 (scores of 0 or 100 are strictly avoided to eliminate false absolutism). Returns null on insufficient data.</span>
+</div>
+<div class="font-mono text-neutral-500">
+            Deterministic Engine Executable v2.4.1 // SHA256 Verified
+          </div>
+</div>
+</div>
+<!-- Telemetry Progress Visualizer -->
+<div class="bg-neutral-50 border border-neutral-200 rounded-xl p-6 lg:p-8">
+<h4 class="text-sm font-bold font-headline text-neutral-900 uppercase tracking-wider mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600">bar_chart</span>
+          Example Evaluation Telemetry: Commercial Ultra-Processed Cereal
+        </h4>
+<div class="space-y-4 font-mono text-xs">
+<!-- Item 1 -->
+<div>
+<div class="flex justify-between text-neutral-700 mb-1">
+<span>Baseline Whole Grain Potential</span>
+<span class="font-bold text-emerald-600">+70 pts (Base)</span>
+</div>
+<div class="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-2 rounded-full" style="width: 100%"></div>
+</div>
+</div>
+<!-- Item 2 -->
+<div>
+<div class="flex justify-between text-neutral-700 mb-1">
+<span>NOVA-4 Penalty (High-temperature puffing &amp; modified corn starch)</span>
+<span class="font-bold text-rose-600">-28 pts</span>
+</div>
+<div class="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+<div class="bg-rose-500 h-2 rounded-full" style="width: 28%"></div>
+</div>
+</div>
+<!-- Item 3 -->
+<div>
+<div class="flex justify-between text-neutral-700 mb-1">
+<span>Chemical Additive Penalty (Red 40 [E129], BHT [E321])</span>
+<span class="font-bold text-rose-600">-30 pts</span>
+</div>
+<div class="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+<div class="bg-rose-500 h-2 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+<!-- Item 4 -->
+<div>
+<div class="flex justify-between text-neutral-700 mb-1">
+<span>Nutrient Density Penalty (38g sugar per 100g)</span>
+<span class="font-bold text-rose-600">-22 pts</span>
+</div>
+<div class="w-full bg-neutral-200 h-2 rounded-full overflow-hidden">
+<div class="bg-rose-500 h-2 rounded-full" style="width: 22%"></div>
+</div>
+</div>
+<!-- Final Score Badge -->
+<div class="pt-4 border-t border-neutral-200 flex items-center justify-between">
+<span class="font-headline font-bold text-neutral-900 text-sm">Final ScanBeforeEat Safety Score:</span>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-rose-100 text-rose-800 font-bold text-sm">
+<span class="material-symbols-outlined text-rose-700 text-base">dangerous</span>
+<span>20 / 100 (High Risk // Ultra-Processed)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== ADDITIVE RISK CLASSIFICATION TIER MATRIX ==================== -->
+<section class="py-20 bg-neutral-50">
+<div class="max-w-7xl mx-auto px-6">
+<div class="max-w-3xl mb-12">
+<span class="text-xs font-label uppercase tracking-widest text-emerald-600 font-semibold mb-2 block">Toxicological Framework</span>
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-neutral-900 mb-4">
+          5-Tier Additive Risk Classification Matrix
+        </h2>
+<p class="text-sm sm:text-base text-neutral-600 leading-relaxed">
+          Every authorized and non-authorized food additive is categorized into five transparent threat levels determined by consensus in peer-reviewed biochemical literature.
+        </p>
+</div>
+<!-- Matrix Table Card -->
+<div class="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse text-xs sm:text-sm">
+<thead>
+<tr class="bg-neutral-100/80 border-b border-neutral-200 text-neutral-700 font-headline uppercase font-semibold text-[11px] tracking-wider">
+<th class="py-4 px-6">Tier Level</th>
+<th class="py-4 px-6">Risk Badge</th>
+<th class="py-4 px-6">Regulatory Status</th>
+<th class="py-4 px-6">Benchmark Examples</th>
+<th class="py-4 px-6">Biological Mechanism of Concern</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-neutral-200 font-body">
+<!-- Tier 1 -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-4 px-6 font-mono font-bold text-neutral-900">Tier 1</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Safe
+                  </span>
+</td>
+<td class="py-4 px-6 text-neutral-600">EFSA Authorized / FDA GRAS</td>
+<td class="py-4 px-6 font-medium text-neutral-900">Ascorbic acid (E300), Citric acid (E330), Rosemary extract</td>
+<td class="py-4 px-6 text-neutral-500">Naturally metabolized; essential organic nutrients or benign endogenous cellular compounds.</td>
+</tr>
+<!-- Tier 2 -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-4 px-6 font-mono font-bold text-neutral-900">Tier 2</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-800">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> Low Risk
+                  </span>
+</td>
+<td class="py-4 px-6 text-neutral-600">Authorized with high ADI threshold</td>
+<td class="py-4 px-6 font-medium text-neutral-900">Guar gum (E412), Apple pectin (E440), Steviol glycosides</td>
+<td class="py-4 px-6 text-neutral-500">Mild gastrointestinal fermentation in high amounts; inert polysaccharide chains.</td>
+</tr>
+<!-- Tier 3 -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-4 px-6 font-mono font-bold text-neutral-900">Tier 3</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Moderate
+                  </span>
+</td>
+<td class="py-4 px-6 text-neutral-600">Subject to regulatory re-evaluation</td>
+<td class="py-4 px-6 font-medium text-neutral-900">Sodium benzoate (E211), Xanthan gum, Maltodextrin</td>
+<td class="py-4 px-6 text-neutral-500">Potential in vivo benzene formation with ascorbic acid; spikes blood glucose indices.</td>
+</tr>
+<!-- Tier 4 -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-4 px-6 font-mono font-bold text-neutral-900">Tier 4</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Precaution
+                  </span>
+</td>
+<td class="py-4 px-6 text-neutral-600">Restricted in EU; Warning labels mandatory</td>
+<td class="py-4 px-6 font-medium text-neutral-900">Carrageenan (E407), Polysorbate 80 (E433), BHA / BHT</td>
+<td class="py-4 px-6 text-neutral-500">Disruption of protective intestinal mucus layer, bacterial translocation, and endocrine disruption.</td>
+</tr>
+<!-- Tier 5 -->
+<tr class="hover:bg-neutral-50/80 transition-colors">
+<td class="py-4 px-6 font-mono font-bold text-neutral-900">Tier 5</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-800">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Severe Hazard
+                  </span>
+</td>
+<td class="py-4 px-6 text-neutral-600">Banned in EU / ANSES Monograph Caution</td>
+<td class="py-4 px-6 font-medium text-neutral-900">Titanium dioxide (E171), Potassium bromate, Azodicarbonamide</td>
+<td class="py-4 px-6 text-neutral-500">Genotoxicity markers, nanoparticle accumulation in organs, potential carcinogen classifications.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-neutral-50 border-t border-neutral-200 text-xs text-neutral-500 flex flex-wrap items-center justify-between gap-2">
+<span>*Updated in synchrony with the European Food Safety Authority (EFSA) OpenFoodData bulletins.</span>
+<a class="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1" href="#">
+            Download Complete 3,400+ Compound Directory
+            <span class="material-symbols-outlined text-xs">download</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== INDEPENDENCE CHARTER & BOARD ==================== -->
+<section class="py-20 bg-white border-t border-neutral-200">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left: Independence Charter -->
+<div class="lg:col-span-6 flex flex-col justify-between">
+<div>
+<span class="text-xs font-label uppercase tracking-widest text-emerald-600 font-semibold mb-2 block">Zero Conflict of Interest</span>
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-neutral-900 mb-6">
+              The ScanBeforeEat Independence Charter
+            </h2>
+<div class="space-y-4 text-sm text-neutral-600 leading-relaxed">
+<div class="p-4 rounded-lg bg-neutral-50 border border-neutral-200 flex gap-3">
+<span class="material-symbols-outlined text-emerald-600">check_circle</span>
+<div>
+<h4 class="font-bold text-neutral-900 text-sm">No Corporate Food Brand Sponsorships</h4>
+<p class="text-xs text-neutral-500 mt-1">We reject 100% of commercial advertising, promotional product placements, or algorithmic score pay-to-play schemes from food conglomerates.</p>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-neutral-50 border border-neutral-200 flex gap-3">
+<span class="material-symbols-outlined text-emerald-600">check_circle</span>
+<div>
+<h4 class="font-bold text-neutral-900 text-sm">Deterministic &amp; Immutable Evaluations</h4>
+<p class="text-xs text-neutral-500 mt-1">Scores cannot be manually altered or softened on an ad-hoc basis. The identical formula runs across multi-nationals and craft brands alike.</p>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-neutral-50 border border-neutral-200 flex gap-3">
+<span class="material-symbols-outlined text-emerald-600">check_circle</span>
+<div>
+<h4 class="font-bold text-neutral-900 text-sm">Open Audit Public Ledger</h4>
+<p class="text-xs text-neutral-500 mt-1">Every methodology adjustment is committed to our public code repository with annotated academic rationale and peer review citations.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-neutral-100 flex items-center gap-4">
+<span class="material-symbols-outlined text-3xl text-emerald-600">verified_user</span>
+<div>
+<p class="text-xs font-mono font-bold text-neutral-900">CRYPTOGRAPHIC PROOF VERIFICATION</p>
+<p class="text-xs text-neutral-500">Methodology Ledger Hash: 4e9d72a8c...2025</p>
+</div>
+</div>
+</div>
+<!-- Right: Scientific Advisory Panel -->
+<div class="lg:col-span-6 bg-neutral-50 rounded-2xl p-8 border border-neutral-200">
+<span class="text-xs font-label uppercase tracking-widest text-neutral-500 font-semibold mb-2 block">Academic Review Board</span>
+<h3 class="text-xl font-bold font-headline text-neutral-900 mb-6">Scientific Oversight Committee</h3>
+<div class="space-y-4">
+<!-- Member 1 -->
+<div class="p-4 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-between">
+<div>
+<h5 class="text-sm font-bold font-headline text-neutral-900">Dr. Elena Vance, PhD</h5>
+<p class="text-xs text-emerald-600 font-medium">Head of Food Toxicology // Former EFSA Panelist</p>
+<p class="text-xs text-neutral-500 mt-1">Specializes in synthetic emulsifier translocation and epithelial gut barriers.</p>
+</div>
+<span class="material-symbols-outlined text-neutral-300">school</span>
+</div>
+<!-- Member 2 -->
+<div class="p-4 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-between">
+<div>
+<h5 class="text-sm font-bold font-headline text-neutral-900">Alexandre Chen, MSc</h5>
+<p class="text-xs text-emerald-600 font-medium">Director of Computational Epidemiology</p>
+<p class="text-xs text-neutral-500 mt-1">Machine learning synthesis of large-scale European prospective cohort data.</p>
+</div>
+<span class="material-symbols-outlined text-neutral-300">school</span>
+</div>
+<!-- Member 3 -->
+<div class="p-4 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-between">
+<div>
+<h5 class="text-sm font-bold font-headline text-neutral-900">Dr. Marcus Lindqvist, MD</h5>
+<p class="text-xs text-emerald-600 font-medium">Clinical Gastroenterologist &amp; Metabolic Researcher</p>
+<p class="text-xs text-neutral-500 mt-1">Investigates metabolic syndrome correlation with non-nutritive intense sweeteners.</p>
+</div>
+<span class="material-symbols-outlined text-neutral-300">school</span>
+</div>
+</div>
+<div class="mt-6 text-center">
+<a class="text-xs font-semibold text-neutral-600 hover:text-neutral-900 underline" href="#">View Full 14-Member Academic Council &amp; Disclosures</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==================== CALL TO ACTION ==================== -->
+<section class="py-16 bg-emerald-600 text-white relative overflow-hidden" id="scanner">
+<div class="max-w-7xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="max-w-2xl">
+<h2 class="text-2xl sm:text-3xl font-extrabold font-headline mb-3">
+          Experience Transparent Food Analysis on Your Own Pantry Items
+        </h2>
+<p class="text-emerald-100 text-sm sm:text-base leading-relaxed">
+          Scan any barcode or upload an ingredient label photo to see our four-pillar toxicology engine calculate instant, uncompromised ratings.
+        </p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<a class="px-6 py-3.5 rounded-lg bg-neutral-900 text-white font-headline font-semibold text-xs tracking-wide shadow-lg hover:bg-neutral-800 transition-all active:scale-[0.98]" href="#">
+          Launch Web Scanner
+        </a>
+<a class="px-6 py-3.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-headline font-semibold text-xs tracking-wide border border-white/20 transition-all" href="#">
+          Explore Database
+        </a>
+</div>
+</div>
+</section>
+<!-- ==================== CANONICAL FOOTER ==================== -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800">
+<div class="max-w-7xl mx-auto px-6 py-12 md:py-16">
+<div class="grid grid-cols-1 md:grid-cols-5 gap-10 mb-12">
+<!-- Brand Info -->
+<div class="md:col-span-2">
+<div class="font-display text-sm font-semibold tracking-tight text-neutral-900 dark:text-white flex items-center gap-2 mb-3">
+<img alt="ScanBeforeEat Logo" class="w-8 h-8 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="font-bold text-base text-zinc-900 dark:text-white">ScanBeforeEat</span>
+</div>
+<p class="font-body text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-sm mb-4">
+            Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+          </p>
+<div class="font-label text-xs text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            ENGINE_VERSION // 2.4.11-PROD
+          </div>
+</div>
+<!-- Product Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Product</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Database</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a></li>
+</ul>
+</div>
+<!-- Resources Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Resources</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Ingredient Index</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Additives Guide</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Studies &amp; Papers</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Status</a></li>
+</ul>
+</div>
+<!-- Legal Links -->
+<div>
+<h4 class="font-label text-xs uppercase tracking-wider font-bold text-zinc-900 dark:text-white mb-3">Legal</h4>
+<ul class="space-y-2 text-xs font-body text-neutral-500 dark:text-neutral-400">
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms of Service</a></li>
+<li><a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a></li>
+</ul>
+</div>
+</div>
+<!-- Prominent Medical Disclaimer -->
+<div class="p-4 rounded-lg bg-zinc-100 dark:bg-neutral-900 border border-zinc-200 dark:border-neutral-800 text-[11px] leading-relaxed text-zinc-500 dark:text-neutral-400 mb-8">
+<span class="font-bold text-zinc-700 dark:text-zinc-300">Disclaimer:</span> ScanBeforeEat provides informational analysis based on published research and food safety standards. It does not constitute medical advice, medical diagnosis, or personalized dietary prescription. Consult with a qualified physician or registered dietitian for individual health concerns.
+      </div>
+<!-- Copyright Bar -->
+<div class="pt-6 border-t border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 dark:text-neutral-400">
+<div>
+          © 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.
+        </div>
+<div class="flex items-center gap-4 mt-4 sm:mt-0 font-label">
+<span>GDPR Compliant</span>
+<span>•</span>
+<span>Zero User Tracking</span>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

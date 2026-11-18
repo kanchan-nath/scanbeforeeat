@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us — ScanBeforeEat</title>
+<!-- Google Fonts: Inter and Space Grotesk -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Space Grotesk", "sans-serif"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Hide scrollbars cleanly for mobile horizontal rows */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 font-body antialiased flex justify-center selection:bg-emerald-100 selection:text-emerald-900" data-gr-ext-installed="" data-new-gr-c-s-check-loaded="14.1347.0">
+<!-- Mobile Viewport Container (~390px width lock for realistic device rendering on all viewports) -->
+<div class="w-full max-w-[420px] min-h-screen bg-white flex flex-col shadow-2xl relative border-x border-slate-100">
+<!-- 1. MOBILE TOP APP BAR (Shared Component Anchor) -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full px-4 py-3 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800 shadow-sm">
+<a class="flex items-center gap-1.5 font-display font-bold text-base text-neutral-900 dark:text-white" href="#">
+<img alt="ScanBeforeEat Logo" class="w-7 h-7 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-slate-900 dark:text-white font-extrabold text-base">ScanBeforeEat</span>
+</a>
+<div class="flex items-center gap-2">
+<a class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-semibold shadow-sm active:scale-95 transition-transform duration-100 flex items-center gap-1" href="#">
+<span>Start Scanning</span>
+</a>
+<button aria-label="Open Navigation Menu" class="p-1.5 text-neutral-600 dark:text-neutral-300 hover:text-emerald-700 transition-colors duration-150 rounded-lg">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+</header>
+<!-- MAIN BODY CONTENT -->
+<main class="flex-1 flex flex-col">
+<!-- 2. HERO SECTION -->
+<section class="px-5 pt-8 pb-6 flex flex-col items-center text-center">
+<!-- Pulse Status Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/60 mb-5">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
+</span>
+<span class="text-xs font-mono font-semibold text-emerald-700 tracking-tight">Mission &amp; Scientific Standards</span>
+</div>
+<h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4 font-headline">
+          Our Mission: <br/><span class="text-emerald-600">Transparent</span> Food Intelligence
+        </h1>
+<p class="text-sm text-slate-600 leading-relaxed mb-6 font-normal">
+          We believe every consumer deserves to know exactly what they are putting in their body — backed by peer-reviewed science, not corporate marketing.
+        </p>
+<!-- Micro-Trust Pill Strip (Horizontal Scroll / Flex Row) -->
+<div class="w-full flex items-center justify-center gap-2 overflow-x-auto no-scrollbar py-1">
+<div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/80 px-2.5 py-1.2 rounded-full text-[11px] font-mono font-medium text-slate-700 whitespace-nowrap shadow-2xs">
+<span class="material-symbols-outlined text-xs text-emerald-600" data-icon="science">science</span>
+            Independent Research
+          </div>
+<div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/80 px-2.5 py-1.2 rounded-full text-[11px] font-mono font-medium text-slate-700 whitespace-nowrap shadow-2xs">
+<span class="material-symbols-outlined text-xs text-emerald-600" data-icon="block">block</span>
+            No Manufacturer Funding
+          </div>
+<div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/80 px-2.5 py-1.2 rounded-full text-[11px] font-mono font-medium text-slate-700 whitespace-nowrap shadow-2xs">
+<span class="material-symbols-outlined text-xs text-emerald-600" data-icon="lock_open">lock_open</span>
+            Open Access
+          </div>
+</div>
+</section>
+<!-- 3. OUR STORY & KEY STATS -->
+<section class="px-5 py-6 bg-slate-50/70 border-y border-slate-100 flex flex-col gap-4">
+<div>
+<span class="text-xs font-mono font-semibold tracking-wider text-emerald-600 block mb-1">ORIGINS &amp; MOTIVATION</span>
+<h2 class="text-xl font-bold text-slate-900 tracking-tight leading-snug font-headline">
+            Why We Engineered a Public Food Defense System
+          </h2>
+</div>
+<p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Built by software engineers and toxicologists frustrated by misleading "healthy" labels and corporate-sponsored food apps. Modern supermarket aisles systematically disguise aggressive industrial processing, emulsifiers, synthetic preservatives, and hyper-concentrated sodium behind buzzwords like <span class="font-medium text-slate-800">"Plant-Based"</span> and <span class="font-medium text-slate-800">"All Natural"</span>.
+        </p>
+<!-- 2x2 Key Stats Grid -->
+<div class="grid grid-cols-2 gap-3 mt-1">
+<!-- Card 1 -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs flex flex-col">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-2xl font-extrabold text-slate-900 font-label tracking-tight">2M+</span>
+<span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="inventory_2">inventory_2</span>
+</div>
+<span class="text-xs font-semibold text-slate-800">Products Analyzed</span>
+<span class="text-[10px] text-slate-500 font-mono mt-0.5">Cross-verified daily</span>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs flex flex-col">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-2xl font-extrabold text-slate-900 font-label tracking-tight">80K+</span>
+<span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="biotechnology">chips</span>
+</div>
+<span class="text-xs font-semibold text-slate-800">Additives Cataloged</span>
+<span class="text-[10px] text-slate-500 font-mono mt-0.5">Chemical CAS mapped</span>
+</div>
+<!-- Card 3 -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs flex flex-col">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-2xl font-extrabold text-slate-900 font-label tracking-tight">12</span>
+<span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="menu_book">menu_book</span>
+</div>
+<span class="text-xs font-semibold text-slate-800">Scientific Databases</span>
+<span class="text-[10px] text-slate-500 font-mono mt-0.5">EFSA, PubMed, FDA, IARC</span>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs flex flex-col">
+<div class="flex items-center justify-between mb-1.5">
+<span class="text-2xl font-extrabold text-slate-900 font-label tracking-tight">100%</span>
+<span class="material-symbols-outlined text-emerald-600 text-lg" data-icon="verified_user">verified_user</span>
+</div>
+<span class="text-xs font-semibold text-slate-800">Independent</span>
+<span class="text-[10px] text-slate-500 font-mono mt-0.5">Zero Brand Sponsors</span>
+</div>
+</div>
+<!-- Audit Ledger Hash Bar -->
+<div class="bg-white border border-slate-200/90 rounded-lg px-3 py-2 flex items-center justify-between mt-1 text-[11px] font-mono text-slate-600 shadow-2xs">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Ledger Hash: <span class="text-slate-800 font-bold">0x7F4B...9904</span></span>
+</div>
+<span class="text-emerald-700 bg-emerald-50 font-semibold px-2 py-0.5 rounded text-[10px] border border-emerald-200/50">Audited</span>
+</div>
+</section>
+<!-- 4. HOW WE SCORE (Mobile Scientific Formula Card) -->
+<section class="px-5 py-7 flex flex-col gap-4">
+<div>
+<span class="text-xs font-mono font-semibold tracking-wider text-emerald-600 block mb-1">DETERMINISTIC EVALUATION</span>
+<h2 class="text-xl font-bold text-slate-900 tracking-tight leading-snug font-headline">
+            Algorithmic Transparency: How We Score
+          </h2>
+<p class="text-xs text-slate-500 mt-1">Our open calculation model penalizes industrial degradation without subjective bias.</p>
+</div>
+<!-- Formula Card (Dark Slate Container) -->
+<div class="bg-slate-900 rounded-2xl p-4 text-white shadow-xl border border-slate-800 flex flex-col gap-3.5">
+<!-- Baseline Header -->
+<div class="flex items-center justify-between border-b border-slate-800 pb-3">
+<div>
+<span class="text-[10px] font-mono text-emerald-400 block tracking-wider font-semibold">INITIAL BASELINE</span>
+<span class="text-sm font-bold text-white tracking-tight">Starting Base Score: 70 / 100 (Clamped 15–95)</span>
+</div>
+<span class="text-[11px] font-mono bg-slate-800 text-emerald-300 px-2.5 py-1 rounded-md border border-slate-700">
+              Score = max(15, min(95, round(70 + WholeFoodBonus - Deductions)))
+            </span>
+</div>
+<!-- Deduction Items -->
+<div class="space-y-3 pt-0.5">
+<!-- Deduction 1 -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-mono font-bold flex items-center justify-center text-slate-300 mt-0.5 shrink-0">1</span>
+<div>
+<h3 class="text-xs font-semibold text-slate-100 leading-snug">Ultra-Processing Level (NOVA Framework)</h3>
+<p class="text-[11px] text-slate-400 mt-0.5 leading-tight">Industrial extrusion, hydrolyzation, loss of cellular matrix.</p>
+</div>
+</div>
+<span class="bg-rose-950/70 border border-rose-800/60 text-rose-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded shrink-0">
+                -10 to -40 pts
+              </span>
+</div>
+<!-- Deduction 2 -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-mono font-bold flex items-center justify-center text-slate-300 mt-0.5 shrink-0">2</span>
+<div>
+<h3 class="text-xs font-semibold text-slate-100 leading-snug">High-Risk Additives &amp; Synthetics</h3>
+<p class="text-[11px] text-slate-400 mt-0.5 leading-tight">Titanium dioxide, artificial dyes, endocrine disrupting preservatives.</p>
+</div>
+</div>
+<span class="bg-amber-950/70 border border-amber-800/60 text-amber-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded shrink-0">
+                -5 to -15 pts ea.
+              </span>
+</div>
+<!-- Deduction 3 -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-mono font-bold flex items-center justify-center text-slate-300 mt-0.5 shrink-0">3</span>
+<div>
+<h3 class="text-xs font-semibold text-slate-100 leading-snug">Excess Sodium &amp; Free Sugars</h3>
+<p class="text-[11px] text-slate-400 mt-0.5 leading-tight">Calibrated against EFSA/WHO daily reference ceilings.</p>
+</div>
+</div>
+<span class="bg-amber-950/70 border border-amber-800/60 text-amber-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded shrink-0">
+                -5 to -10 pts
+              </span>
+</div>
+<!-- Deduction 4 -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 text-[10px] font-mono font-bold flex items-center justify-center text-slate-300 mt-0.5 shrink-0">4</span>
+<div>
+<h3 class="text-xs font-semibold text-slate-100 leading-snug">Allergen &amp; Obfuscated Ingredients</h3>
+<p class="text-[11px] text-slate-400 mt-0.5 leading-tight">"Natural flavors", "vegetable gum", unlisted cross-contact risks.</p>
+</div>
+</div>
+<span class="bg-amber-950/70 border border-amber-800/60 text-amber-400 font-mono text-[10px] font-bold px-2 py-0.5 rounded shrink-0">
+                -3 to -8 pts
+              </span>
+</div>
+</div>
+</div>
+<!-- Outcome Classification Bar -->
+<div class="grid grid-cols-3 gap-2 pt-1 text-center font-mono">
+<div class="bg-emerald-50 border border-emerald-200/80 rounded-xl p-2.5 flex flex-col items-center">
+<span class="material-symbols-outlined text-emerald-600 text-base mb-1" data-icon="check_circle">check_circle</span>
+<span class="text-[11px] font-bold text-slate-800 font-sans">Safe Matrix</span>
+<span class="text-[10px] text-emerald-700 font-medium">80–100 pts</span>
+</div>
+<div class="bg-amber-50 border border-amber-200/80 rounded-xl p-2.5 flex flex-col items-center">
+<span class="material-symbols-outlined text-amber-600 text-base mb-1" data-icon="warning">warning</span>
+<span class="text-[11px] font-bold text-slate-800 font-sans">Moderate</span>
+<span class="text-[10px] text-amber-700 font-medium">50–79 pts</span>
+</div>
+<div class="bg-rose-50 border border-rose-200/80 rounded-xl p-2.5 flex flex-col items-center">
+<span class="material-symbols-outlined text-rose-600 text-base mb-1" data-icon="dangerous">dangerous</span>
+<span class="text-[11px] font-bold text-slate-800 font-sans">High Risk</span>
+<span class="text-[10px] text-rose-700 font-medium">&lt; 50 pts</span>
+</div>
+</div>
+</section>
+<!-- 5. OUR VALUES (4 Stacked Clean Cards) -->
+<section class="px-5 py-7 bg-slate-50/60 border-t border-slate-100 flex flex-col gap-4">
+<div>
+<span class="text-xs font-mono font-semibold tracking-wider text-emerald-600 block mb-1">CORE ETHICAL FRAMEWORK</span>
+<h2 class="text-xl font-bold text-slate-900 tracking-tight leading-snug font-headline">
+            Our Architectural Commitments
+          </h2>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 1 -->
+<div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs flex flex-col gap-1.5 transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="p-1 rounded-md bg-emerald-50 text-emerald-700">
+<span class="material-symbols-outlined text-lg" data-icon="menu_book">menu_book</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Scientific Rigor</h3>
+</div>
+<span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">EVID_INDEX_01</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed pl-8">
+              PubMed citations and EFSA toxicology datasets back every deduction and assertion. No unverified internet claims.
+            </p>
+</div>
+<!-- Card 2 -->
+<div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs flex flex-col gap-1.5 transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="p-1 rounded-md bg-emerald-50 text-emerald-700">
+<span class="material-symbols-outlined text-lg" data-icon="shield">shield</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Zero Corporate Funding</h3>
+</div>
+<span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">CORP_IND_02</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed pl-8">
+              Zero food brand sponsorships, no affiliate kickbacks, and no paid ingredient overrides. Complete autonomy guaranteed.
+            </p>
+</div>
+<!-- Card 3 -->
+<div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs flex flex-col gap-1.5 transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="p-1 rounded-md bg-emerald-50 text-emerald-700">
+<span class="material-symbols-outlined text-lg" data-icon="lock">lock</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900">User Privacy First</h3>
+</div>
+<span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">PRIV_SEC_03</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed pl-8">
+              Zero data broker sales. Your barcode history, pantry scans, and nutritional intolerances are encrypted and never monetized.
+            </p>
+</div>
+<!-- Card 4 -->
+<div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs flex flex-col gap-1.5 transition-all">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="p-1 rounded-md bg-emerald-50 text-emerald-700">
+<span class="material-symbols-outlined text-lg" data-icon="code">code</span>
+</div>
+<h3 class="text-sm font-bold text-slate-900">Open Methodology</h3>
+</div>
+<span class="text-[10px] font-mono text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">OPEN_SPEC_04</span>
+</div>
+<p class="text-xs text-slate-600 leading-relaxed pl-8">
+              Our scoring algorithms, weight vectors, and additive libraries are publicly auditable and open for academic inspection.
+            </p>
+</div>
+</div>
+</section>
+<!-- 6. SCIENTIFIC TEAM -->
+<section class="px-5 py-7 flex flex-col gap-4">
+<div>
+<span class="text-xs font-mono font-semibold tracking-wider text-emerald-600 block mb-1">INTERDISCIPLINARY COLLECTIVE</span>
+<h2 class="text-xl font-bold text-slate-900 tracking-tight leading-snug font-headline">
+            Built by Scientists and Systems Engineers
+          </h2>
+<p class="text-xs text-slate-500 mt-1">Contributors uniting computational systems, molecular toxicology, and consumer safety.</p>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Profile 1: Alexandre Chen -->
+<div class="p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-xs flex items-start gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0 border border-slate-200 shadow-2xs" data-alt="Professional studio portrait of an Asian male software engineer in his early thirties with thoughtful expression, wearing a minimalist black turtleneck, soft natural indoor illumination, clean modern aesthetic, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9szScx8n1J7kxT4QeijCnZpIi87kvWg_h_m4WQm8YrzBfnCubuG0QGHXVq2alX9oPm149wX7NLbULWPRgN9njp88ulb-en5eIpx__TAlpau-XxYh8BJ4EbdCYPe2NhBzIf4Zg00Xz0g-5ly0DGE7NTz0M6xWIYHw2XYF1QW5wSmQjG_NvSnEWH7MIA5iIv41rZUInNxhIFDUHcct7rjhPpcetkf-AP7XVJwz6HRR-sok4UKIAl93rfCVIT41C45xmhzDi-xsDcplw"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-xs font-bold text-slate-900 truncate">Alexandre Chen</h3>
+<span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">Founder</span>
+</div>
+<p class="text-[11px] font-semibold text-slate-700 mt-0.5">Founder &amp; Lead Engineer</p>
+<p class="text-[11px] text-slate-500 leading-tight mt-1">Former distributed systems lead; M.S. Distributed Computing MIT. Dedicated to real-time verification at scale.</p>
+</div>
+</div>
+<!-- Profile 2: Dr. Helena Varga -->
+<div class="p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-xs flex items-start gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0 border border-slate-200 shadow-2xs" data-alt="Portrait of a female European biochemical toxicologist with glasses in her late thirties smiling warmly, high-key clean laboratory background, bright natural studio lighting, modern minimalist professional style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2yBJuaukQGKhLYNwxT3dIDpUN7uoBjiRFIZqVciYS_EC_dg8y-RIE1jF2IsZ5rBYcvitnzTWpRiFDNoE7TIWdJ_yW7vQE_T5tX55BKx2XT-fffzIvWcnTij9VGwbQIcOiLD1p7rjh88WpEoyCz1qk_cg5YYthvtQt7PZFHLOHJRvS8aJg8A4XCMrG4uFo9ciyPKfSQbh85LAp932l0HDXCHA8gMj_kArV63OtPG316dII3as3Ke6-wGi_DjsW8QRQ6OpvIJNL8qxR"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-xs font-bold text-slate-900 truncate">Dr. Helena Varga</h3>
+<span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">PhD Toxicologist</span>
+</div>
+<p class="text-[11px] font-semibold text-slate-700 mt-0.5">Head of Nutrition Science</p>
+<p class="text-[11px] text-slate-500 leading-tight mt-1">PhD Toxicology Karolinska Institutet; specializing in food matrix alterations and endocrine disruptors.</p>
+</div>
+</div>
+<!-- Profile 3: Marcus Lindqvist -->
+<div class="p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-xs flex items-start gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0 border border-slate-200 shadow-2xs" data-alt="Professional headshot of a Scandinavian male machine learning researcher in his late twenties wearing neutral grey linen shirt, clean light-toned backdrop, soft ambient lighting, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAzd9YpSWOcj6x3N9QWLUOFPCo6kJItGKtLkENLONtRoy4VCcwZASdtHmglPKJsFOb1S41dVSOJmZh-KhLlj-mcFzwAkpuRgJzIG8UwAha95HOxjymli_rXNwEmC0AV34l6Xao_H0Ou32d4im56HrRctZxA5QxZI8falK-JY_1hxTvp23esFA3qBSl3a9N3QFiagUSUacADebTO1rh-2RQvB05huucfaKIvEaK9ZRKEO42Rkxpx8H84PLII4_lrIpp5s5RyMD7z1T5"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-xs font-bold text-slate-900 truncate">Marcus Lindqvist</h3>
+<span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">Computer Vision</span>
+</div>
+<p class="text-[11px] font-semibold text-slate-700 mt-0.5">AI Research Lead</p>
+<p class="text-[11px] text-slate-500 leading-tight mt-1">M.S. Computer Vision Stanford; specialized in edge-device OCR, multi-language label parsing, and fuzzy matching.</p>
+</div>
+</div>
+<!-- Profile 4: Maya Patel -->
+<div class="p-3.5 bg-white rounded-xl border border-slate-200/80 shadow-xs flex items-start gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0 border border-slate-200 shadow-2xs" data-alt="Portrait of a young South Asian woman product designer with a bright confident smile, wearing an elegant neutral blazer, soft bright studio lighting, minimalist contemporary portraiture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBY45h0dS3ykxPfM45TzkIQ-QJsGhG0o0lI-sug_k_7waY5hBg0vI5oYx0s_ZXAI2MGi14W2eLTv4irl0Y6sf_qWjEsiC-hbfo_D7uMyy_5HPcIYrYyCO20pAJtJWsTKuJ8U9713lW82U7hQLePFy4c-9g3ZU7PKLOfQJaszmGwcIu1kaYULmkXJkAssI-UFngWrl9-vqVRLmXnlV36XLlpOkEx-7IMR-ZcLgacW1sAy3bFjDMREnM1-CALfwxC4Ayy8nKHG_BnuPI2"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="text-xs font-bold text-slate-900 truncate">Maya Patel</h3>
+<span class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-medium">HCI Design</span>
+</div>
+<p class="text-[11px] font-semibold text-slate-700 mt-0.5">Product Designer</p>
+<p class="text-[11px] text-slate-500 leading-tight mt-1">B.Des Human-Computer Interaction RCA; focused on zero cognitive friction and readable food telemetry for consumers.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 7. MOBILE CTA CARD -->
+<section class="px-5 py-6">
+<div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 text-white text-center relative overflow-hidden shadow-2xl">
+<!-- Subtle Accent Ring Glow -->
+<div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-12 -left-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700/80 mb-3 text-[11px] font-mono text-emerald-400">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Join the Public Transparency Protocol
+            </div>
+<h2 class="text-xl font-bold tracking-tight text-white mb-2 font-headline">
+              Join us in making food transparency the standard.
+            </h2>
+<p class="text-xs text-slate-300 mb-5 leading-relaxed max-w-xs">
+              Start scanning ingredients in real-time. ScanBeforeEat is completely free for consumers — no subscription or credit card required.
+            </p>
+<button class="w-full bg-emerald-500 hover:bg-emerald-400 active:scale-98 text-slate-950 font-bold text-sm py-3 px-4 rounded-xl transition duration-150 shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span>Start Scanning Free</span>
+</button>
+<a class="mt-3.5 inline-flex items-center gap-1 text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors" href="#methodology">
+<span>Explore Methodological Docs</span>
+<span class="material-symbols-outlined text-xs" data-icon="north_east">north_east</span>
+</a>
+</div>
+</div>
+</section>
+</main>
+<!-- 8. FOOTER (Shared Component Anchor) -->
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 mt-auto">
+<div class="w-full max-w-[390px] mx-auto px-6 py-8 flex flex-col items-center gap-4 text-center font-body text-xs text-neutral-500 dark:text-neutral-400">
+<!-- Brand & Tagline -->
+<div class="flex items-center gap-1.5 font-display font-bold text-sm text-neutral-900 dark:text-white">
+<img alt="ScanBeforeEat Logo" class="w-7 h-7 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-slate-900 dark:text-white font-bold">ScanBeforeEat</span>
+</div>
+<p class="text-[11px] text-slate-500 dark:text-neutral-400 max-w-xs -mt-2">
+      Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+    </p>
+<!-- Navigation Links -->
+<div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Database</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a>
+</div>
+<!-- Medical & Scientific Disclaimer -->
+<div class="bg-neutral-100/80 dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800 text-[10px] text-neutral-500 dark:text-neutral-400 leading-normal text-left">
+<strong class="text-neutral-700 dark:text-zinc-300 font-semibold">Medical Disclaimer:</strong>
+      ScanBeforeEat provides informational analysis based on published research and food safety standards. Consult with a qualified physician or registered dietitian for individual health concerns.
+    </div>
+<!-- Copyright & Privacy Compliance -->
+<div class="text-[10px] text-neutral-400 dark:text-neutral-500 font-label flex flex-col gap-0.5 pt-1">
+<span>© 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.</span>
+<span>GDPR Compliant • Zero User Tracking • 100% User Funded</span>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

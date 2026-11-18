@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScanBeforeEat - Mobile Scientific Methodology</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#F9FAFB",
+            "surface-variant": "#F3F4F6",
+            primary: "#059669",
+            "primary-container": "#ECFDF5",
+            "on-primary-container": "#064E3B",
+            "on-surface-variant": "#4B5563",
+            "on-surface": "#1F2937",
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter"],
+            display: ["Inter"],
+            body: ["Inter"],
+            label: ["Space Grotesk"]
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full px-4 py-3 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-neutral-100 dark:border-neutral-800 shadow-sm">
+<a class="flex items-center gap-1.5 font-display font-bold text-base text-neutral-900 dark:text-white" href="#">
+<img alt="ScanBeforeEat Logo" class="w-7 h-7 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-slate-900 dark:text-white font-extrabold text-base">ScanBeforeEat</span>
+</a>
+<div class="flex items-center gap-2">
+<a class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-semibold shadow-sm active:scale-95 transition-transform duration-100 flex items-center gap-1" href="#">
+<span>Start Scanning</span>
+</a>
+<button aria-label="Open Navigation Menu" class="p-1.5 text-neutral-600 dark:text-neutral-300 hover:text-emerald-700 transition-colors duration-150 rounded-lg">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-md mx-auto px-4 py-6 space-y-8">
+<!-- Hero Section -->
+<section class="space-y-3">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-container text-on-primary-container text-xs font-label font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">science</span>
+        Transparent Science // Peer-Reviewed
+      </div>
+<h1 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface">How Our Scientific Methodology Evaluates Food Safety</h1>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+        Our multi-layered scoring algorithm combines rigorous toxicological data, independent clinical research, and strict zero lobby funding criteria to deliver completely unbiased nutritional intelligence.
+      </p>
+</section>
+<!-- Quick Stats Cards -->
+<section class="grid grid-cols-3 gap-3">
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl shadow-sm border border-surface-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-1 text-2xl">verified_user</span>
+<span class="font-bold text-lg font-headline text-on-surface">100%</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-label">Academic Board</span>
+</div>
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl shadow-sm border border-surface-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-1 text-2xl">hub</span>
+<span class="font-bold text-lg font-headline text-on-surface">Open</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-label">Source Weight</span>
+</div>
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl shadow-sm border border-surface-variant flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-primary mb-1 text-2xl">block</span>
+<span class="font-bold text-lg font-headline text-on-surface">Zero</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-label">Commercial Bias</span>
+</div>
+</section>
+<!-- Four-Pillar Algorithmic Architecture -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline font-bold text-xl text-on-surface">Algorithmic Architecture</h2>
+<span class="text-xs text-primary font-bold">4 Pillars</span>
+</div>
+<div class="space-y-3">
+<!-- Pillar 01 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex gap-4 items-start">
+<div class="bg-primary-container text-on-primary-container font-label font-bold text-sm px-2.5 py-1.5 rounded-lg">01</div>
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-base text-on-surface">Structural / NOVA</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">Quantifies degree of industrial food processing based on the internationally recognized NOVA classification framework.</p>
+</div>
+</div>
+<!-- Pillar 02 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex gap-4 items-start">
+<div class="bg-primary-container text-on-primary-container font-label font-bold text-sm px-2.5 py-1.5 rounded-lg">02</div>
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-base text-on-surface">Chemical &amp; Regulatory</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">Analyzes synthetic additives, pesticides, and contaminants against EFSA, FDA, and independent toxicological limits.</p>
+</div>
+</div>
+<!-- Pillar 03 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex gap-4 items-start">
+<div class="bg-primary-container text-on-primary-container font-label font-bold text-sm px-2.5 py-1.5 rounded-lg">03</div>
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-base text-on-surface">Nutrient Density</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">Measures ratio of essential micronutrients, vitamins, and fiber relative to total caloric load.</p>
+</div>
+</div>
+<!-- Pillar 04 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex gap-4 items-start">
+<div class="bg-primary-container text-on-primary-container font-label font-bold text-sm px-2.5 py-1.5 rounded-lg">04</div>
+<div class="space-y-1">
+<h3 class="font-headline font-bold text-base text-on-surface">Clinical &amp; Epidemiological</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">Incorporates longitudinal health outcome studies regarding long-term metabolic and inflammatory markers.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Scoring Formula & Weight Calculation Box -->
+<section class="bg-primary-container text-on-primary-container p-5 rounded-xl space-y-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">calculate</span>
+<h3 class="font-headline font-bold text-base">Scoring Formula &amp; Weight Calculation</h3>
+</div>
+<p class="text-xs leading-relaxed opacity-90">
+        Final Safety Score (S) is calculated using a weighted baseline minus penalty deductions for harmful additives and processing extremes:
+      </p>
+<div class="bg-white/80 dark:bg-zinc-900/80 p-3 rounded-lg font-mono text-xs text-primary font-bold">
+        S = max(15, min(95, round(70 + B_whole - Deductions)))<sub>additive</sub> × Severity) - (ΔNOVA × 15)
+      </div>
+</section>
+<!-- 5-Tier Additive Risk Classification Matrix -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline font-bold text-xl text-on-surface">Additive Risk Classification</h2>
+<span class="text-xs text-on-surface-variant">5 Tiers</span>
+</div>
+<div class="space-y-3">
+<!-- Tier 1 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wide">Tier 1 // Safe</span>
+<span class="text-xs text-on-surface-variant">Status: Approved</span>
+</div>
+<h4 class="font-headline font-bold text-sm text-on-surface">Benchmark: Ascorbic Acid (Vitamin C)</h4>
+<p class="text-xs text-on-surface-variant">Biological concern: Negligible. Acts as a potent antioxidant with established safety profiles.</p>
+</div>
+<!-- Tier 2 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 uppercase tracking-wide">Tier 2 // Low Risk</span>
+<span class="text-xs text-on-surface-variant">Status: Regulated</span>
+</div>
+<h4 class="font-headline font-bold text-sm text-on-surface">Benchmark: Citric Acid</h4>
+<p class="text-xs text-on-surface-variant">Biological concern: Generally safe, minor dental enamel erosion risk at high concentrations.</p>
+</div>
+<!-- Tier 3 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 uppercase tracking-wide">Tier 3 // Moderate</span>
+<span class="text-xs text-on-surface-variant">Status: Restricted ADI</span>
+</div>
+<h4 class="font-headline font-bold text-sm text-on-surface">Benchmark: Sodium Benzoate</h4>
+<p class="text-xs text-on-surface-variant">Biological concern: Potential mild inflammatory triggers in sensitive subsets when combined with ascorbic acid.</p>
+</div>
+<!-- Tier 4 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-100 text-orange-800 uppercase tracking-wide">Tier 4 // High Risk</span>
+<span class="text-xs text-on-surface-variant">Status: Under Review</span>
+</div>
+<h4 class="font-headline font-bold text-sm text-on-surface">Benchmark: Artificial Dyes (Red 40, Yellow 5)</h4>
+<p class="text-xs text-on-surface-variant">Biological concern: Associated with behavioral hyperactivity in pediatric studies and mild gut barrier disruption.</p>
+</div>
+<!-- Tier 5 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm space-y-2">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 uppercase tracking-wide">Tier 5 // Severe Hazard</span>
+<span class="text-xs text-on-surface-variant">Status: Banned / Phased Out</span>
+</div>
+<h4 class="font-headline font-bold text-sm text-on-surface">Benchmark: Partially Hydrogenated Oils (Trans Fats)</h4>
+<p class="text-xs text-on-surface-variant">Biological concern: Direct correlation with cardiovascular disease, systemic inflammation, and LDL cholesterol spikes.</p>
+</div>
+</div>
+</section>
+<!-- Scientific Oversight Committee -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="font-headline font-bold text-xl text-on-surface">Scientific Oversight Board</h2>
+<span class="text-xs text-primary font-bold">Independent</span>
+</div>
+<div class="space-y-3">
+<!-- Committee Member 1 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-primary font-bold text-lg">
+            EV
+          </div>
+<div class="space-y-0.5">
+<h4 class="font-headline font-bold text-sm text-on-surface">Dr. Elena Vance</h4>
+<p class="text-xs text-primary font-medium">Head of Toxicology &amp; Clinical Research</p>
+<p class="text-[10px] text-on-surface-variant">Ph.D. Biochemistry, Oxford University</p>
+</div>
+</div>
+<!-- Committee Member 2 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-primary font-bold text-lg">
+            AC
+          </div>
+<div class="space-y-0.5">
+<h4 class="font-headline font-bold text-sm text-on-surface">Alexandre Chen</h4>
+<p class="text-xs text-primary font-medium">Lead Epidemiologist &amp; Biostatistician</p>
+<p class="text-[10px] text-on-surface-variant">M.Sc. Public Health, Johns Hopkins</p>
+</div>
+</div>
+<!-- Committee Member 3 -->
+<div class="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-surface-variant shadow-sm flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center text-primary font-bold text-lg">
+            ML
+          </div>
+<div class="space-y-0.5">
+<h4 class="font-headline font-bold text-sm text-on-surface">Dr. Marcus Lindqvist</h4>
+<p class="text-xs text-primary font-medium">Food Systems &amp; Additive Specialist</p>
+<p class="text-[10px] text-on-surface-variant">Ph.D. Food Science, Karolinska Institute</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface dark:bg-surface shadow-lg rounded-t-xl flex justify-around items-center px-2 py-2">
+<!-- Scan (Inactive here, Methodology / Legal active or secondary context) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+<span class="font-label text-xs mt-1">Scan</span>
+</a>
+<!-- History -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">history</span>
+<span class="font-label text-xs mt-1">History</span>
+</a>
+<!-- Health -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">favorite</span>
+<span class="font-label text-xs mt-1">Health</span>
+</a>
+<!-- Legal / Methodology (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl p-2 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="font-label text-xs mt-1">Legal</span>
+</a>
+</nav>
+<footer class="w-full bg-neutral-50 dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 mt-auto">
+<div class="w-full max-w-[390px] mx-auto px-6 py-8 flex flex-col items-center gap-4 text-center font-body text-xs text-neutral-500 dark:text-neutral-400">
+<!-- Brand & Tagline -->
+<div class="flex items-center gap-1.5 font-display font-bold text-sm text-neutral-900 dark:text-white">
+<img alt="ScanBeforeEat Logo" class="w-7 h-7 rounded-lg object-contain inline-block shrink-0" src="https://lh3.googleusercontent.com/aida/ALJJyrC058KxQALuXfTGeJJNr75yQFkU_09QMc8OVBP-Qj6wV62Ywnf-JOeesiHUjuvEzhG9s02IjyrkWnPuk5MzAZasHZQBBDj6q_OI8dkXgdoucmVp1J6hW8eby2pu0M8FS0yODUqEAB5uq_vswxibW1BdFtUIZ5I5XygTVmRokpB3Wube1yeIZEdtnyTwNbI4NCQb_4G4CGd_mYpUGailGHKDQYx77_BxaORPkQxOIWHNeQ"/>
+<span class="tracking-tight text-slate-900 dark:text-white font-bold">ScanBeforeEat</span>
+</div>
+<p class="text-[11px] text-slate-500 dark:text-neutral-400 max-w-xs -mt-2">
+      Science-backed ingredient transparency. Empowering consumers with unbiased toxicology and processing data directly at the supermarket aisle.
+    </p>
+<!-- Navigation Links -->
+<div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Scanner</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Database</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Methodology</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">API Docs</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Privacy</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Terms</a>
+<span class="text-neutral-300 dark:text-neutral-700">•</span>
+<a class="hover:text-emerald-700 dark:hover:text-white transition-colors duration-150" href="#">Security</a>
+</div>
+<!-- Medical & Scientific Disclaimer -->
+<div class="bg-neutral-100/80 dark:bg-neutral-900 p-3 rounded-lg border border-neutral-200/80 dark:border-neutral-800 text-[10px] text-neutral-500 dark:text-neutral-400 leading-normal text-left">
+<strong class="text-neutral-700 dark:text-zinc-300 font-semibold">Medical Disclaimer:</strong>
+      ScanBeforeEat provides informational analysis based on published research and food safety standards. Consult with a qualified physician or registered dietitian for individual health concerns.
+    </div>
+<!-- Copyright & Privacy Compliance -->
+<div class="text-[10px] text-neutral-400 dark:text-neutral-500 font-label flex flex-col gap-0.5 pt-1">
+<span>© 2025 ScanBeforeEat Inc. All rights reserved. Disclaimer: Not Medical Advice.</span>
+<span>GDPR Compliant • Zero User Tracking • 100% User Funded</span>
+</div>
+</div>
+</footer></body></html>
