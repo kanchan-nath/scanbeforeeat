@@ -1,29 +1,39 @@
 services:
+  # 1. Next.js Static Web Application (100% Free Tier, Zero Cold Start)
+  - type: static
+    name: scanbeforeeat-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: out
+    envVars:
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://scanbeforeeat.com
+      - key: NEXT_PUBLIC_API_URL
+        value: https://scanbeforeeat-api.onrender.com/api
+
+  # 2. Express TypeScript Toxicology & Billing API Server
   - type: web
-    name: scanbeforeeat
+    name: scanbeforeeat-api
+    rootDir: server
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
-    healthCheckPath: /api/v1/health
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: SESSION_SECRET
-        generateValue: true
+      - key: PORT
+        value: "4000"
+      - key: ALLOWED_ORIGIN
+        value: "*"
+      # Optional: Cloud PostgreSQL connection string (e.g. Render Postgres or Neon)
+      # If omitted, server automatically boots local zero-config SQLite database.
       - key: DATABASE_URL
-        sync: false # Set this to your Aiven MySQL Service URI (or use individual DB_* variables)
-      - key: DB_SSL
-        value: "true"
-      - key: DB_SSL_REJECT_UNAUTHORIZED
-        value: "false"
-      - key: AUTO_SEED
-        value: "true"
-      - key: AI_MOCK_MODE
-        value: "true" # Set to false once you add your NVIDIA_API_KEY
-      - key: NVIDIA_API_KEY
         sync: false
-      - key: LOG_LEVEL
-        value: info
-
+      # Live Razorpay credentials (if omitted, falls back to test sandbox)
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
