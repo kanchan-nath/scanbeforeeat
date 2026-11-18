@@ -27,8 +27,8 @@ export default function CheckoutClient() {
   const planPrice =
     planParam === "monthly_pro" ? 199 : planParam === "six_month_saver" ? 499 : 999;
 
-  const gst = Math.round(planPrice * 0.18);
-  const total = planPrice + gst;
+  const gst = Math.round(planPrice * 0.18 * 100) / 100;
+  const total = Math.round((planPrice + gst) * 100) / 100;
 
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();

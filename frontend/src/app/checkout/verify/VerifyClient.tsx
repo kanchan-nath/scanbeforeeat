@@ -60,7 +60,7 @@ export default function VerifyClient() {
           </div>
           <div className="flex justify-between py-1 border-b border-zinc-50">
             <span className="text-zinc-500">Transaction Amount</span>
-            <span className="font-mono font-bold text-zinc-900">₹{amtParam}.00</span>
+            <span className="font-mono font-bold text-zinc-900">₹{parseFloat(amtParam).toFixed(2)}</span>
           </div>
           <div className="flex justify-between py-1 border-b border-zinc-50">
             <span className="text-zinc-500">Card</span>
