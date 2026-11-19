@@ -11,7 +11,7 @@ import {
   onAuthStateChanged,
   FirebaseUser,
 } from "./firebase";
-import { syncUserWithServer, fetchUserProfile, UserProfile } from "./api";
+import { syncUserWithServer, fetchUserProfile, sendEmailOtp, verifyEmailOtp, UserProfile } from "./api";
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -20,6 +20,8 @@ interface AuthContextType {
   signIn: (email: string, pass: string) => Promise<void>;
   signUp: (email: string, pass: string, displayName?: string) => Promise<void>;
   signInGoogle: () => Promise<void>;
+  sendOtp: (email: string) => Promise<{ success: boolean; message: string; isMock?: boolean; devOtp?: string }>;
+  verifyOtp: (email: string, otp: string, displayName?: string) => Promise<void>;
   loginDemo: (plan?: "free" | "monthly_pro") => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -171,15 +173,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(profile);
       localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
     } catch (err: any) {
-      const randId = `usr_google_${Date.now()}`;
-      const profile = await syncUserWithServer({
-        id: randId,
-        email: "google.user@example.com",
-        displayName: "Google User",
-        plan: "free",
-      });
-      setUser(profile);
-      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
+      if (err.code === "auth/configuration-not-found" || err.message?.includes("CONFIGURATION_NOT_FOUND")) {
+        throw new Error("Google Sign-In is not enabled yet in your Firebase Console (scanbeforeeat-app). Please enable Google under Authentication > Sign-in method.");
+      }
+      if (err.code === "auth/popup-closed-by-user") {
+        throw new Error("Google sign-in popup was closed before completing.");
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendOtp = async (email: string) => {
+    return await sendEmailOtp(email);
+  };
+
+  const verifyOtp = async (email: string, otp: string, displayName?: string) => {
+    setLoading(true);
+    try {
+      const res = await verifyEmailOtp(email, otp, displayName);
+      setUser(res.user);
+      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(res.user));
     } finally {
       setLoading(false);
     }
@@ -236,6 +251,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signUp,
         signInGoogle,
+        sendOtp,
+        verifyOtp,
         loginDemo,
         logout,
         refreshProfile,

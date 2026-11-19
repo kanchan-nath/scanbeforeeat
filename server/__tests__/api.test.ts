@@ -323,4 +323,56 @@ describe("ScanBeforeEat Server API Endpoints", () => {
     // Clean up
     await fetch(`${BASE_URL}/user/account/usr_real_auditor_unique`, { method: "DELETE" });
   });
+
+  it("POST /api/auth/send-otp and POST /api/auth/verify-otp should authenticate user via 6-digit email OTP", async () => {
+    const testEmail = "test_otp_user@example.com";
+
+    // 1. Send OTP
+    const sendRes = await fetch(`${BASE_URL}/auth/send-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: testEmail }),
+    });
+    const sendData = await sendRes.json();
+    expect(sendRes.status).toBe(200);
+    expect(sendData.success).toBe(true);
+
+    // Retrieve generated OTP from SQLite email_otps table
+    const otpRow = db.prepare("SELECT otp FROM email_otps WHERE email = ? AND verified = 0 ORDER BY createdAt DESC LIMIT 1").get(testEmail) as any;
+    expect(otpRow).toBeDefined();
+    expect(otpRow.otp).toMatch(/^\d{6}$/);
+
+    // 2. Reject wrong OTP
+    const badVerifyRes = await fetch(`${BASE_URL}/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: testEmail, otp: "000000" }),
+    });
+    expect(badVerifyRes.status).toBe(400);
+
+    // 3. Verify valid OTP
+    const verifyRes = await fetch(`${BASE_URL}/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: testEmail, otp: otpRow.otp, displayName: "OTP Tester" }),
+    });
+    const verifyData = await verifyRes.json();
+    expect(verifyRes.status).toBe(200);
+    expect(verifyData.success).toBe(true);
+    expect(verifyData.user.email).toBe(testEmail);
+    expect(verifyData.user.displayName).toBe("OTP Tester");
+    expect(verifyData.user.remainingScans).toBe(15);
+
+    // 4. Verify OTP cannot be reused
+    const reuseRes = await fetch(`${BASE_URL}/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: testEmail, otp: otpRow.otp }),
+    });
+    expect(reuseRes.status).toBe(400);
+
+    // Clean up
+    db.prepare("DELETE FROM email_otps WHERE email = ?").run(testEmail);
+    db.prepare("DELETE FROM users WHERE email = ?").run(testEmail);
+  });
 });

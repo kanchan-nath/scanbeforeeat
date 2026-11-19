@@ -25,6 +25,15 @@ export function initDatabase() {
       createdAt TEXT DEFAULT (datetime('now'))
     );
 
+    CREATE TABLE IF NOT EXISTS email_otps (
+      id TEXT PRIMARY KEY,
+      email TEXT NOT NULL,
+      otp TEXT NOT NULL,
+      expiresAt TEXT NOT NULL,
+      verified INTEGER DEFAULT 0,
+      createdAt TEXT DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS scans (
       id TEXT PRIMARY KEY,
       userId TEXT NOT NULL,

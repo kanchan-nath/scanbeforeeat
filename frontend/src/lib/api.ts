@@ -77,6 +77,32 @@ export async function syncUserWithServer(params: {
   return res.json();
 }
 
+export async function sendEmailOtp(email: string): Promise<{ success: boolean; message: string; isMock?: boolean; devOtp?: string }> {
+  const res = await fetch(`${API_BASE}/auth/send-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to send verification email");
+  }
+  return data;
+}
+
+export async function verifyEmailOtp(email: string, otp: string, displayName?: string): Promise<{ success: boolean; user: UserProfile }> {
+  const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, otp, displayName }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || "Failed to verify code");
+  }
+  return data;
+}
+
 export async function fetchUserProfile(userId: string): Promise<UserProfile> {
   const res = await fetch(`${API_BASE}/user/profile/${encodeURIComponent(userId)}`);
   if (!res.ok) throw new Error("Failed to fetch user profile");
@@ -93,10 +119,45 @@ export async function updateUserPlan(userId: string, plan: string): Promise<User
   return res.json();
 }
 
+export interface AiStatusResponse {
+  nvidiaConfigured: boolean;
+  model: string;
+  textModel: string;
+  fallbackReady: boolean;
+  engine: string;
+}
+
+export async function fetchAiStatus(): Promise<AiStatusResponse> {
+  const res = await fetch(`${API_BASE}/scan/ai-status`);
+  if (!res.ok) throw new Error("Failed to fetch AI telemetry status");
+  return res.json();
+}
+
+export async function extractAiAnalysis(params: {
+  text?: string;
+  image?: string;
+  imageType?: string;
+  nameHint?: string;
+}): Promise<ProductDetail> {
+  const res = await fetch(`${API_BASE}/scan/ai-extract`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "AI extraction failed. Please try again.");
+  }
+  return res.json();
+}
+
 export async function performScan(params: {
   userId: string;
   barcode?: string;
   rawText?: string;
+  image?: string;
+  imageType?: string;
+  nameHint?: string;
 }): Promise<ScanResponse> {
   const res = await fetch(`${API_BASE}/scan`, {
     method: "POST",
@@ -105,7 +166,7 @@ export async function performScan(params: {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Scan failed or monthly quota exceeded");
+    throw new Error(err.error || err.message || "Scan failed or monthly quota exceeded");
   }
   return res.json();
 }

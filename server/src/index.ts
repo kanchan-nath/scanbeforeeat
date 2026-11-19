@@ -7,6 +7,12 @@ import { generateInvoicePdf } from "./services/pdf.js";
 import { fetchFromOpenFoodFacts } from "./services/openfoodfacts.js";
 import { computeUserExposure } from "./services/toxicology.js";
 import { createPaymentOrder, verifyAndActivateSubscription } from "./services/payment.js";
+import { sendOtpEmail } from "./services/email.js";
+import {
+  analyzeIngredientsTextWithAI,
+  analyzeFoodImageWithAI,
+  getAiServiceStatus,
+} from "./services/ai.js";
 
 dotenv.config();
 
@@ -14,7 +20,8 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // Initialize schema & seed tables
 initDatabase();
@@ -132,6 +139,110 @@ app.post("/api/auth/login", (req: Request, res: Response) => {
   return res.json({ ...user, remainingScans: 15 });
 });
 
+// -------------------------------------------------------------
+// Email OTP Authentication
+// -------------------------------------------------------------
+app.post("/api/auth/send-otp", async (req: Request, res: Response) => {
+  const { email } = req.body;
+  if (!email || typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ error: "A valid email address is required" });
+  }
+
+  const cleanEmail = email.toLowerCase().trim();
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const id = "otp_" + crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+  try {
+    db.prepare("UPDATE email_otps SET verified = -1 WHERE email = ? AND verified = 0").run(cleanEmail);
+
+    db.prepare(`
+      INSERT INTO email_otps (id, email, otp, expiresAt, verified)
+      VALUES (?, ?, ?, ?, 0)
+    `).run(id, cleanEmail, otpCode, expiresAt);
+
+    const mailResult = await sendOtpEmail(cleanEmail, otpCode);
+
+    if (!mailResult.success && !mailResult.isMock) {
+      return res.status(500).json({ error: mailResult.error || "Failed to send verification email" });
+    }
+
+    return res.json({
+      success: true,
+      message: `Verification code sent to ${cleanEmail}`,
+      isMock: mailResult.isMock || false,
+      devOtp: mailResult.isMock ? otpCode : undefined,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: err.message || "Failed to process OTP request" });
+  }
+});
+
+app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
+  const { email, otp, displayName } = req.body;
+  if (!email || !otp) {
+    return res.status(400).json({ error: "Email and 6-digit OTP code are required" });
+  }
+
+  const cleanEmail = email.toLowerCase().trim();
+  const cleanOtp = String(otp).trim();
+
+  const record = db.prepare(`
+    SELECT * FROM email_otps 
+    WHERE email = ? AND verified = 0 
+    ORDER BY createdAt DESC LIMIT 1
+  `).get(cleanEmail) as any;
+
+  if (!record) {
+    return res.status(400).json({ error: "No pending verification code found. Please request a new code." });
+  }
+
+  if (new Date(record.expiresAt).getTime() < Date.now()) {
+    db.prepare("UPDATE email_otps SET verified = -1 WHERE id = ?").run(record.id);
+    return res.status(400).json({ error: "Verification code has expired. Please request a new one." });
+  }
+
+  if (record.otp !== cleanOtp) {
+    return res.status(400).json({ error: "Invalid verification code. Please check your email and try again." });
+  }
+
+  db.prepare("UPDATE email_otps SET verified = 1 WHERE id = ?").run(record.id);
+
+  const existing = db.prepare("SELECT * FROM users WHERE email = ?").get(cleanEmail) as any;
+  if (existing) {
+    const remaining = Math.max(0, existing.scansLimit - existing.scansUsed);
+    return res.json({
+      success: true,
+      user: { ...existing, remainingScans: remaining },
+    });
+  }
+
+  const safeId = "usr_" + cleanEmail.replace(/[^a-z0-9]/g, "_");
+  const resetIso = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+  const name = displayName?.trim() || cleanEmail.split("@")[0];
+
+  db.prepare(`
+    INSERT INTO users (id, email, displayName, plan, scansLimit, scansUsed, billingCycleResetAt, paymentGateway)
+    VALUES (?, ?, ?, 'free', 15, 0, ?, 'email_otp')
+  `).run(safeId, cleanEmail, name, resetIso);
+
+  db.prepare(`
+    INSERT OR IGNORE INTO user_health_profiles (userId, dietaryProtocol, riskTolerance, dailyTarget, conditionsJson, weightKg, updatedAt)
+    VALUES (?, 'Standard Clean Baseline', 'Standard Precautionary', 5, '[]', 65.0, datetime('now'))
+  `).run(safeId);
+
+  db.prepare(`
+    INSERT OR IGNORE INTO user_notifications (userId, allergenAlert, synergyAlert, weeklyDigest, newStudies, quotaAlert, updatedAt)
+    VALUES (?, 1, 1, 1, 0, 1, datetime('now'))
+  `).run(safeId);
+
+  const newUser = db.prepare("SELECT * FROM users WHERE id = ?").get(safeId) as any;
+  return res.json({
+    success: true,
+    user: { ...newUser, remainingScans: 15 },
+  });
+});
+
 app.get("/api/user/profile/:id", (req: Request, res: Response) => {
   const { id } = req.params;
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as any;
@@ -171,10 +282,37 @@ app.post("/api/user/plan", (req: Request, res: Response) => {
 });
 
 // -------------------------------------------------------------
-// Scanning & Barcode Lookup (With Open Food Facts Integration)
+// AI Scanner Telemetry & Direct AI Extraction Endpoints
+// -------------------------------------------------------------
+app.get("/api/scan/ai-status", (_req: Request, res: Response) => {
+  res.json(getAiServiceStatus());
+});
+
+app.post("/api/scan/ai-extract", async (req: Request, res: Response) => {
+  const { text, image, imageType, nameHint } = req.body;
+  if (!text && !image) {
+    return res.status(400).json({ error: "Either 'text' or 'image' must be provided" });
+  }
+
+  let result: any;
+  if (image) {
+    result = await analyzeFoodImageWithAI(image, imageType || "image/jpeg", nameHint);
+  } else {
+    result = await analyzeIngredientsTextWithAI(text, nameHint);
+  }
+
+  if (result.isFoodProduct === false) {
+    return res.status(400).json({ error: result.error || "No food product detected", isFoodProduct: false });
+  }
+
+  res.json(result);
+});
+
+// -------------------------------------------------------------
+// Scanning & Barcode Lookup (With Open Food Facts & AI Vision)
 // -------------------------------------------------------------
 app.post("/api/scan", async (req: Request, res: Response) => {
-  const { userId, barcode, rawText } = req.body;
+  const { userId, barcode, rawText, image, imageType, nameHint } = req.body;
   if (!userId) {
     return res.status(400).json({ error: "userId is required" });
   }
@@ -195,9 +333,23 @@ app.post("/api/scan", async (req: Request, res: Response) => {
 
   let productResult: any = null;
 
-  // Step 1: Known barcode in local cache
-  if (barcode) {
-    const existing = db.prepare("SELECT * FROM products WHERE barcode = ?").get(barcode) as any;
+  // Case 1: Image provided (Camera label snapshot or gallery photo upload)
+  if (image) {
+    productResult = await analyzeFoodImageWithAI(image, imageType || "image/jpeg", nameHint);
+    if (productResult.isFoodProduct === false) {
+      return res.status(400).json({
+        error: productResult.error || "No food product detected. Please reframe the ingredients label.",
+        isFoodProduct: false,
+      });
+    }
+    if (barcode) {
+      productResult.barcode = barcode;
+    }
+  }
+  // Case 2: Barcode provided
+  else if (barcode) {
+    const cleanBarcode = String(barcode).trim();
+    const existing = db.prepare("SELECT * FROM products WHERE barcode = ?").get(cleanBarcode) as any;
     if (existing) {
       productResult = {
         ...existing,
@@ -207,15 +359,59 @@ app.post("/api/scan", async (req: Request, res: Response) => {
         alternatives: JSON.parse(existing.alternativesJson),
       };
     } else {
-      // Step 2: Query Open Food Facts live catalog
-      productResult = await fetchFromOpenFoodFacts(barcode);
+      // Query Open Food Facts live catalog
+      productResult = await fetchFromOpenFoodFacts(cleanBarcode);
+
+      // If uncataloged in Open Food Facts, run AI text monograph
+      if (!productResult) {
+        const textToAnalyze = rawText || "Packaged Grocery Ingredient Matrix";
+        productResult = await analyzeIngredientsTextWithAI(textToAnalyze, nameHint || `Product ${cleanBarcode}`);
+        productResult.barcode = cleanBarcode;
+      }
     }
   }
+  // Case 3: Raw ingredient text provided
+  else if (rawText) {
+    productResult = await analyzeIngredientsTextWithAI(rawText, nameHint);
+    if (productResult.isFoodProduct === false) {
+      return res.status(400).json({
+        error: productResult.error || "No food ingredients detected in provided text.",
+        isFoodProduct: false,
+      });
+    }
+  }
+  // Fallback
+  else {
+    productResult = await analyzeIngredientsTextWithAI("Packaged Grocery Ingredients", "Scanned Grocery Item");
+  }
 
-  // Step 3: Heuristic OCR fallback if uncataloged or rawText
-  if (!productResult) {
-    const textToAnalyze = rawText || "Custom Grocery Item Ingredients";
-    productResult = synthesizeScanResult(barcode || `GEN-${Date.now().toString().slice(-6)}`, textToAnalyze);
+  // Ensure unique barcode identifier
+  if (!productResult.barcode) {
+    productResult.barcode = `GEN-${Date.now().toString().slice(-6)}`;
+  }
+
+  // Cache/persist product in database for instant future lookups
+  try {
+    db.prepare(`
+      INSERT OR REPLACE INTO products (
+        barcode, name, brand, category, healthScore, novaGroup,
+        ingredientsText, additivesJson, allergensJson, deductionsJson, alternativesJson
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      productResult.barcode,
+      productResult.name || "Audited Food Product",
+      productResult.brand || "Detected Brand",
+      productResult.category || "General Packaged Food",
+      productResult.healthScore ?? 50,
+      productResult.novaGroup ?? 3,
+      productResult.ingredientsText || "",
+      JSON.stringify(productResult.additives || []),
+      JSON.stringify(productResult.allergens || []),
+      JSON.stringify(productResult.deductions || []),
+      JSON.stringify(productResult.alternatives || [])
+    );
+  } catch (cacheErr) {
+    console.warn("[Database] Could not cache scanned product:", cacheErr);
   }
 
   // Deduct 1 scan quota

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
@@ -10,14 +10,53 @@ import { useAuth } from "@/lib/auth-context";
 
 export default function AuthPage() {
   const router = useRouter();
-  const { signIn, signUp, signInGoogle, loginDemo, user } = useAuth();
+  const { signInGoogle, sendOtp, verifyOtp, loginDemo, user } = useAuth();
 
+  // "signin" | "signup"
   const [mode, setMode] = useState<"signin" | "signup">("signin");
+  // Step 1: "email" | Step 2: "otp"
+  const [step, setStep] = useState<"email" | "otp">("email");
+
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // OTP State: 6 digits
+  const [otpDigits, setOtpDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
+  const [resendTimer, setResendTimer] = useState<number>(60);
+  const [canResend, setCanResend] = useState<boolean>(false);
+
+  // Refs for 6 OTP input boxes
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Countdown timer for OTP resend
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (step === "otp" && resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [step, resendTimer]);
+
+  // Focus first OTP input when entering OTP step
+  useEffect(() => {
+    if (step === "otp") {
+      setTimeout(() => {
+        inputRefs.current[0]?.focus();
+      }, 100);
+    }
+  }, [step]);
 
   // If already logged in, show quick redirect option
   if (user) {
@@ -58,25 +97,125 @@ export default function AuthPage() {
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle Send OTP (Step 1 -> Step 2)
+  const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !email.includes("@")) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+
     setErrorMsg("");
+    setSuccessMsg("");
     setIsSubmitting(true);
 
     try {
-      if (mode === "signin") {
-        await signIn(email, password);
-      } else {
-        await signUp(email, password, displayName);
+      const res = await sendOtp(email.trim());
+      setSuccessMsg(`Verification code sent to ${email.trim()}`);
+      if (res.devOtp) {
+        setDevOtpHint(res.devOtp);
       }
-      router.push("/dashboard");
+      setResendTimer(60);
+      setCanResend(false);
+      setOtpDigits(["", "", "", "", "", ""]);
+      setStep("otp");
     } catch (err: any) {
-      setErrorMsg(err.message || "Authentication failed. Please verify credentials.");
+      setErrorMsg(err.message || "Failed to send verification code. Please check your network.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // Handle Resend OTP
+  const handleResendOtp = async () => {
+    if (!canResend || isSubmitting) return;
+    setErrorMsg("");
+    setSuccessMsg("");
+    setIsSubmitting(true);
+
+    try {
+      const res = await sendOtp(email.trim());
+      setSuccessMsg(`New verification code sent to ${email.trim()}`);
+      if (res.devOtp) {
+        setDevOtpHint(res.devOtp);
+      }
+      setResendTimer(60);
+      setCanResend(false);
+      setOtpDigits(["", "", "", "", "", ""]);
+      inputRefs.current[0]?.focus();
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to resend code.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle Verify OTP (Step 2)
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const fullOtp = otpDigits.join("");
+    if (fullOtp.length !== 6) {
+      setErrorMsg("Please enter the complete 6-digit verification code.");
+      return;
+    }
+
+    setErrorMsg("");
+    setIsSubmitting(true);
+
+    try {
+      await verifyOtp(email.trim(), fullOtp, displayName.trim() || undefined);
+      router.push("/dashboard");
+    } catch (err: any) {
+      setErrorMsg(err.message || "Invalid or expired code. Please verify and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle OTP digit changes
+  const handleOtpChange = (index: number, val: string) => {
+    const clean = val.replace(/\D/g, "");
+    if (!clean) {
+      const newDigits = [...otpDigits];
+      newDigits[index] = "";
+      setOtpDigits(newDigits);
+      return;
+    }
+
+    // Handle pasted sequence
+    if (clean.length > 1) {
+      const pasteArray = clean.slice(0, 6).split("");
+      const newDigits = [...otpDigits];
+      for (let i = 0; i < 6; i++) {
+        if (pasteArray[i]) {
+          newDigits[i] = pasteArray[i];
+        }
+      }
+      setOtpDigits(newDigits);
+      const nextIndex = Math.min(pasteArray.length, 5);
+      inputRefs.current[nextIndex]?.focus();
+      return;
+    }
+
+    const singleDigit = clean.slice(-1);
+    const newDigits = [...otpDigits];
+    newDigits[index] = singleDigit;
+    setOtpDigits(newDigits);
+
+    // Auto advance focus
+    if (singleDigit && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  // Handle backspace navigation in OTP
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !otpDigits[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  // Google SSO via Firebase Auth
   const handleGoogle = async () => {
     setErrorMsg("");
     setIsSubmitting(true);
@@ -90,6 +229,7 @@ export default function AuthPage() {
     }
   };
 
+  // Instant Showcase Demo Login
   const handleDemo = async (plan: "free" | "monthly_pro") => {
     setIsSubmitting(true);
     try {
@@ -122,7 +262,7 @@ export default function AuthPage() {
               </h1>
 
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-8">
-                Sign in to access your scanned product history, set personalized dietary & allergen watchlists, and unlock high-speed barcode inspection.
+                Sign in with Google or your email OTP to access your scanned product history, set personalized dietary & allergen watchlists, and unlock high-speed barcode inspection.
               </p>
 
               {/* 3 Value Propositions */}
@@ -193,172 +333,290 @@ export default function AuthPage() {
               </div>
             </div>
 
-            {/* Right Column: Interactive Sign In / Sign Up Form */}
+            {/* Right Column: Authentication Card (Step 1: Auth Options / Step 2: In-Page OTP Verification Section) */}
             <div className="lg:col-span-7 flex justify-center">
-              <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200/90 shadow-xl shadow-slate-200/60 p-6 sm:p-9 relative">
-                {/* Mode Selector Tabs */}
-                <div className="flex rounded-xl bg-slate-100 p-1 mb-6 border border-slate-200">
-                  <button
-                    type="button"
-                    onClick={() => { setMode("signin"); setErrorMsg(""); }}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                      mode === "signin"
-                        ? "bg-white text-zinc-950 shadow-sm"
-                        : "text-zinc-600 hover:text-zinc-950"
-                    }`}
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setMode("signup"); setErrorMsg(""); }}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
-                      mode === "signup"
-                        ? "bg-white text-zinc-950 shadow-sm"
-                        : "text-zinc-600 hover:text-zinc-950"
-                    }`}
-                  >
-                    Create Free Account
-                  </button>
-                </div>
-
-                <div className="mb-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-headline">
-                    {mode === "signin" ? "Sign in to ScanBeforeEat" : "Claim 15 Free Monthly Scans"}
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    {mode === "signin"
-                      ? "Enter your credentials or choose a quick login below"
-                      : "Create your free account. No credit card required."}
-                  </p>
-                </div>
-
-                {/* Google SSO Button */}
-                <button
-                  type="button"
-                  onClick={handleGoogle}
-                  disabled={isSubmitting}
-                  className="w-full border border-slate-200 rounded-xl py-2.5 px-3 flex items-center justify-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs cursor-pointer active:scale-[0.99] mb-4"
-                >
-                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05" />
-                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335" />
-                  </svg>
-                  <span>Continue with Google</span>
-                </button>
-
-                {/* Instant Showcase Demo Access */}
-                <div className="mb-6 space-y-2">
-                  <button
-                    type="button"
-                    onClick={() => handleDemo("monthly_pro")}
-                    disabled={isSubmitting}
-                    className="w-full py-2.5 px-3 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-950 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs"
-                  >
-                    <Icon name="verified_user" className="text-sm text-emerald-700" />
-                    <span>Explore Showcase Demo (<code className="text-emerald-800 font-mono">trial@scanbeforeeat.com</code>)</span>
-                  </button>
-                  <p className="text-[11px] text-zinc-500 text-center">
-                    Showcases full product components with pre-loaded mock food audits, pantry, and invoices
-                  </p>
-                </div>
-
-                <div className="relative flex items-center justify-center my-6">
-                  <div className="border-t border-slate-200 w-full"></div>
-                  <span className="bg-white px-3 text-[10px] font-semibold text-slate-400 tracking-wider uppercase font-label shrink-0">
-                    OR SIGN IN WITH YOUR PERSONAL ACCOUNT
-                  </span>
-                  <div className="border-t border-slate-200 w-full"></div>
-                </div>
-
-                {errorMsg && (
-                  <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                    <Icon name="warning" className="text-sm shrink-0" />
-                    <span>{errorMsg}</span>
-                  </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {mode === "signup" && (
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1.5" htmlFor="name">
-                        Full Name
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        required
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        placeholder="Dr. Alex Rivera"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      />
-                    </div>
-                  )}
-
+              <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200/90 shadow-xl shadow-slate-200/60 p-6 sm:p-9 relative transition-all duration-300">
+                {step === "email" ? (
+                  /* ========================================================================= */
+                  /* STEP 1: Main Authentication Section (Google + Email OTP trigger)          */
+                  /* ========================================================================= */
                   <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-xs font-semibold text-slate-700" htmlFor="email">
-                        Email Address
-                      </label>
+                    {/* Mode Selector Tabs */}
+                    <div className="flex rounded-xl bg-slate-100 p-1 mb-6 border border-slate-200">
                       <button
                         type="button"
-                        onClick={() => setEmail("trial@scanbeforeeat.com")}
-                        className="text-[10px] text-emerald-700 hover:underline font-medium"
+                        onClick={() => { setMode("signin"); setErrorMsg(""); }}
+                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                          mode === "signin"
+                            ? "bg-white text-zinc-950 shadow-sm"
+                            : "text-zinc-600 hover:text-zinc-950"
+                        }`}
                       >
-                        Auto-fill Showcase Trial
+                        Sign In
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setMode("signup"); setErrorMsg(""); }}
+                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                          mode === "signup"
+                            ? "bg-white text-zinc-950 shadow-sm"
+                            : "text-zinc-600 hover:text-zinc-950"
+                        }`}
+                      >
+                        Create Free Account
                       </button>
                     </div>
-                    <input
-                      id="email"
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="alex.rivera@example.com or trial@scanbeforeeat.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    />
-                  </div>
 
+                    <div className="mb-6">
+                      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-headline">
+                        {mode === "signin" ? "Sign in to ScanBeforeEat" : "Claim 15 Free Monthly Scans"}
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-1">
+                        {mode === "signin"
+                          ? "Continue with Google or receive a one-time login code to your email"
+                          : "Create your free account via email OTP. No password required."}
+                      </p>
+                    </div>
+
+                    {/* Google SSO Button (Firebase Auth) */}
+                    <button
+                      type="button"
+                      onClick={handleGoogle}
+                      disabled={isSubmitting}
+                      className="w-full border border-slate-200 rounded-xl py-2.5 px-3 flex items-center justify-center gap-2.5 text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all shadow-xs cursor-pointer active:scale-[0.99] mb-4"
+                    >
+                      <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05" />
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335" />
+                      </svg>
+                      <span>Continue with Google</span>
+                    </button>
+
+                    {/* Instant Showcase Demo Access */}
+                    <div className="mb-6 space-y-2">
+                      <button
+                        type="button"
+                        onClick={() => handleDemo("monthly_pro")}
+                        disabled={isSubmitting}
+                        className="w-full py-2.5 px-3 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-950 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-2 shadow-xs"
+                      >
+                        <Icon name="verified_user" className="text-sm text-emerald-700" />
+                        <span>Explore Showcase Demo (<code className="text-emerald-800 font-mono">trial@scanbeforeeat.com</code>)</span>
+                      </button>
+                    </div>
+
+                    <div className="relative flex items-center justify-center my-6">
+                      <div className="border-t border-slate-200 w-full"></div>
+                      <span className="bg-white px-3 text-[10px] font-semibold text-slate-400 tracking-wider uppercase font-label shrink-0">
+                        OR CONTINUE WITH EMAIL OTP
+                      </span>
+                      <div className="border-t border-slate-200 w-full"></div>
+                    </div>
+
+                    {errorMsg && (
+                      <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                        <Icon name="warning" className="text-sm shrink-0" />
+                        <span>{errorMsg}</span>
+                      </div>
+                    )}
+
+                    <form onSubmit={handleRequestOtp} className="space-y-4">
+                      {mode === "signup" && (
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-700 mb-1.5" htmlFor="name">
+                            Full Name
+                          </label>
+                          <input
+                            id="name"
+                            type="text"
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            placeholder="Dr. Alex Rivera"
+                            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <label className="block text-xs font-semibold text-slate-700" htmlFor="email">
+                            Email Address
+                          </label>
+                        </div>
+                        <input
+                          id="email"
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="alex.rivera@example.com"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/25 transition-all cursor-pointer active:scale-[0.99] flex items-center justify-center gap-2"
+                      >
+                        <span>{isSubmitting ? "Sending Code..." : "Send 6-Digit Verification Code"}</span>
+                        <Icon name="mail" className="text-sm" />
+                      </button>
+                    </form>
+
+                    <div className="mt-6 text-center text-xs text-slate-500">
+                      Protected by 256-bit encryption. By continuing you agree to our{" "}
+                      <Link href="/terms" className="text-emerald-700 hover:underline">
+                        Terms
+                      </Link>{" "}
+                      and{" "}
+                      <Link href="/privacy" className="text-emerald-700 hover:underline">
+                        Privacy Policy
+                      </Link>
+                      .
+                    </div>
+                  </div>
+                ) : (
+                  /* ========================================================================= */
+                  /* STEP 2: In-Page Secondary View - OTP Verification Section                 */
+                  /* (Replaces the main auth form using the exact ScanBeforeEat color template) */
+                  /* ========================================================================= */
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1.5" htmlFor="password">
-                      Password
-                    </label>
-                    <input
-                      id="password"
-                      type="password"
-                      required
-                      minLength={6}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••••••"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    />
+                    {/* Header badge */}
+                    <div className="text-center mb-6">
+                      <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center mx-auto mb-3 shadow-inner">
+                        <Icon name="mark_email_read" className="text-2xl" />
+                      </div>
+                      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-headline">
+                        Enter Verification Code
+                      </h2>
+                      <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                        We sent a 6-digit one-time code to{" "}
+                        <strong className="text-slate-900 font-semibold">{email}</strong>
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => { setStep("email"); setErrorMsg(""); setSuccessMsg(""); }}
+                        className="inline-flex items-center gap-1 text-[11px] text-emerald-700 hover:text-emerald-800 font-semibold mt-1 cursor-pointer hover:underline"
+                      >
+                        <Icon name="edit" className="text-xs" />
+                        <span>Change Email Address</span>
+                      </button>
+                    </div>
+
+                    {/* Success notification */}
+                    {successMsg && (
+                      <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+                        <Icon name="check_circle" className="text-sm text-emerald-600 shrink-0" />
+                        <span>{successMsg}</span>
+                      </div>
+                    )}
+
+                    {/* Dev OTP Notification (when SMTP is not configured yet) */}
+                    {devOtpHint && (
+                      <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs">
+                        <div className="flex items-center gap-1.5 font-bold mb-1">
+                          <Icon name="info" className="text-sm text-amber-700" />
+                          <span>Local Development Mode</span>
+                        </div>
+                        <p className="text-[11px] text-amber-800 mb-1.5">
+                          SMTP credentials pending. Your 6-digit verification code is:
+                        </p>
+                        <div className="flex items-center justify-between bg-white px-3 py-1.5 rounded-lg border border-amber-300">
+                          <code className="font-mono font-bold text-sm text-emerald-800 tracking-wider">
+                            {devOtpHint}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const digits = devOtpHint.split("");
+                              setOtpDigits(digits);
+                              inputRefs.current[5]?.focus();
+                            }}
+                            className="text-[10px] text-emerald-700 font-bold hover:underline"
+                          >
+                            Auto-Fill
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {errorMsg && (
+                      <div className="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                        <Icon name="warning" className="text-sm shrink-0" />
+                        <span>{errorMsg}</span>
+                      </div>
+                    )}
+
+                    {/* 6-Digit OTP Form */}
+                    <form onSubmit={handleVerifyOtp} className="space-y-6">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-3 text-center">
+                          6-Digit Verification Code
+                        </label>
+                        <div className="flex justify-between items-center gap-2 sm:gap-2.5">
+                          {otpDigits.map((digit, idx) => (
+                            <input
+                              key={idx}
+                              ref={(el) => { inputRefs.current[idx] = el; }}
+                              type="text"
+                              inputMode="numeric"
+                              maxLength={1}
+                              value={digit}
+                              onChange={(e) => handleOtpChange(idx, e.target.value)}
+                              onKeyDown={(e) => handleOtpKeyDown(idx, e)}
+                              className="w-12 h-14 sm:w-13 sm:h-15 text-center text-xl sm:text-2xl font-bold font-mono rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-xs"
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || otpDigits.join("").length !== 6}
+                        className="w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white shadow-md shadow-emerald-600/25 transition-all cursor-pointer active:scale-[0.99] flex items-center justify-center gap-2"
+                      >
+                        <span>{isSubmitting ? "Verifying Code..." : "Verify & Sign In"}</span>
+                        <Icon name="arrow_forward" className="text-sm" />
+                      </button>
+
+                      {/* Resend Code Section */}
+                      <div className="text-center pt-2">
+                        {canResend ? (
+                          <button
+                            type="button"
+                            onClick={handleResendOtp}
+                            disabled={isSubmitting}
+                            className="text-xs font-bold text-emerald-700 hover:text-emerald-800 cursor-pointer hover:underline"
+                          >
+                            Didn&apos;t receive code? Resend Code
+                          </button>
+                        ) : (
+                          <p className="text-xs text-slate-500">
+                            Resend code in{" "}
+                            <span className="font-semibold text-slate-800 font-mono">
+                              {resendTimer}s
+                            </span>
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Back button */}
+                      <div className="pt-2 border-t border-slate-100 text-center">
+                        <button
+                          type="button"
+                          onClick={() => { setStep("email"); setErrorMsg(""); }}
+                          className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer font-medium"
+                        >
+                          <Icon name="arrow_back" className="text-xs" />
+                          <span>Back to all login options</span>
+                        </button>
+                      </div>
+                    </form>
                   </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/25 transition-all cursor-pointer active:scale-[0.99] flex items-center justify-center gap-2"
-                  >
-                    <span>{isSubmitting ? "Connecting..." : mode === "signin" ? "Sign In" : "Create Account & Start Scanning"}</span>
-                    <Icon name="arrow_forward" className="text-sm" />
-                  </button>
-                </form>
-
-                <div className="mt-6 text-center text-xs text-slate-500">
-                  Protected by 256-bit encryption. By continuing you agree to our{" "}
-                  <Link href="/terms" className="text-emerald-700 hover:underline">
-                    Terms
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/privacy" className="text-emerald-700 hover:underline">
-                    Privacy Policy
-                  </Link>
-                  .
-                </div>
+                )}
               </div>
             </div>
           </div>
