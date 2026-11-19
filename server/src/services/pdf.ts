@@ -21,9 +21,9 @@ export function generateInvoicePdf(invoice: InvoiceData): Promise<Buffer> {
       const doc = new PDFDocument({ margin: 40, size: "A4" });
       const buffers: Buffer[] = [];
 
-      doc.on("data", (chunk) => buffers.push(chunk));
+      doc.on("data", (chunk: Buffer) => buffers.push(chunk));
       doc.on("end", () => resolve(Buffer.concat(buffers)));
-      doc.on("error", (err) => reject(err));
+      doc.on("error", (err: Error) => reject(err));
 
       const primaryColor = "#059669"; // Emerald 600
       const darkColor = "#0f172a"; // Slate 900
