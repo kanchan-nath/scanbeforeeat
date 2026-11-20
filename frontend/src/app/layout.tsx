@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.com";
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com";
+const siteUrl = rawSiteUrl.replace(/\/+$/, "");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

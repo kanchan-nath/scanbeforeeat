@@ -14,7 +14,7 @@ services:
         destination: /index.html
     envVars:
       - key: NEXT_PUBLIC_SITE_URL
-        value: https://scanbeforeeat.com
+        value: https://scanbeforeeat.onrender.com
       - key: NEXT_PUBLIC_API_URL
         value: https://scanbeforeeat-api.onrender.com/api
 

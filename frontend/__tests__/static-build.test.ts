@@ -7,14 +7,12 @@ const outDir = path.resolve(__dirname, "../out");
 
 describe("Static Export Build Validation", () => {
   beforeAll(() => {
-    // If out/ directory has not been generated yet, run the build once
-    if (!fs.existsSync(path.join(outDir, "index.html"))) {
-      execSync("npm run build", {
-        cwd: path.resolve(__dirname, ".."),
-        stdio: "pipe",
-        env: { ...process.env, NEXT_PUBLIC_SITE_URL: "https://scanbeforeeat.com" },
-      });
-    }
+    // Always rebuild to validate current environment configuration
+    execSync("npm run build", {
+      cwd: path.resolve(__dirname, ".."),
+      stdio: "pipe",
+      env: { ...process.env, NEXT_PUBLIC_SITE_URL: "https://scanbeforeeat.onrender.com" },
+    });
   }, 120000); // 120s timeout in case build runs
 
   it("ensures the static export out/ directory exists", () => {
@@ -40,11 +38,11 @@ describe("Static Export Build Validation", () => {
     const content = fs.readFileSync(sitemapPath, "utf-8");
     expect(content).toContain('<?xml version="1.0" encoding="UTF-8"?>');
     expect(content).toContain("<urlset");
-    expect(content).toContain("https://scanbeforeeat.com/");
-    expect(content).toContain("https://scanbeforeeat.com/additives/");
-    expect(content).toContain("https://scanbeforeeat.com/upf-guide/");
-    expect(content).toContain("https://scanbeforeeat.com/methodology/");
-    expect(content).toContain("https://scanbeforeeat.com/blog/");
+    expect(content).toContain("https://scanbeforeeat.onrender.com/");
+    expect(content).toContain("https://scanbeforeeat.onrender.com/additives/");
+    expect(content).toContain("https://scanbeforeeat.onrender.com/upf-guide/");
+    expect(content).toContain("https://scanbeforeeat.onrender.com/methodology/");
+    expect(content).toContain("https://scanbeforeeat.onrender.com/blog/");
   });
 
   it("ensures out/robots.txt exists and contains standard crawler rules", () => {
@@ -54,7 +52,7 @@ describe("Static Export Build Validation", () => {
     const content = fs.readFileSync(robotsPath, "utf-8");
     expect(content).toContain("User-Agent: *");
     expect(content).toContain("Allow: /");
-    expect(content).toContain("Sitemap: https://scanbeforeeat.com/sitemap.xml");
+    expect(content).toContain("Sitemap: https://scanbeforeeat.onrender.com/sitemap.xml");
   });
 
   it("ensures all core unauthenticated subpages exist as static HTML files", () => {

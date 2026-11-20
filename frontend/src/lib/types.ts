@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "ScanBeforeEat",
   description:
     "AI-powered food ingredient scanner. Scan any food barcode or ingredient list for instant analysis of additives, allergens, and ultra-processed markers.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.com",
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com").replace(/\/+$/, ""),
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "https://app-scanbeforeeat.com",
   ogImage: "/og-image.png",
 } as const;

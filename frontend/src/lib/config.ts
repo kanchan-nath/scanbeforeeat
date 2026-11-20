@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: "Know What You Eat. Before You Eat It.",
   description:
     "AI-powered food ingredient scanner. Scan any food barcode or label for instant analysis of toxic additives, allergens, ultra-processed markers, and an evidence-backed health score.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.com",
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com").replace(/\/+$/, ""),
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "",
   loginUrl: "/auth",
   scanUrl: "/scanner",
