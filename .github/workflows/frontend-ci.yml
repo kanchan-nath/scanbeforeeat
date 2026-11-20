@@ -51,7 +51,7 @@ jobs:
       - name: Build Next.js static export
         run: npm run build
         env:
-          NEXT_PUBLIC_SITE_URL: "https://scanbeforeeat.com"
+          NEXT_PUBLIC_SITE_URL: "https://scanbeforeeat.onrender.com"
           NEXT_PUBLIC_APP_URL: "https://app-scanbeforeeat.com"
 
       - name: Validate static export artifacts

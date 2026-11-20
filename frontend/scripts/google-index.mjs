@@ -11,7 +11,7 @@
 import fs from "fs";
 import crypto from "crypto";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://scanbeforeeat.com";
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://scanbeforeeat.onrender.com").replace(/\/+$/, "");
 
 const URLS_TO_INDEX = [
   `${SITE_URL}/`,

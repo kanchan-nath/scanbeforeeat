@@ -3,7 +3,8 @@ import { MetadataRoute } from "next";
 export const dynamic = "force-static";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.com";
+  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com";
+  const siteUrl = rawSiteUrl.replace(/\/+$/, "");
 
   return {
     rules: [

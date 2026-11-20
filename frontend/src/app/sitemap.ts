@@ -4,7 +4,8 @@ import { getAllBlogPosts } from "@/content/blog";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.com";
+  const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com";
+  const siteUrl = rawSiteUrl.replace(/\/+$/, "");
 
   const staticRoutes = [
     {
