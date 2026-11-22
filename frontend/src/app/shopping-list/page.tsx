@@ -13,15 +13,11 @@ import {
 } from "@/lib/api";
 
 export default function ShoppingListPage() {
-  const { user, loginDemo } = useAuth();
+  const { user } = useAuth();
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [newItemName, setNewItemName] = useState("");
   const [newItemCategory, setNewItemCategory] = useState("Clean Produce");
-
-  useEffect(() => {
-    if (!user) loginDemo("monthly_pro");
-  }, [user, loginDemo]);
 
   useEffect(() => {
     if (user?.id) loadItems();

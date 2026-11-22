@@ -162,6 +162,25 @@ export default function AuthenticatedShell({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Client-side route guard: redirect unauthenticated visitors to /auth
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push(`/auth?redirect=${encodeURIComponent(pathname)}`);
+    }
+  }, [loading, user, pathname, router]);
+
+  // Loading skeleton state while verifying session
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-mono text-zinc-500">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Compute avatar initials and display name
   const displayName = user?.displayName || (user?.email ? user.email.split("@")[0] : "Dr. Elena Vance");
   const initials = displayName

@@ -7,7 +7,8 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
 
-const dbPath = process.env.DATABASE_PATH || path.join(dataDir, "scanbeforeeat.sqlite");
+const defaultName = process.env.NODE_ENV === "test" ? "test.sqlite" : "scanbeforeeat.sqlite";
+const dbPath = process.env.DATABASE_PATH || path.join(dataDir, defaultName);
 export const db = new DatabaseSync(dbPath);
 
 export function initDatabase() {
@@ -22,6 +23,10 @@ export function initDatabase() {
       billingCycleResetAt TEXT,
       subscriptionId TEXT,
       paymentGateway TEXT,
+      authProvider TEXT DEFAULT 'email_otp',
+      firebaseUid TEXT,
+      photoUrl TEXT,
+      lastLoginAt TEXT DEFAULT (datetime('now')),
       createdAt TEXT DEFAULT (datetime('now'))
     );
 
@@ -223,6 +228,18 @@ export function initDatabase() {
   } catch {}
   try {
     db.exec("ALTER TABLE users ADD COLUMN paymentGateway TEXT");
+  } catch {}
+  try {
+    db.exec("ALTER TABLE users ADD COLUMN authProvider TEXT DEFAULT 'email_otp'");
+  } catch {}
+  try {
+    db.exec("ALTER TABLE users ADD COLUMN firebaseUid TEXT");
+  } catch {}
+  try {
+    db.exec("ALTER TABLE users ADD COLUMN photoUrl TEXT");
+  } catch {}
+  try {
+    db.exec("ALTER TABLE users ADD COLUMN lastLoginAt TEXT");
   } catch {}
 
   seedProducts();

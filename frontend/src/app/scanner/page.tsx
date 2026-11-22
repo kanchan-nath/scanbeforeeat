@@ -19,7 +19,7 @@ const PRESET_PRODUCTS = [
 
 export default function ScannerPage() {
   const router = useRouter();
-  const { user, loginDemo, refreshProfile } = useAuth();
+  const { user, refreshProfile } = useAuth();
 
   const [activeTab, setActiveTab] = useState<"barcode" | "ocr" | "manual">("barcode");
   const [manualBarcode, setManualBarcode] = useState("8901058852331");
@@ -27,13 +27,6 @@ export default function ScannerPage() {
   const [isScanning, setIsScanning] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [aiStatus, setAiStatus] = useState<AiStatusResponse | null>(null);
-
-  // Auto-login as demo if user arrives without login
-  useEffect(() => {
-    if (!user) {
-      loginDemo("monthly_pro");
-    }
-  }, [user, loginDemo]);
 
   // Fetch AI status telemetry on mount
   useEffect(() => {

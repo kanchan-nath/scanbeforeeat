@@ -19,7 +19,7 @@ const DEFAULT_ALLERGENS = [
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { user, loginDemo, refreshProfile } = useAuth();
+  const { user, refreshProfile } = useAuth();
 
   const [scanHistory, setScanHistory] = useState<any[]>([]);
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([
@@ -28,12 +28,6 @@ export default function DashboardPage() {
   ]);
   const [saveStatus, setSaveStatus] = useState("");
   const [isUpgrading, setIsUpgrading] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      loginDemo("monthly_pro");
-    }
-  }, [user, loginDemo]);
 
   useEffect(() => {
     if (user?.id) {

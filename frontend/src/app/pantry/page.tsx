@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth-context";
 import { fetchPantryItems, addPantryItem, deletePantryItem, PantryItem } from "@/lib/api";
 
 export default function PantryPage() {
-  const { user, loginDemo } = useAuth();
+  const { user } = useAuth();
   const [items, setItems] = useState<PantryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterNova, setFilterNova] = useState<number | "all">("all");
@@ -22,12 +22,6 @@ export default function PantryPage() {
   const [newItemExpiry, setNewItemExpiry] = useState("2027-06-30");
   const [newItemQuantity, setNewItemQuantity] = useState(1);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (!user) {
-      loginDemo("monthly_pro");
-    }
-  }, [user, loginDemo]);
 
   useEffect(() => {
     if (user?.id) {

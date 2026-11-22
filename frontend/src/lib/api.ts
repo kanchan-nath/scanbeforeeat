@@ -1,4 +1,14 @@
+import { getAuthCookie, setAuthCookie } from "./auth-cookie";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+
+function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  const token = getAuthCookie();
+  return {
+    ...extra,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
 
 export interface UserProfile {
   id: string;
@@ -9,6 +19,11 @@ export interface UserProfile {
   scansUsed: number;
   remainingScans: number;
   allergens?: string[];
+  authProvider?: string;
+  firebaseUid?: string;
+  photoUrl?: string;
+  lastLoginAt?: string;
+  token?: string;
 }
 
 export interface AdditiveMonograph {
@@ -67,14 +82,22 @@ export async function syncUserWithServer(params: {
   email: string;
   displayName?: string;
   plan?: string;
+  authProvider?: string;
+  firebaseUid?: string;
+  photoUrl?: string;
 }): Promise<UserProfile> {
   const res = await fetch(`${API_BASE}/auth/sync`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    credentials: "include",
     body: JSON.stringify(params),
   });
   if (!res.ok) throw new Error("Failed to sync user with server");
-  return res.json();
+  const data = await res.json();
+  if (data.token) {
+    setAuthCookie(data.token);
+  }
+  return data;
 }
 
 export async function sendEmailOtp(email: string): Promise<{ success: boolean; message: string; isMock?: boolean; devOtp?: string }> {
@@ -90,21 +113,29 @@ export async function sendEmailOtp(email: string): Promise<{ success: boolean; m
   return data;
 }
 
-export async function verifyEmailOtp(email: string, otp: string, displayName?: string): Promise<{ success: boolean; user: UserProfile }> {
+export async function verifyEmailOtp(email: string, otp: string, displayName?: string): Promise<{ success: boolean; user: UserProfile; token?: string }> {
   const res = await fetch(`${API_BASE}/auth/verify-otp`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ email, otp, displayName }),
   });
   const data = await res.json();
   if (!res.ok) {
     throw new Error(data.error || "Failed to verify code");
   }
+  const token = data.token || data.user?.token;
+  if (token) {
+    setAuthCookie(token);
+  }
   return data;
 }
 
 export async function fetchUserProfile(userId: string): Promise<UserProfile> {
-  const res = await fetch(`${API_BASE}/user/profile/${encodeURIComponent(userId)}`);
+  const res = await fetch(`${API_BASE}/user/profile/${encodeURIComponent(userId)}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Failed to fetch user profile");
   return res.json();
 }
@@ -112,7 +143,8 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile> {
 export async function updateUserPlan(userId: string, plan: string): Promise<UserProfile> {
   const res = await fetch(`${API_BASE}/user/plan`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    credentials: "include",
     body: JSON.stringify({ userId, plan }),
   });
   if (!res.ok) throw new Error("Failed to update user plan");
@@ -161,7 +193,8 @@ export async function performScan(params: {
 }): Promise<ScanResponse> {
   const res = await fetch(`${API_BASE}/scan`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    credentials: "include",
     body: JSON.stringify(params),
   });
   if (!res.ok) {

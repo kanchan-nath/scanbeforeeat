@@ -13,6 +13,13 @@ import {
   analyzeFoodImageWithAI,
   getAiServiceStatus,
 } from "./services/ai.js";
+import {
+  generateJwtToken,
+  serializeAuthCookie,
+  serializeClearAuthCookie,
+  requireAuth,
+  type AuthenticatedRequest,
+} from "./middleware/auth.js";
 
 dotenv.config();
 
@@ -42,12 +49,13 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // Auth & User Profile
 // -------------------------------------------------------------
 app.post("/api/auth/sync", (req: Request, res: Response) => {
-  let { id, email, displayName, plan } = req.body;
+  let { id, email, displayName, plan, authProvider, firebaseUid, photoUrl } = req.body;
   if (!email) {
     return res.status(400).json({ error: "email is required" });
   }
 
   const cleanEmail = email.toLowerCase().trim();
+  const provider = authProvider || "email_otp";
   const isMockShowcase =
     cleanEmail === "trial@scanbeforeeat.com" ||
     cleanEmail === "trial" ||
@@ -59,17 +67,35 @@ app.post("/api/auth/sync", (req: Request, res: Response) => {
     const demo = db.prepare("SELECT * FROM users WHERE id = 'demo_pro'").get() as any;
     if (demo) {
       const remaining = Math.max(0, demo.scansLimit - demo.scansUsed);
-      return res.json({ ...demo, remainingScans: remaining });
+      const token = generateJwtToken(demo);
+      res.setHeader("Set-Cookie", serializeAuthCookie(token));
+      return res.json({ ...demo, remainingScans: remaining, token });
     }
   }
 
   // Real user: look up by id or email
   const existing = db.prepare("SELECT * FROM users WHERE id = ? OR email = ?").get(id, cleanEmail) as any;
   if (existing) {
-    const remaining = Math.max(0, existing.scansLimit - existing.scansUsed);
+    try {
+      db.prepare(`
+        UPDATE users 
+        SET lastLoginAt = datetime('now'),
+            authProvider = COALESCE(?, authProvider),
+            firebaseUid = COALESCE(?, firebaseUid),
+            photoUrl = COALESCE(?, photoUrl),
+            displayName = COALESCE(?, displayName)
+        WHERE id = ?
+      `).run(authProvider || null, firebaseUid || null, photoUrl || null, displayName || null, existing.id);
+    } catch {}
+
+    const updated = db.prepare("SELECT * FROM users WHERE id = ?").get(existing.id) as any;
+    const remaining = Math.max(0, updated.scansLimit - updated.scansUsed);
+    const token = generateJwtToken(updated);
+    res.setHeader("Set-Cookie", serializeAuthCookie(token));
     return res.json({
-      ...existing,
+      ...updated,
       remainingScans: remaining,
+      token,
     });
   }
 
@@ -79,9 +105,9 @@ app.post("/api/auth/sync", (req: Request, res: Response) => {
   const resetIso = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
   db.prepare(`
-    INSERT INTO users (id, email, displayName, plan, scansLimit, scansUsed, billingCycleResetAt, paymentGateway)
-    VALUES (?, ?, ?, ?, ?, 0, ?, 'none')
-  `).run(id, cleanEmail, displayName || cleanEmail.split("@")[0], userPlan, limit, resetIso);
+    INSERT INTO users (id, email, displayName, plan, scansLimit, scansUsed, billingCycleResetAt, paymentGateway, authProvider, firebaseUid, photoUrl, lastLoginAt)
+    VALUES (?, ?, ?, ?, ?, 0, ?, 'none', ?, ?, ?, datetime('now'))
+  `).run(id, cleanEmail, displayName || cleanEmail.split("@")[0], userPlan, limit, resetIso, provider, firebaseUid || null, photoUrl || null);
 
   // Initialize clean health profile and default notifications
   db.prepare(`
@@ -95,9 +121,12 @@ app.post("/api/auth/sync", (req: Request, res: Response) => {
   `).run(id);
 
   const newUser = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as any;
+  const token = generateJwtToken(newUser);
+  res.setHeader("Set-Cookie", serializeAuthCookie(token));
   res.json({
     ...newUser,
     remainingScans: limit,
+    token,
   });
 });
 
@@ -109,13 +138,17 @@ app.post("/api/auth/login", (req: Request, res: Response) => {
   if (cleanEmail === "trial@scanbeforeeat.com" || cleanEmail === "demo@scanbeforeeat.com" || cleanEmail === "trial") {
     const demo = db.prepare("SELECT * FROM users WHERE id = 'demo_pro'").get() as any;
     const remaining = Math.max(0, demo.scansLimit - demo.scansUsed);
-    return res.json({ ...demo, remainingScans: remaining });
+    const token = generateJwtToken(demo);
+    res.setHeader("Set-Cookie", serializeAuthCookie(token));
+    return res.json({ ...demo, remainingScans: remaining, token });
   }
 
   const existing = db.prepare("SELECT * FROM users WHERE email = ?").get(cleanEmail) as any;
   if (existing) {
     const remaining = Math.max(0, existing.scansLimit - existing.scansUsed);
-    return res.json({ ...existing, remainingScans: remaining });
+    const token = generateJwtToken(existing);
+    res.setHeader("Set-Cookie", serializeAuthCookie(token));
+    return res.json({ ...existing, remainingScans: remaining, token });
   }
 
   const safeId = "usr_" + cleanEmail.replace(/[^a-z0-9]/g, "_");
@@ -136,7 +169,9 @@ app.post("/api/auth/login", (req: Request, res: Response) => {
   `).run(safeId);
 
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(safeId) as any;
-  return res.json({ ...user, remainingScans: 15 });
+  const token = generateJwtToken(user);
+  res.setHeader("Set-Cookie", serializeAuthCookie(token));
+  return res.json({ ...user, remainingScans: 15, token });
 });
 
 // -------------------------------------------------------------
@@ -210,10 +245,17 @@ app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
 
   const existing = db.prepare("SELECT * FROM users WHERE email = ?").get(cleanEmail) as any;
   if (existing) {
-    const remaining = Math.max(0, existing.scansLimit - existing.scansUsed);
+    try {
+      db.prepare("UPDATE users SET lastLoginAt = datetime('now'), authProvider = COALESCE(authProvider, 'email_otp') WHERE id = ?").run(existing.id);
+    } catch {}
+    const updated = db.prepare("SELECT * FROM users WHERE id = ?").get(existing.id) as any;
+    const remaining = Math.max(0, updated.scansLimit - updated.scansUsed);
+    const token = generateJwtToken(updated);
+    res.setHeader("Set-Cookie", serializeAuthCookie(token));
     return res.json({
       success: true,
-      user: { ...existing, remainingScans: remaining },
+      user: { ...updated, remainingScans: remaining, token },
+      token,
     });
   }
 
@@ -222,8 +264,8 @@ app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
   const name = displayName?.trim() || cleanEmail.split("@")[0];
 
   db.prepare(`
-    INSERT INTO users (id, email, displayName, plan, scansLimit, scansUsed, billingCycleResetAt, paymentGateway)
-    VALUES (?, ?, ?, 'free', 15, 0, ?, 'email_otp')
+    INSERT INTO users (id, email, displayName, plan, scansLimit, scansUsed, billingCycleResetAt, paymentGateway, authProvider, lastLoginAt)
+    VALUES (?, ?, ?, 'free', 15, 0, ?, 'none', 'email_otp', datetime('now'))
   `).run(safeId, cleanEmail, name, resetIso);
 
   db.prepare(`
@@ -237,13 +279,34 @@ app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
   `).run(safeId);
 
   const newUser = db.prepare("SELECT * FROM users WHERE id = ?").get(safeId) as any;
+  const token = generateJwtToken(newUser);
+  res.setHeader("Set-Cookie", serializeAuthCookie(token));
   return res.json({
     success: true,
-    user: { ...newUser, remainingScans: 15 },
+    user: { ...newUser, remainingScans: 15, token },
+    token,
   });
 });
 
-app.get("/api/user/profile/:id", (req: Request, res: Response) => {
+app.post("/api/auth/logout", (_req: Request, res: Response) => {
+  res.setHeader("Set-Cookie", serializeClearAuthCookie());
+  return res.json({ success: true, message: "Logged out successfully" });
+});
+
+app.get("/api/auth/me", requireAuth, (req: Request, res: Response) => {
+  const authUser = (req as AuthenticatedRequest).user;
+  if (!authUser) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  const user = db.prepare("SELECT * FROM users WHERE id = ?").get(authUser.id) as any;
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const remaining = Math.max(0, user.scansLimit - user.scansUsed);
+  return res.json({ ...user, remainingScans: remaining });
+});
+
+app.get("/api/user/profile/:id", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as any;
   if (!user) {
@@ -260,7 +323,7 @@ app.get("/api/user/profile/:id", (req: Request, res: Response) => {
   });
 });
 
-app.post("/api/user/plan", (req: Request, res: Response) => {
+app.post("/api/user/plan", requireAuth, (req: Request, res: Response) => {
   const { userId, plan } = req.body;
   if (!userId || !plan) {
     return res.status(400).json({ error: "userId and plan are required" });
@@ -311,7 +374,7 @@ app.post("/api/scan/ai-extract", async (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Scanning & Barcode Lookup (With Open Food Facts & AI Vision)
 // -------------------------------------------------------------
-app.post("/api/scan", async (req: Request, res: Response) => {
+app.post("/api/scan", requireAuth, async (req: Request, res: Response) => {
   const { userId, barcode, rawText, image, imageType, nameHint } = req.body;
   if (!userId) {
     return res.status(400).json({ error: "userId is required" });
@@ -514,7 +577,7 @@ app.post("/api/duel", async (req: Request, res: Response) => {
 });
 
 // Scan History
-app.get("/api/user/history/:userId", (req: Request, res: Response) => {
+app.get("/api/user/history/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const history = db
     .prepare("SELECT * FROM scans WHERE userId = ? ORDER BY scannedAt DESC LIMIT 50")
@@ -526,13 +589,13 @@ app.get("/api/user/history/:userId", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Allergens
 // -------------------------------------------------------------
-app.get("/api/user/allergens/:userId", (req: Request, res: Response) => {
+app.get("/api/user/allergens/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const rows = db.prepare("SELECT allergen FROM user_allergens WHERE userId = ?").all(userId) as any[];
   res.json(rows.map((r) => r.allergen));
 });
 
-app.post("/api/user/allergens", (req: Request, res: Response) => {
+app.post("/api/user/allergens", requireAuth, (req: Request, res: Response) => {
   const { userId, allergens } = req.body;
   if (!userId || !Array.isArray(allergens)) {
     return res.status(400).json({ error: "userId and allergens array required" });
@@ -551,13 +614,13 @@ app.post("/api/user/allergens", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Digital Pantry
 // -------------------------------------------------------------
-app.get("/api/pantry/:userId", (req: Request, res: Response) => {
+app.get("/api/pantry/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const items = db.prepare("SELECT * FROM pantry_items WHERE userId = ? ORDER BY addedAt DESC").all(userId);
   res.json(items);
 });
 
-app.post("/api/pantry", (req: Request, res: Response) => {
+app.post("/api/pantry", requireAuth, (req: Request, res: Response) => {
   const { userId, productName, category, novaGroup, healthScore, expiryDate, quantity } = req.body;
   if (!userId || !productName) {
     return res.status(400).json({ error: "userId and productName are required" });
@@ -582,7 +645,7 @@ app.post("/api/pantry", (req: Request, res: Response) => {
   res.json(item);
 });
 
-app.delete("/api/pantry/:id", (req: Request, res: Response) => {
+app.delete("/api/pantry/:id", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   db.prepare("DELETE FROM pantry_items WHERE id = ?").run(id);
   res.json({ success: true, id });
@@ -591,13 +654,13 @@ app.delete("/api/pantry/:id", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Shopping List
 // -------------------------------------------------------------
-app.get("/api/shopping-list/:userId", (req: Request, res: Response) => {
+app.get("/api/shopping-list/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const items = db.prepare("SELECT * FROM shopping_items WHERE userId = ? ORDER BY addedAt DESC").all(userId);
   res.json(items);
 });
 
-app.post("/api/shopping-list", (req: Request, res: Response) => {
+app.post("/api/shopping-list", requireAuth, (req: Request, res: Response) => {
   const { userId, productName, category } = req.body;
   if (!userId || !productName) {
     return res.status(400).json({ error: "userId and productName required" });
@@ -623,7 +686,7 @@ app.patch("/api/shopping-list/:id/toggle", (req: Request, res: Response) => {
   res.json({ success: true, id, checked: nextVal });
 });
 
-app.delete("/api/shopping-list/:id", (req: Request, res: Response) => {
+app.delete("/api/shopping-list/:id", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   db.prepare("DELETE FROM shopping_items WHERE id = ?").run(id);
   res.json({ success: true, id });
@@ -808,7 +871,7 @@ app.get("/api/alternatives/:userId", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Invoicing & PDF Generation
 // -------------------------------------------------------------
-app.get("/api/user/invoices/:userId", (req: Request, res: Response) => {
+app.get("/api/user/invoices/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const invoices = db.prepare("SELECT * FROM invoices WHERE userId = ? ORDER BY createdAt DESC").all(userId);
   res.json(invoices);
@@ -842,7 +905,7 @@ app.get("/api/invoices/:id/pdf", async (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Payment Gateway (Razorpay Integration & Verification)
 // -------------------------------------------------------------
-app.post("/api/checkout/create-order", async (req: Request, res: Response) => {
+app.post("/api/checkout/create-order", requireAuth, async (req: Request, res: Response) => {
   const { userId, plan } = req.body;
   if (!userId || !plan) {
     return res.status(400).json({ error: "userId and plan required" });
@@ -856,7 +919,7 @@ app.post("/api/checkout/create-order", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/api/checkout/verify-payment", (req: Request, res: Response) => {
+app.post("/api/checkout/verify-payment", requireAuth, (req: Request, res: Response) => {
   const { userId, plan, orderId, paymentId, signature } = req.body;
   if (!userId || !plan || !orderId) {
     return res.status(400).json({ error: "userId, plan, and orderId required" });
@@ -907,13 +970,13 @@ app.post("/api/webhooks/razorpay", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Payment Methods Management
 // -------------------------------------------------------------
-app.get("/api/user/payment-methods/:userId", (req: Request, res: Response) => {
+app.get("/api/user/payment-methods/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const cards = db.prepare("SELECT * FROM payment_methods WHERE userId = ? ORDER BY isDefault DESC").all(userId);
   res.json(cards);
 });
 
-app.post("/api/user/payment-methods", (req: Request, res: Response) => {
+app.post("/api/user/payment-methods", requireAuth, (req: Request, res: Response) => {
   const { userId, brand, last4, expiry, name } = req.body;
   if (!userId || !last4) {
     return res.status(400).json({ error: "userId and last4 required" });
@@ -929,7 +992,7 @@ app.post("/api/user/payment-methods", (req: Request, res: Response) => {
   res.json(created);
 });
 
-app.patch("/api/user/payment-methods/:id/default", (req: Request, res: Response) => {
+app.patch("/api/user/payment-methods/:id/default", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   const target = db.prepare("SELECT * FROM payment_methods WHERE id = ?").get(id) as any;
   if (!target) return res.status(404).json({ error: "Payment method not found" });
@@ -940,7 +1003,7 @@ app.patch("/api/user/payment-methods/:id/default", (req: Request, res: Response)
   res.json({ success: true, id });
 });
 
-app.delete("/api/user/payment-methods/:id", (req: Request, res: Response) => {
+app.delete("/api/user/payment-methods/:id", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   db.prepare("DELETE FROM payment_methods WHERE id = ?").run(id);
   res.json({ success: true, id });
@@ -949,7 +1012,7 @@ app.delete("/api/user/payment-methods/:id", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Health Profile
 // -------------------------------------------------------------
-app.get("/api/user/health-profile/:userId", (req: Request, res: Response) => {
+app.get("/api/user/health-profile/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   let profile = db.prepare("SELECT * FROM user_health_profiles WHERE userId = ?").get(userId) as any;
   if (!profile) {
@@ -969,7 +1032,7 @@ app.get("/api/user/health-profile/:userId", (req: Request, res: Response) => {
   });
 });
 
-app.put("/api/user/health-profile/:userId", (req: Request, res: Response) => {
+app.put("/api/user/health-profile/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const { dietaryProtocol, riskTolerance, dailyTarget, conditions, weightKg } = req.body;
 
@@ -1002,7 +1065,7 @@ app.put("/api/user/health-profile/:userId", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Active Sessions
 // -------------------------------------------------------------
-app.get("/api/user/sessions/:userId", (req: Request, res: Response) => {
+app.get("/api/user/sessions/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   let sessions = db.prepare("SELECT * FROM user_sessions WHERE userId = ? ORDER BY isCurrent DESC, lastActiveAt DESC").all(userId);
   if (sessions.length === 0) {
@@ -1017,13 +1080,13 @@ app.get("/api/user/sessions/:userId", (req: Request, res: Response) => {
   res.json(sessions);
 });
 
-app.delete("/api/user/sessions/:id", (req: Request, res: Response) => {
+app.delete("/api/user/sessions/:id", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   db.prepare("DELETE FROM user_sessions WHERE id = ?").run(id);
   res.json({ success: true, id });
 });
 
-app.post("/api/user/sessions/revoke-all", (req: Request, res: Response) => {
+app.post("/api/user/sessions/revoke-all", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({ error: "userId required" });
   db.prepare("DELETE FROM user_sessions WHERE userId = ? AND isCurrent = 0").run(userId);
@@ -1033,7 +1096,7 @@ app.post("/api/user/sessions/revoke-all", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Notification Preferences
 // -------------------------------------------------------------
-app.get("/api/user/notifications/:userId", (req: Request, res: Response) => {
+app.get("/api/user/notifications/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   let notifs = db.prepare("SELECT * FROM user_notifications WHERE userId = ?").get(userId) as any;
   if (!notifs) {
@@ -1049,7 +1112,7 @@ app.get("/api/user/notifications/:userId", (req: Request, res: Response) => {
   res.json(notifs);
 });
 
-app.put("/api/user/notifications/:userId", (req: Request, res: Response) => {
+app.put("/api/user/notifications/:userId", requireAuth, (req: Request, res: Response) => {
   const { userId } = req.params;
   const { allergenAlert, synergyAlert, weeklyDigest, newStudies, quotaAlert } = req.body;
 
@@ -1176,7 +1239,7 @@ app.post("/api/audit/flag", (req: Request, res: Response) => {
 // -------------------------------------------------------------
 // GDPR Data Export & Account Deletion
 // -------------------------------------------------------------
-app.get("/api/user/export/:userId", async (req: Request, res: Response) => {
+app.get("/api/user/export/:userId", requireAuth, async (req: Request, res: Response) => {
   const { userId } = req.params;
   const format = (req.query.format as string) || "json";
 

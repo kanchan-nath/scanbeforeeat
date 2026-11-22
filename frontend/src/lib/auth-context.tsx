@@ -4,6 +4,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   auth,
   googleProvider,
+  twitterProvider,
+  githubProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -12,6 +14,7 @@ import {
   FirebaseUser,
 } from "./firebase";
 import { syncUserWithServer, fetchUserProfile, sendEmailOtp, verifyEmailOtp, UserProfile } from "./api";
+import { setAuthCookie, clearAuthCookie, getAuthCookie } from "./auth-cookie";
 
 interface AuthContextType {
   user: UserProfile | null;
@@ -20,6 +23,8 @@ interface AuthContextType {
   signIn: (email: string, pass: string) => Promise<void>;
   signUp: (email: string, pass: string, displayName?: string) => Promise<void>;
   signInGoogle: () => Promise<void>;
+  signInTwitter: () => Promise<void>;
+  signInGithub: () => Promise<void>;
   sendOtp: (email: string) => Promise<{ success: boolean; message: string; isMock?: boolean; devOtp?: string }>;
   verifyOtp: (email: string, otp: string, displayName?: string) => Promise<void>;
   loginDemo: (plan?: "free" | "monthly_pro") => Promise<void>;
@@ -63,10 +68,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setFirebaseUser(fbUser);
         if (fbUser) {
           try {
+            const providerId = fbUser.providerData[0]?.providerId || "firebase";
             const profile = await syncUserWithServer({
               id: fbUser.uid,
               email: fbUser.email || "user@scanbeforeeat.com",
               displayName: fbUser.displayName || undefined,
+              authProvider: providerId,
+              firebaseUid: fbUser.uid,
+              photoUrl: fbUser.photoURL || undefined,
             });
             setUser(profile);
           } catch {
@@ -79,6 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               scansLimit: 15,
               scansUsed: 0,
               remainingScans: 15,
+              photoUrl: fbUser.photoURL || undefined,
             });
           }
         } else {
@@ -108,6 +118,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: cred.user.uid,
         email: cred.user.email || cleanEmail,
         displayName: cred.user.displayName || undefined,
+        authProvider: "password",
+        firebaseUid: cred.user.uid,
+        photoUrl: cred.user.photoURL || undefined,
       });
       setUser(profile);
       localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
@@ -118,6 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: safeId,
         email: cleanEmail,
         displayName: cleanEmail.split("@")[0],
+        authProvider: "password",
       });
       setUser(profile);
       localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
@@ -142,6 +156,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: cred.user.email || cleanEmail,
         displayName: displayName || undefined,
         plan: "free",
+        authProvider: "password",
+        firebaseUid: cred.user.uid,
+        photoUrl: cred.user.photoURL || undefined,
       });
       setUser(profile);
       localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
@@ -153,6 +170,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: cleanEmail,
         displayName: displayName || cleanEmail.split("@")[0],
         plan: "free",
+        authProvider: "password",
       });
       setUser(profile);
       localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
@@ -169,6 +187,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         id: cred.user.uid,
         email: cred.user.email || "google_user@scanbeforeeat.com",
         displayName: cred.user.displayName || undefined,
+        authProvider: "google.com",
+        firebaseUid: cred.user.uid,
+        photoUrl: cred.user.photoURL || undefined,
       });
       setUser(profile);
       localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
@@ -178,6 +199,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       if (err.code === "auth/popup-closed-by-user") {
         throw new Error("Google sign-in popup was closed before completing.");
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInTwitter = async () => {
+    setLoading(true);
+    try {
+      const cred = await signInWithPopup(auth, twitterProvider);
+      const profile = await syncUserWithServer({
+        id: cred.user.uid,
+        email: cred.user.email || `twitter_${cred.user.uid}@scanbeforeeat.com`,
+        displayName: cred.user.displayName || undefined,
+        authProvider: "twitter.com",
+        firebaseUid: cred.user.uid,
+        photoUrl: cred.user.photoURL || undefined,
+      });
+      setUser(profile);
+      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
+    } catch (err: any) {
+      if (err.code === "auth/configuration-not-found" || err.message?.includes("CONFIGURATION_NOT_FOUND")) {
+        throw new Error("Twitter/X Sign-In is not enabled yet in your Firebase Console. Please enable Twitter/X under Authentication > Sign-in method.");
+      }
+      if (err.code === "auth/popup-closed-by-user") {
+        throw new Error("Twitter sign-in popup was closed before completing.");
+      }
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInGithub = async () => {
+    setLoading(true);
+    try {
+      const cred = await signInWithPopup(auth, githubProvider);
+      const profile = await syncUserWithServer({
+        id: cred.user.uid,
+        email: cred.user.email || `github_${cred.user.uid}@scanbeforeeat.com`,
+        displayName: cred.user.displayName || undefined,
+        authProvider: "github.com",
+        firebaseUid: cred.user.uid,
+        photoUrl: cred.user.photoURL || undefined,
+      });
+      setUser(profile);
+      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(profile));
+    } catch (err: any) {
+      if (err.code === "auth/configuration-not-found" || err.message?.includes("CONFIGURATION_NOT_FOUND")) {
+        throw new Error("GitHub Sign-In is not enabled yet in your Firebase Console. Please enable GitHub under Authentication > Sign-in method.");
+      }
+      if (err.code === "auth/popup-closed-by-user") {
+        throw new Error("GitHub sign-in popup was closed before completing.");
       }
       throw err;
     } finally {
@@ -222,6 +297,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
+    clearAuthCookie();
     localStorage.removeItem(DEMO_STORAGE_KEY);
     try {
       await firebaseSignOut(auth);
@@ -251,6 +327,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signUp,
         signInGoogle,
+        signInTwitter,
+        signInGithub,
         sendOtp,
         verifyOtp,
         loginDemo,

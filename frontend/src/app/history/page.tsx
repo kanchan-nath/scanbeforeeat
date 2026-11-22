@@ -7,14 +7,10 @@ import { useAuth } from "@/lib/auth-context";
 import { fetchScanHistory, getDataExportUrl } from "@/lib/api";
 
 export default function HistoryPage() {
-  const { user, loginDemo } = useAuth();
+  const { user } = useAuth();
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    if (!user) loginDemo("monthly_pro");
-  }, [user, loginDemo]);
 
   useEffect(() => {
     if (user?.id) {
