@@ -27,6 +27,8 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 scripts/seo-pipeline/*.json
+__pycache__/
+*.pyc
 
 # OS Files
 .DS_Store

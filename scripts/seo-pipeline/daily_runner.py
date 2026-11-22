@@ -10,6 +10,7 @@ Coordinates:
 
 import sys
 import json
+import re
 import subprocess
 import argparse
 from pathlib import Path
@@ -20,6 +21,75 @@ PIPELINE_DIR = REPO_ROOT / "scripts" / "seo-pipeline"
 KEYWORD_ENGINE = PIPELINE_DIR / "keyword_engine.py"
 BLOG_SYNC = PIPELINE_DIR / "blog_sync.py"
 STITCH_IMAGE = PIPELINE_DIR / "stitch_image.py"
+PUBLIC_SITEMAP = REPO_ROOT / "frontend" / "public" / "sitemap.xml"
+BLOG_INDEX_PATH = REPO_ROOT / "frontend" / "src" / "content" / "blog" / "index.ts"
+
+
+def get_site_domain() -> str:
+    """Reads domain from single source of truth in frontend/src/lib/config.ts."""
+    config_path = REPO_ROOT / "frontend" / "src" / "lib" / "config.ts"
+    if config_path.exists():
+        content = config_path.read_text(encoding="utf-8")
+        match = re.search(r'url:\s*\([^?]+\?\?\s*["\']([^"\']+)["\']\)', content)
+        if match:
+            return match.group(1).rstrip("/")
+    return "https://scanbeforeeat.onrender.com"
+
+
+def update_public_sitemap(domain: str) -> None:
+    """Generates and updates frontend/public/sitemap.xml with all static and blog routes."""
+    PUBLIC_SITEMAP.parent.mkdir(parents=True, exist_ok=True)
+    today = date.today().isoformat()
+
+    static_routes = [
+        ("/", "1.0", "daily"),
+        ("/upf-guide/", "0.9", "weekly"),
+        ("/additives/", "0.9", "weekly"),
+        ("/methodology/", "0.9", "weekly"),
+        ("/studies/", "0.8", "weekly"),
+        ("/blog/", "0.8", "daily"),
+        ("/about/", "0.7", "monthly"),
+        ("/careers/", "0.6", "weekly"),
+        ("/security/", "0.5", "monthly"),
+        ("/status/", "0.5", "hourly"),
+        ("/api-docs/", "0.5", "weekly"),
+        ("/privacy/", "0.4", "monthly"),
+        ("/terms/", "0.4", "monthly"),
+    ]
+
+    slugs = []
+    if BLOG_INDEX_PATH.exists():
+        content = BLOG_INDEX_PATH.read_text(encoding="utf-8")
+        slugs = re.findall(r'slug:\s*["\']([^"\']+)["\']', content)
+
+    xml_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ]
+
+    for path, prio, freq in static_routes:
+        xml_lines.extend([
+            "  <url>",
+            f"    <loc>{domain}{path}</loc>",
+            f"    <lastmod>{today}</lastmod>",
+            f"    <changefreq>{freq}</changefreq>",
+            f"    <priority>{prio}</priority>",
+            "  </url>",
+        ])
+
+    for slug in slugs:
+        xml_lines.extend([
+            "  <url>",
+            f"    <loc>{domain}/blog/{slug}/</loc>",
+            f"    <lastmod>{today}</lastmod>",
+            f"    <changefreq>monthly</changefreq>",
+            "    <priority>0.8</priority>",
+            "  </url>",
+        ])
+
+    xml_lines.append("</urlset>")
+    PUBLIC_SITEMAP.write_text("\n".join(xml_lines), encoding="utf-8")
+    print(f"[SITEMAP] Generated & updated {PUBLIC_SITEMAP} with {len(static_routes) + len(slugs)} routes.")
 
 
 def run_part_a(seed: str = "") -> dict:
@@ -106,15 +176,21 @@ def main():
 
         if not args.dry_run:
             run_verification()
+            domain = get_site_domain()
+            update_public_sitemap(domain)
             with open(args.post_json, "r", encoding="utf-8") as f:
                 post_data = json.load(f)
             slug = post_data.get("slug", "")
+            live_url = f"{domain}/blog/{slug}"
             print("\n" + "=" * 60)
             print("STAGE 3: PUBLICATION SUCCESSFUL")
             print("=" * 60)
-            print(f"Local URL  : http://localhost:3000/blog/{slug}")
-            print(f"Live URL   : https://scanbeforeeat.com/blog/{slug}")
-            print(f"Google GSC : Submit https://scanbeforeeat.com/blog/{slug} for instant indexing.")
+            print(f"Domain Source : frontend/src/lib/config.ts ({domain})")
+            print(f"Local URL     : http://localhost:3000/blog/{slug}")
+            print(f"Live URL      : {live_url}")
+            print(f"Sitemap.xml   : {domain}/sitemap.xml (Updated)")
+            print(f"Google GSC    : Inspect {live_url} in Search Console.")
+            print(f"GitHub PR     : https://github.com/kanchan-nath/scanbeforeeat/pull/new/feature/seo-blog-automation-pipeline")
 
 
 if __name__ == "__main__":
