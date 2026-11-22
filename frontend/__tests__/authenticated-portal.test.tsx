@@ -119,4 +119,23 @@ describe("Authenticated Portal Shell & Navigation", () => {
     const proBadges = screen.getAllByText("PRO PLAN");
     expect(proBadges.length).toBeGreaterThan(0);
   });
+
+  it("verifies mobile navigation has NO hamburger breadcrumb button in the top corner and renders slideable bottom navigation", () => {
+    render(
+      <AuthenticatedShell>
+        <div>Content</div>
+      </AuthenticatedShell>
+    );
+
+    // Verify top corner breadcrumb / hamburger menu button is NOT in the document
+    expect(screen.queryByRole("button", { name: /toggle navigation menu/i })).toBeNull();
+
+    // Verify Mobile Bottom Navigation is rendered
+    const mobileNav = screen.getByRole("navigation", { name: "Mobile Bottom Navigation" });
+    expect(mobileNav).toBeDefined();
+
+    // Verify "ALL (24)" directory expander button is present
+    const allBtn = screen.getByRole("button", { name: /all navigation links/i });
+    expect(allBtn).toBeDefined();
+  });
 });

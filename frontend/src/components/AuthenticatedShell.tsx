@@ -101,9 +101,43 @@ export default function AuthenticatedShell({
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading, logout } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const sectionTabsRef = useRef<HTMLDivElement>(null);
+  const itemsRailRef = useRef<HTMLDivElement>(null);
+
+  // Sync active section based on current pathname
+  const currentSectionIdx = NAV_SECTIONS.findIndex((section) =>
+    section.items.some((item) => item.href === pathname)
+  );
+  const [activeSectionIdx, setActiveSectionIdx] = useState(
+    currentSectionIdx >= 0 ? currentSectionIdx : 0
+  );
+
+  useEffect(() => {
+    const idx = NAV_SECTIONS.findIndex((section) =>
+      section.items.some((item) => item.href === pathname)
+    );
+    if (idx >= 0) {
+      setActiveSectionIdx(idx);
+    }
+  }, [pathname]);
+
+  // Smoothly center active tab & active item in horizontal scroll rails
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const activeTab = sectionTabsRef.current?.querySelector('[data-active="true"]');
+      if (activeTab && typeof activeTab.scrollIntoView === "function") {
+        activeTab.scrollIntoView({ inline: "center", behavior: "smooth", block: "nearest" });
+      }
+      const activeItem = itemsRailRef.current?.querySelector('[data-active="true"]');
+      if (activeItem && typeof activeItem.scrollIntoView === "function") {
+        activeItem.scrollIntoView({ inline: "center", behavior: "smooth", block: "nearest" });
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [pathname, activeSectionIdx]);
 
   // Keyboard shortcut: Cmd+K or Ctrl+K focuses search input
   useEffect(() => {
@@ -146,7 +180,7 @@ export default function AuthenticatedShell({
 
   return (
     <div className="min-h-screen bg-slate-50 text-zinc-900 flex flex-col md:flex-row antialiased">
-      {/* Mobile Top Header Bar */}
+      {/* Mobile Top Header Bar - Hamburger/Breadcrumb button removed */}
       <header className="md:hidden sticky top-0 z-40 bg-white border-b border-zinc-200 px-4 py-3 flex items-center justify-between">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-tight shadow-xs">
@@ -176,94 +210,10 @@ export default function AuthenticatedShell({
           </Link>
 
           {headerAction}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 rounded-lg text-zinc-700 hover:bg-zinc-100 transition-colors"
-            aria-label="Toggle navigation menu"
-          >
-            <span className="material-symbols-outlined text-xl">
-              {mobileMenuOpen ? "close" : "menu"}
-            </span>
-          </button>
         </div>
       </header>
 
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-black/50 flex">
-          <div className="w-72 max-w-[85%] bg-white h-full flex flex-col justify-between p-4 overflow-y-auto">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
-                <Link href="/dashboard" className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-xs">
-                    SE
-                  </div>
-                  <span className="font-bold text-sm text-zinc-900">ScanBeforeEat</span>
-                </Link>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-1 rounded text-zinc-500 hover:text-zinc-900"
-                >
-                  <span className="material-symbols-outlined text-lg">close</span>
-                </button>
-              </div>
 
-              {NAV_SECTIONS.map((section) => (
-                <div key={section.title} className="space-y-1">
-                  <div className="px-2 text-[10px] font-bold font-mono tracking-wider text-zinc-400 uppercase">
-                    {section.title}
-                  </div>
-                  {section.items.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors duration-150 font-medium ${
-                          isActive
-                            ? "bg-emerald-50 text-emerald-800 font-semibold"
-                            : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
-                        }`}
-                      >
-                        <span className={`material-symbols-outlined text-base ${isActive ? "text-emerald-700" : "text-zinc-500"}`}>
-                          {item.icon}
-                        </span>
-                        <span>{item.name}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-4 border-t border-zinc-200 mt-6">
-              <div className="flex items-center justify-between p-2 rounded-lg bg-zinc-50">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    {initials}
-                  </div>
-                  <div className="truncate">
-                    <div className="text-xs font-semibold text-zinc-900 truncate">{displayName}</div>
-                    <div className="text-[10px] text-zinc-500 truncate">{user?.email || "elena@science.org"}</div>
-                  </div>
-                </div>
-                <button
-                  onClick={async () => {
-                    await logout();
-                    router.push("/auth");
-                  }}
-                  className="p-1.5 text-zinc-400 hover:text-rose-600 rounded transition-colors"
-                  title="Sign Out"
-                >
-                  <span className="material-symbols-outlined text-base">logout</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="flex-1" onClick={() => setMobileMenuOpen(false)} />
-        </div>
-      )}
 
       {/* Desktop Fixed Side Navigation Bar */}
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 border-r border-zinc-200 bg-white z-50 flex-col justify-between p-4 overflow-y-auto">
@@ -342,7 +292,7 @@ export default function AuthenticatedShell({
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 md:ml-64 min-h-screen bg-slate-50 flex flex-col">
+      <main className="flex-1 md:ml-64 min-h-screen bg-slate-50 flex flex-col pb-28 md:pb-6">
         {/* Desktop Authenticated Top Bar (Matching Stitch 1:1) */}
         <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-zinc-200 px-6 py-3 hidden md:flex items-center justify-between shadow-xs">
           {/* Search Bar with ⌘K keyboard shortcut */}
@@ -444,54 +394,224 @@ export default function AuthenticatedShell({
         {children}
       </main>
 
-      {/* Mobile Bottom Thumb Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-zinc-200 px-4 py-2 flex items-center justify-around">
-        <Link
-          href="/dashboard"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium ${
-            pathname === "/dashboard" ? "text-emerald-600 font-bold" : "text-zinc-500"
-          }`}
+      {/* Mobile Slideable Bottom Navigation */}
+      <nav
+        aria-label="Mobile Bottom Navigation"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 shadow-lg"
+      >
+        {/* Row 1: Section Sliding Tabs */}
+        <div
+          ref={sectionTabsRef}
+          className="flex items-center gap-1.5 px-3 py-1.5 overflow-x-auto no-scrollbar border-b border-zinc-100 scroll-smooth"
         >
-          <span className="material-symbols-outlined text-lg">dashboard</span>
-          <span>Home</span>
-        </Link>
-        <Link
-          href="/scanner"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium ${
-            pathname === "/scanner" ? "text-emerald-600 font-bold" : "text-zinc-500"
-          }`}
+          {NAV_SECTIONS.map((section, idx) => {
+            const isSelected = activeSectionIdx === idx;
+            const containsCurrentPage = section.items.some((i) => i.href === pathname);
+            return (
+              <button
+                key={section.title}
+                data-active={isSelected ? "true" : "false"}
+                onClick={() => setActiveSectionIdx(idx)}
+                className={`px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider whitespace-nowrap shrink-0 transition-all ${
+                  isSelected
+                    ? "bg-emerald-600 text-white font-bold shadow-xs scale-102"
+                    : containsCurrentPage
+                    ? "bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200"
+                    : "bg-zinc-100 text-zinc-600 hover:text-zinc-900 border border-zinc-200"
+                }`}
+              >
+                {section.title}
+              </button>
+            );
+          })}
+          {/* Quick "ALL (24)" Bottom Sheet Expander */}
+          <button
+            onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
+            className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider whitespace-nowrap shrink-0 bg-zinc-800 text-white font-bold flex items-center gap-1 active:scale-95 transition-transform"
+            aria-label="All navigation links"
+          >
+            <span className="material-symbols-outlined text-xs">
+              {bottomSheetOpen ? "expand_more" : "grid_view"}
+            </span>
+            <span>ALL (24)</span>
+          </button>
+        </div>
+
+        {/* Row 2: Navigation Items (Horizontally Slideable) */}
+        <div
+          ref={itemsRailRef}
+          className="flex items-center gap-2 px-3 py-2 overflow-x-auto no-scrollbar scroll-smooth"
         >
-          <span className="material-symbols-outlined text-lg">qr_code_scanner</span>
-          <span>Scanner</span>
-        </Link>
-        <Link
-          href="/pantry"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium ${
-            pathname === "/pantry" ? "text-emerald-600 font-bold" : "text-zinc-500"
-          }`}
-        >
-          <span className="material-symbols-outlined text-lg">kitchen</span>
-          <span>Pantry</span>
-        </Link>
-        <Link
-          href="/shopping-list"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium ${
-            pathname === "/shopping-list" ? "text-emerald-600 font-bold" : "text-zinc-500"
-          }`}
-        >
-          <span className="material-symbols-outlined text-lg">shopping_cart</span>
-          <span>Grocery</span>
-        </Link>
-        <Link
-          href="/health-profile"
-          className={`flex flex-col items-center gap-0.5 text-[10px] font-medium ${
-            pathname === "/health-profile" ? "text-emerald-600 font-bold" : "text-zinc-500"
-          }`}
-        >
-          <span className="material-symbols-outlined text-lg">badge</span>
-          <span>Profile</span>
-        </Link>
+          {/* Previous section shortcut */}
+          {activeSectionIdx > 0 && (
+            <button
+              onClick={() => setActiveSectionIdx(activeSectionIdx - 1)}
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-mono text-zinc-500 bg-zinc-100 border border-zinc-200 shrink-0 hover:bg-zinc-200 active:scale-95 transition-all"
+              title={`Previous: ${NAV_SECTIONS[activeSectionIdx - 1].title}`}
+            >
+              <span className="material-symbols-outlined text-xs">arrow_back</span>
+              <span>Prev</span>
+            </button>
+          )}
+
+          {NAV_SECTIONS[activeSectionIdx]?.items.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                data-active={isActive ? "true" : "false"}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all active:scale-95 ${
+                  isActive
+                    ? "bg-emerald-600 text-white font-semibold shadow-xs"
+                    : "bg-zinc-50 border border-zinc-200 text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100"
+                }`}
+              >
+                <span
+                  className={`material-symbols-outlined text-base ${
+                    isActive ? "text-white" : "text-emerald-700"
+                  }`}
+                >
+                  {item.icon}
+                </span>
+                <span>{item.name}</span>
+                {isActive && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-white ml-0.5 shrink-0" />
+                )}
+              </Link>
+            );
+          })}
+
+          {/* Next section shortcut */}
+          {activeSectionIdx < NAV_SECTIONS.length - 1 && (
+            <button
+              onClick={() => setActiveSectionIdx(activeSectionIdx + 1)}
+              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-mono text-zinc-500 bg-zinc-100 border border-zinc-200 shrink-0 hover:bg-zinc-200 active:scale-95 transition-all"
+              title={`Next: ${NAV_SECTIONS[activeSectionIdx + 1].title}`}
+            >
+              <span>Next</span>
+              <span className="material-symbols-outlined text-xs">arrow_forward</span>
+            </button>
+          )}
+        </div>
       </nav>
+
+      {/* Slide-Up Bottom Sheet for Full Directory (Slides up from bottom) */}
+      {bottomSheetOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end">
+          {/* Backdrop dismiss */}
+          <div className="flex-1" onClick={() => setBottomSheetOpen(false)} />
+
+          {/* Bottom Sheet Card */}
+          <div className="bg-white rounded-t-2xl max-h-[82vh] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-300">
+            {/* Sheet Handle & Header */}
+            <div className="px-4 py-3 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/90">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-xs">
+                  SE
+                </div>
+                <div>
+                  <span className="font-bold text-sm text-zinc-900 block font-display">
+                    ScanBeforeEat Navigation
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-mono">
+                    All 6 Sections • 24 Pages
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => setBottomSheetOpen(false)}
+                className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/60 transition-colors"
+                aria-label="Close navigation sheet"
+              >
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
+
+            {/* Scrollable Directory Content */}
+            <div className="overflow-y-auto p-4 space-y-5">
+              {NAV_SECTIONS.map((section, sIdx) => (
+                <div key={section.title} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-bold font-mono tracking-wider text-zinc-400 uppercase">
+                      {section.title}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setActiveSectionIdx(sIdx);
+                        setBottomSheetOpen(false);
+                      }}
+                      className="text-[10px] font-medium text-emerald-600 hover:underline"
+                    >
+                      Focus Rail
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {section.items.map((item) => {
+                      const isActive = pathname === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => {
+                            setActiveSectionIdx(sIdx);
+                            setBottomSheetOpen(false);
+                          }}
+                          className={`flex items-center gap-2 p-2 rounded-lg text-xs transition-colors font-medium border ${
+                            isActive
+                              ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-semibold"
+                              : "bg-zinc-50/50 text-zinc-700 border-zinc-200/80 hover:bg-zinc-100"
+                          }`}
+                        >
+                          <span
+                            className={`material-symbols-outlined text-base shrink-0 ${
+                              isActive ? "text-emerald-700" : "text-zinc-500"
+                            }`}
+                          >
+                            {item.icon}
+                          </span>
+                          <span className="truncate">{item.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* User Account & Logout in Sheet */}
+              <div className="pt-3 border-t border-zinc-200">
+                <div className="flex items-center justify-between p-2.5 rounded-xl bg-zinc-50 border border-zinc-200">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                      {initials}
+                    </div>
+                    <div className="truncate">
+                      <div className="text-xs font-semibold text-zinc-900 truncate">
+                        {displayName}
+                      </div>
+                      <div className="text-[10px] text-zinc-500 truncate">
+                        {user?.email || "elena@science.org"}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      setBottomSheetOpen(false);
+                      await logout();
+                      router.push("/auth");
+                    }}
+                    className="flex items-center gap-1 px-2.5 py-1 text-xs text-rose-600 font-medium hover:bg-rose-50 rounded-lg transition-colors border border-rose-200"
+                    title="Sign Out"
+                  >
+                    <span className="material-symbols-outlined text-sm">logout</span>
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
