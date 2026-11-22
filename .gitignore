@@ -27,6 +27,7 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 scripts/seo-pipeline/*.json
+!scripts/seo-pipeline/quality_rules.json
 __pycache__/
 *.pyc
 

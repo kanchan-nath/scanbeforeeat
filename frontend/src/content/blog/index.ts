@@ -30,10 +30,10 @@ export const blogPosts: BlogPost[] = [
     readTime: "9 min read",
     publishedDate: "2026-03-22",
     author: {
-      name: "Dr. Benoit Chassaing, Ph.D. & Kanchan Nath",
-      role: "Director of Research, Inserm (Institut Cochin) • Reviewed by ScanBeforeEat Scientific Team",
+      name: "Dr. Benoit Chassaing, Ph.D.",
+      role: "Director of Research, Inserm (Institut Cochin) • Mucosal Immunology Specialist",
     },
-    reviewBoard: "Inserm Mucosal Immunology Group & ScanBeforeEat Scientific Advisory Board",
+    reviewBoard: "Peer-Reviewed Academic Literature Synthesis (Inserm / PubMed)",
     coverImage: "/blog/what-foods-contain-emulsifiers.png",
     featured: false,
     tags: ["Emulsifiers", "Gut Health", "Food Additives", "Polysorbate 80", "CMC", "UPF", "Nutrition"],
@@ -154,7 +154,7 @@ Transitioning away from industrial emulsifiers does not require sacrificing conv
 - Bread and Bakery: Select traditional sourdough loaves from local bakeries made with only flour, water, salt, and wild yeast culture. Sourdough fermentation naturally preserves softness without DATEM or SSL.
 - Frozen Desserts: Choose authentic gelato or artisanal ice cream formulated with whole cream, milk, egg yolks, and pure cane sugar, completely avoiding polysorbates and cellulose gums.
 
-Scientific methodologies and ongoing clinical reviews are maintained in the [Kanchan Nath Research Archive](https://github.com/kanchan-nath/know_about_me) and the [Inserm Research Portal](https://www.inserm.fr/en/) to guide consumers toward transparent, additive-free eating.
+Scientific methodologies and ongoing clinical reviews are maintained directly through the [Inserm Research Portal](https://www.inserm.fr/en/) and the [PubMed Clinical Database](https://pubmed.ncbi.nlm.nih.gov/34728527/) to guide consumers toward transparent, additive-free eating.
     `,
   },
   {
