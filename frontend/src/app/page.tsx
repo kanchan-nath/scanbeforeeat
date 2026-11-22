@@ -6,18 +6,12 @@ import { FeatureGrid } from "@/components/home/FeatureGrid";
 import { ComparisonSection } from "@/components/home/ComparisonSection";
 import { PricingSection } from "@/components/home/PricingSection";
 import { CtaBanner } from "@/components/home/CtaBanner";
-import {
-  OrganizationSchema,
-  WebSiteSchema,
-  SoftwareAppSchema,
-} from "@/components/seo/JsonLd";
+import { SoftwareAppSchema } from "@/components/seo/JsonLd";
 
 export default function HomePage() {
   return (
     <>
       {/* Schema.org Structured Data for Google Rich Snippets */}
-      <OrganizationSchema />
-      <WebSiteSchema />
       <SoftwareAppSchema />
 
       <Navbar />

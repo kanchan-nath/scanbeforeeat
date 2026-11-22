@@ -75,4 +75,25 @@ describe("Favicon & SEO Brand Icon Assets", () => {
     expect(sizes).toContain("192x192");
     expect(sizes).toContain("512x512");
   });
+
+  it("configures Google Site Names WebSite schema with brand and alternate names", () => {
+    const jsonLdPath = path.resolve(__dirname, "../src/components/seo/JsonLd.tsx");
+    expect(fs.existsSync(jsonLdPath)).toBe(true);
+
+    const content = fs.readFileSync(jsonLdPath, "utf-8");
+    expect(content).toContain('"@type": "WebSite"');
+    expect(content).toContain("alternateName");
+    expect(content).toContain("Scan Before Eat");
+    expect(content).toContain('"@type": "Organization"');
+    expect(content).toContain("icon-512.png");
+  });
+
+  it("allows Googlebot-Image to index favicons in robots configuration", () => {
+    const robotsPath = path.resolve(__dirname, "../src/app/robots.ts");
+    expect(fs.existsSync(robotsPath)).toBe(true);
+
+    const content = fs.readFileSync(robotsPath, "utf-8");
+    expect(content).toContain("Googlebot-Image");
+    expect(content).toContain('allow: "/"');
+  });
 });
