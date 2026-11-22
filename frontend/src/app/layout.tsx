@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import type { Metadata } from "next";
 import { AuthProvider } from "@/lib/auth-context";
+import { OrganizationSchema, WebSiteSchema } from "@/components/seo/JsonLd";
 import "./globals.css";
 
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com";
@@ -80,6 +81,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <OrganizationSchema />
+        <WebSiteSchema />
         <script
           async
           src="https://www.googletagmanager.com/gtm.js?id=GTM-M5NZ4CXL"
@@ -91,6 +94,9 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());`,
           }}
         />
+        <link rel="icon" type="image/png" sizes="48x48" href="/icon-48.png" />
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link
           rel="preload"
           href="/fonts/material-symbols-outlined.woff2"

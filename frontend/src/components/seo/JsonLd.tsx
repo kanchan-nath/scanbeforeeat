@@ -20,10 +20,13 @@ export function OrganizationSchema() {
     "@type": "Organization",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
+    alternateName: ["Scan Before Eat", "ScanBeforeEat AI"],
     url: siteConfig.url,
     logo: {
       "@type": "ImageObject",
-      url: siteConfig.logoUrl,
+      url: `${siteConfig.url}/icon-512.png`,
+      width: 512,
+      height: 512,
       caption: `${siteConfig.name} Logo`,
     },
     description: siteConfig.description,
@@ -46,6 +49,12 @@ export function WebSiteSchema() {
     "@id": `${siteConfig.url}/#website`,
     url: siteConfig.url,
     name: siteConfig.name,
+    alternateName: [
+      "Scan Before Eat",
+      "ScanBeforeEat App",
+      "ScanBeforeEat AI",
+      "scanbeforeeat.onrender.com",
+    ],
     description: siteConfig.description,
     publisher: {
       "@id": `${siteConfig.url}/#organization`,

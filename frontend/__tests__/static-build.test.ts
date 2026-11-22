@@ -11,7 +11,11 @@ describe("Static Export Build Validation", () => {
     execSync("npm run build", {
       cwd: path.resolve(__dirname, ".."),
       stdio: "pipe",
-      env: { ...process.env, NEXT_PUBLIC_SITE_URL: "https://scanbeforeeat.onrender.com" },
+      env: {
+        ...process.env,
+        NODE_ENV: "production",
+        NEXT_PUBLIC_SITE_URL: "https://scanbeforeeat.onrender.com",
+      },
     });
   }, 120000); // 120s timeout in case build runs
 
@@ -54,6 +58,7 @@ describe("Static Export Build Validation", () => {
     const content = fs.readFileSync(robotsPath, "utf-8");
     expect(content).toContain("User-Agent: *");
     expect(content).toContain("Allow: /");
+    expect(content).toContain("User-Agent: Googlebot-Image");
     expect(content).toContain("Sitemap: https://scanbeforeeat.onrender.com/sitemap.xml");
   });
 
