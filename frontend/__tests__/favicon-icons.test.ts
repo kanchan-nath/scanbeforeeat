@@ -84,8 +84,14 @@ describe("Favicon & SEO Brand Icon Assets", () => {
     expect(content).toContain('"@type": "WebSite"');
     expect(content).toContain("alternateName");
     expect(content).toContain("Scan Before Eat");
+    expect(content).toContain("Kanchan Nath");
+    expect(content).toContain("Kanchan Nath's Project");
+    expect(content).toContain("The Rover Kanchan");
+    expect(content).toContain("Kanchan Nath GitHub");
     expect(content).toContain('"@type": "Organization"');
     expect(content).toContain("icon-512.png");
+    expect(content).toContain("founder");
+    expect(content).toContain("creator");
   });
 
   it("allows Googlebot-Image to index favicons in robots configuration", () => {

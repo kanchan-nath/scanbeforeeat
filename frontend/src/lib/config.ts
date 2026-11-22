@@ -5,6 +5,12 @@ export const siteConfig = {
     "AI-powered food ingredient scanner. Scan any food barcode or label for instant analysis of toxic additives, allergens, ultra-processed markers, and an evidence-backed health score.",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://scanbeforeeat.onrender.com").replace(/\/+$/, ""),
   appUrl: process.env.NEXT_PUBLIC_APP_URL ?? "",
+  creator: {
+    name: "Kanchan Nath",
+    alternateNames: ["The Rover Kanchan", "TheRoverKanchan"],
+    github: "https://github.com/kanchan-nath",
+    projectRepo: "https://github.com/kanchan-nath/scanbeforeeat",
+  },
   loginUrl: "/auth",
   scanUrl: "/scanner",
   dashboardUrl: "/dashboard",
