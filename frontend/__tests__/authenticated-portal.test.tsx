@@ -146,4 +146,16 @@ describe("Authenticated Portal Shell & Navigation", () => {
     expect(menuBtn).toBeDefined();
     expect(screen.getAllByText("Menu").length).toBeGreaterThan(0);
   });
+
+  it("renders the official brand logo in sidebar and mobile headers", () => {
+    render(
+      <AuthenticatedShell>
+        <div>Content</div>
+      </AuthenticatedShell>
+    );
+
+    const logoImages = screen.getAllByAltText("ScanBeforeEat Logo");
+    expect(logoImages.length).toBeGreaterThan(0);
+    expect(logoImages[0].getAttribute("src")).toBe("/logo.svg");
+  });
 });

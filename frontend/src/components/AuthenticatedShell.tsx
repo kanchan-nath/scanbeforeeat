@@ -193,10 +193,13 @@ export default function AuthenticatedShell({
     <div className="min-h-screen bg-slate-50 text-zinc-900 flex flex-col md:flex-row antialiased">
       {/* Mobile Top Header Bar - Hamburger/Breadcrumb button removed */}
       <header className="md:hidden sticky top-0 z-40 bg-white border-b border-zinc-200 px-4 py-3 flex items-center justify-between">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-tight shadow-xs">
-            SE
-          </div>
+        <Link href="/dashboard" className="flex items-center gap-2 group">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.svg"
+            alt="ScanBeforeEat Logo"
+            className="w-8 h-8 rounded-lg object-contain inline-block shrink-0 shadow-xs group-hover:scale-105 transition-transform"
+          />
           <span className="font-bold text-base tracking-tight text-zinc-900 font-display">
             ScanBeforeEat
           </span>
@@ -230,10 +233,13 @@ export default function AuthenticatedShell({
       <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 border-r border-zinc-200 bg-white z-50 flex-col justify-between p-4 overflow-y-auto">
         <div className="space-y-6">
           {/* Brand Header */}
-          <Link href="/dashboard" className="flex items-center gap-2 px-2 py-1 group">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-tight shadow-xs group-hover:scale-105 transition-transform">
-              SE
-            </div>
+          <Link href="/dashboard" className="flex items-center gap-2.5 px-2 py-1 group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.svg"
+              alt="ScanBeforeEat Logo"
+              className="w-8 h-8 rounded-lg object-contain inline-block shrink-0 shadow-xs group-hover:scale-105 transition-transform"
+            />
             <div>
               <span className="font-display font-bold text-base text-zinc-900 tracking-tight block">
                 ScanBeforeEat
@@ -482,9 +488,12 @@ export default function AuthenticatedShell({
             {/* Sheet Handle & Header */}
             <div className="px-4 py-3 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/90">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-xs">
-                  SE
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.svg"
+                  alt="ScanBeforeEat Logo"
+                  className="w-7 h-7 rounded-lg object-contain inline-block shrink-0 shadow-xs"
+                />
                 <div>
                   <span className="font-bold text-sm text-zinc-900 block font-display">
                     ScanBeforeEat Navigation
