@@ -28,6 +28,8 @@ describe("Static Export Build Validation", () => {
     const content = fs.readFileSync(indexPath, "utf-8");
     expect(content).toContain("<!DOCTYPE html>");
     expect(content).toContain("ScanBeforeEat");
+    expect(content).toContain("googletagmanager.com/gtm.js?id=GTM-M5NZ4CXL");
+    expect(content).toContain("window.dataLayer");
     expect(content.length).toBeGreaterThan(1000);
   });
 

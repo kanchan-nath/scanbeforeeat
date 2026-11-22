@@ -80,6 +80,17 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtm.js?id=GTM-M5NZ4CXL"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`,
+          }}
+        />
         <link
           rel="preload"
           href="/fonts/material-symbols-outlined.woff2"
