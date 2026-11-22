@@ -188,13 +188,24 @@ def main():
     for w in warnings:
         print(f"[HUMANIZER] {w}")
 
-    # 2. Validate
+    # 2. Validate standard schema
     errors = validate_post(post)
     if errors:
         sys.stderr.write("[ERROR] Post validation failed:\n")
         for err in errors:
             sys.stderr.write(f"  - {err}\n")
         sys.exit(1)
+
+    # 3. Strict Quality Guard Review Agent Check
+    from quality_guard import audit_post
+    quality_violations = audit_post(post)
+    if quality_violations:
+        sys.stderr.write("[ERROR] Quality Guard Audit Failed:\n")
+        for qv in quality_violations:
+            sys.stderr.write(f"  ❌ {qv}\n")
+        sys.exit(1)
+    else:
+        print("[QUALITY GUARD] All compliance and quality rules passed cleanly.")
 
     # 3. Format TypeScript object
     ts_obj = format_ts_post(post)

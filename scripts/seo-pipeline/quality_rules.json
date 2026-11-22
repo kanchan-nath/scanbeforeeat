@@ -1,0 +1,73 @@
+{
+  "version": "1.1.0",
+  "description": "ScanBeforeEat Strict Quality Assurance & Compliance Ledger. Enforced automatically before any article can be saved, committed, or published.",
+  "banned_phrases": [
+    "kanchan nath",
+    "kanchan",
+    "know_about_me",
+    "scanbeforeeat scientific team",
+    "scanbeforeeat medical board",
+    "scanbeforeeat labs team",
+    "our in-house scientific team",
+    "dr. aris thorne"
+  ],
+  "banned_ai_words": [
+    "delve",
+    "delving",
+    "tapestry",
+    "game-changer",
+    "game changer",
+    "beacon of",
+    "in today's fast-paced world",
+    "in today's digital age",
+    "testament to",
+    "it is crucial to remember",
+    "it goes without saying",
+    "furthermore",
+    "moreover"
+  ],
+  "prohibited_characters": [
+    "—"
+  ],
+  "author_requirements": {
+    "must_be_real_researcher": true,
+    "prohibit_founder_as_biologist": true,
+    "require_academic_affiliation": true
+  },
+  "review_board_requirements": {
+    "disallow_fake_internal_board": true,
+    "require_transparent_synthesis_label": true,
+    "allowed_patterns": [
+      "Peer-Reviewed Academic Literature Synthesis",
+      "PubMed / Inserm Academic Review",
+      "Independent Toxicology Synthesis"
+    ]
+  },
+  "seo_requirements": {
+    "min_word_count": 600,
+    "min_high_da_backlinks": 3,
+    "high_da_domains": [
+      "nature.com",
+      "bmj.com",
+      "nih.gov",
+      "ncbi.nlm.nih.gov",
+      "pubmed.ncbi.nlm.nih.gov",
+      "efsa.europa.eu",
+      "who.int",
+      "sciencedirect.com",
+      "inserm.fr"
+    ],
+    "min_internal_links": 2,
+    "allowed_internal_paths": [
+      "/scanner",
+      "/upf-guide",
+      "/additives",
+      "/duel",
+      "/methodology"
+    ]
+  },
+  "formatting_rules": {
+    "no_swallowed_heading_paragraphs": true,
+    "all_links_must_be_markdown": true
+  }
+}
