@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth-context";
 
 interface NavItem {
   name: string;
+  shortName?: string;
   href: string;
   icon: string;
   badge?: string;
@@ -21,61 +22,93 @@ const NAV_SECTIONS: NavSection[] = [
   {
     title: "CORE AUDIT",
     items: [
-      { name: "Dashboard", href: "/dashboard", icon: "dashboard" },
-      { name: "Live Scanner", href: "/scanner", icon: "qr_code_scanner" },
-      { name: "Batch Queue", href: "/batch-queue", icon: "receipt_long" },
-      { name: "Audit History", href: "/history", icon: "history" },
+      { name: "Dashboard", shortName: "Home", href: "/dashboard", icon: "grid_view" },
+      { name: "Live Scanner", shortName: "Scanner", href: "/scanner", icon: "qr_code_scanner" },
+      { name: "Batch Queue", shortName: "Queue", href: "/batch-queue", icon: "receipt_long" },
+      { name: "Audit History", shortName: "History", href: "/history", icon: "history" },
     ],
   },
   {
     title: "PANTRY & GROCERY",
     items: [
-      { name: "Digital Pantry", href: "/pantry", icon: "kitchen" },
-      { name: "Product Duel", href: "/duel", icon: "compare_arrows" },
-      { name: "Clean Alternatives", href: "/alternatives", icon: "eco" },
-      { name: "Shopping List", href: "/shopping-list", icon: "shopping_cart" },
+      { name: "Digital Pantry", shortName: "Pantry", href: "/pantry", icon: "kitchen" },
+      { name: "Product Duel", shortName: "Duel", href: "/duel", icon: "compare_arrows" },
+      { name: "Clean Alternatives", shortName: "Alternatives", href: "/alternatives", icon: "eco" },
+      { name: "Shopping List", shortName: "Grocery", href: "/shopping-list", icon: "shopping_cart" },
     ],
   },
   {
     title: "HEALTH & TOXICOLOGY",
     items: [
-      { name: "Diet & Health", href: "/health-profile", icon: "badge" },
-      { name: "Allergen Matrix", href: "/allergens", icon: "warning" },
-      { name: "Banned Additives", href: "/banned-additives", icon: "block" },
-      { name: "Exposure Ledger", href: "/exposure-ledger", icon: "monitoring" },
-      { name: "Synergy Alerts", href: "/synergy-alerts", icon: "science" },
-      { name: "Saved Studies", href: "/saved-studies", icon: "bookmark" },
+      { name: "Diet & Health", shortName: "Profile", href: "/health-profile", icon: "badge" },
+      { name: "Allergen Matrix", shortName: "Allergens", href: "/allergens", icon: "warning" },
+      { name: "Banned Additives", shortName: "Banned", href: "/banned-additives", icon: "block" },
+      { name: "Exposure Ledger", shortName: "Exposure", href: "/exposure-ledger", icon: "monitoring" },
+      { name: "Synergy Alerts", shortName: "Synergies", href: "/synergy-alerts", icon: "science" },
+      { name: "Saved Studies", shortName: "Studies", href: "/saved-studies", icon: "bookmark" },
     ],
   },
   {
     title: "BILLING & PLANS",
     items: [
-      { name: "Subscription Plans", href: "/pricing", icon: "loyalty" },
-      { name: "Manage Plan", href: "/subscription", icon: "credit_card" },
-      { name: "Payment Methods", href: "/payment-methods", icon: "payments" },
-      { name: "Invoices & Receipts", href: "/invoices", icon: "description" },
+      { name: "Subscription Plans", shortName: "Plans", href: "/pricing", icon: "loyalty" },
+      { name: "Manage Plan", shortName: "Billing", href: "/subscription", icon: "credit_card" },
+      { name: "Payment Methods", shortName: "Payments", href: "/payment-methods", icon: "payments" },
+      { name: "Invoices & Receipts", shortName: "Invoices", href: "/invoices", icon: "description" },
     ],
   },
   {
     title: "DEVELOPER API",
     items: [
-      { name: "API Dashboard", href: "/developer", icon: "terminal" },
-      { name: "API Keys", href: "/api-keys", icon: "key" },
-      { name: "Webhooks", href: "/webhooks", icon: "webhook" },
-      { name: "API Playground", href: "/api-playground", icon: "play_circle" },
+      { name: "API Dashboard", shortName: "Developer", href: "/developer", icon: "terminal" },
+      { name: "API Keys", shortName: "API Keys", href: "/api-keys", icon: "key" },
+      { name: "Webhooks", shortName: "Webhooks", href: "/webhooks", icon: "webhook" },
+      { name: "API Playground", shortName: "Playground", href: "/api-playground", icon: "play_circle" },
     ],
   },
   {
     title: "SETTINGS",
     items: [
-      { name: "Security & 2FA", href: "/account/security", icon: "security" },
-      { name: "Active Sessions", href: "/account/sessions", icon: "devices" },
-      { name: "Notifications", href: "/account/notifications", icon: "notifications" },
-      { name: "Family Profiles", href: "/account/family", icon: "group" },
-      { name: "Data Export", href: "/account/export", icon: "cloud_download" },
-      { name: "Delete Account", href: "/account/delete", icon: "delete_forever" },
+      { name: "Security & 2FA", shortName: "Security", href: "/account/security", icon: "security" },
+      { name: "Active Sessions", shortName: "Sessions", href: "/account/sessions", icon: "devices" },
+      { name: "Notifications", shortName: "Alerts", href: "/account/notifications", icon: "notifications" },
+      { name: "Family Profiles", shortName: "Family", href: "/account/family", icon: "group" },
+      { name: "Data Export", shortName: "Export", href: "/account/export", icon: "cloud_download" },
+      { name: "Delete Account", shortName: "Delete", href: "/account/delete", icon: "delete_forever" },
     ],
   },
+];
+
+// Flat list of mobile navigation items matching the reference design 1:1
+const MOBILE_NAV_ITEMS: NavItem[] = [
+  { name: "Dashboard", shortName: "Home", href: "/dashboard", icon: "grid_view" },
+  { name: "Live Scanner", shortName: "Scanner", href: "/scanner", icon: "qr_code_scanner" },
+  { name: "Digital Pantry", shortName: "Pantry", href: "/pantry", icon: "kitchen" },
+  { name: "Shopping List", shortName: "Grocery", href: "/shopping-list", icon: "shopping_cart" },
+  { name: "Diet & Health", shortName: "Profile", href: "/health-profile", icon: "badge" },
+  { name: "Product Duel", shortName: "Duel", href: "/duel", icon: "compare_arrows" },
+  { name: "Clean Alternatives", shortName: "Alternatives", href: "/alternatives", icon: "eco" },
+  { name: "Audit History", shortName: "History", href: "/history", icon: "history" },
+  { name: "Batch Queue", shortName: "Queue", href: "/batch-queue", icon: "receipt_long" },
+  { name: "Allergen Matrix", shortName: "Allergens", href: "/allergens", icon: "warning" },
+  { name: "Banned Additives", shortName: "Banned", href: "/banned-additives", icon: "block" },
+  { name: "Exposure Ledger", shortName: "Exposure", href: "/exposure-ledger", icon: "monitoring" },
+  { name: "Synergy Alerts", shortName: "Synergies", href: "/synergy-alerts", icon: "science" },
+  { name: "Saved Studies", shortName: "Studies", href: "/saved-studies", icon: "bookmark" },
+  { name: "Subscription Plans", shortName: "Plans", href: "/pricing", icon: "loyalty" },
+  { name: "Manage Plan", shortName: "Billing", href: "/subscription", icon: "credit_card" },
+  { name: "Payment Methods", shortName: "Payments", href: "/payment-methods", icon: "payments" },
+  { name: "Invoices & Receipts", shortName: "Invoices", href: "/invoices", icon: "description" },
+  { name: "API Dashboard", shortName: "Developer", href: "/developer", icon: "terminal" },
+  { name: "API Keys", shortName: "API Keys", href: "/api-keys", icon: "key" },
+  { name: "Webhooks", shortName: "Webhooks", href: "/webhooks", icon: "webhook" },
+  { name: "API Playground", shortName: "Playground", href: "/api-playground", icon: "play_circle" },
+  { name: "Security & 2FA", shortName: "Security", href: "/account/security", icon: "security" },
+  { name: "Active Sessions", shortName: "Sessions", href: "/account/sessions", icon: "devices" },
+  { name: "Notifications", shortName: "Alerts", href: "/account/notifications", icon: "notifications" },
+  { name: "Family Profiles", shortName: "Family", href: "/account/family", icon: "group" },
+  { name: "Data Export", shortName: "Export", href: "/account/export", icon: "cloud_download" },
+  { name: "Delete Account", shortName: "Delete", href: "/account/delete", icon: "delete_forever" },
 ];
 
 const SEARCH_CATALOG = [
@@ -104,40 +137,18 @@ export default function AuthenticatedShell({
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const sectionTabsRef = useRef<HTMLDivElement>(null);
-  const itemsRailRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
 
-  // Sync active section based on current pathname
-  const currentSectionIdx = NAV_SECTIONS.findIndex((section) =>
-    section.items.some((item) => item.href === pathname)
-  );
-  const [activeSectionIdx, setActiveSectionIdx] = useState(
-    currentSectionIdx >= 0 ? currentSectionIdx : 0
-  );
-
-  useEffect(() => {
-    const idx = NAV_SECTIONS.findIndex((section) =>
-      section.items.some((item) => item.href === pathname)
-    );
-    if (idx >= 0) {
-      setActiveSectionIdx(idx);
-    }
-  }, [pathname]);
-
-  // Smoothly center active tab & active item in horizontal scroll rails
+  // Smoothly center active item in horizontal scroll rail on mobile
   useEffect(() => {
     const timer = setTimeout(() => {
-      const activeTab = sectionTabsRef.current?.querySelector('[data-active="true"]');
-      if (activeTab && typeof activeTab.scrollIntoView === "function") {
-        activeTab.scrollIntoView({ inline: "center", behavior: "smooth", block: "nearest" });
-      }
-      const activeItem = itemsRailRef.current?.querySelector('[data-active="true"]');
+      const activeItem = railRef.current?.querySelector('[data-active="true"]');
       if (activeItem && typeof activeItem.scrollIntoView === "function") {
         activeItem.scrollIntoView({ inline: "center", behavior: "smooth", block: "nearest" });
       }
     }, 50);
     return () => clearTimeout(timer);
-  }, [pathname, activeSectionIdx]);
+  }, [pathname]);
 
   // Keyboard shortcut: Cmd+K or Ctrl+K focuses search input
   useEffect(() => {
@@ -354,10 +365,10 @@ export default function AuthenticatedShell({
               <span>New Scan</span>
             </Link>
 
-            {/* Notifications Bell */}
+            {/* Notifications Bell - hidden on mobile, visible sm+ */}
             <Link
               href="/account/notifications"
-              className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 relative transition-colors"
+              className="hidden sm:flex p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 relative transition-colors"
               title="Notifications"
             >
               <span className="material-symbols-outlined text-lg">notifications</span>
@@ -367,24 +378,25 @@ export default function AuthenticatedShell({
             {/* Pro Plan / Free Plan Badge */}
             <Link
               href="/pricing"
-              className={`px-2.5 py-1 rounded-full text-[11px] font-semibold tracking-wider transition-colors ${
+              className={`px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-bold tracking-wider transition-colors ${
                 isPro
                   ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
                   : "bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100"
               }`}
             >
-              {isPro ? "PRO PLAN" : "FREE PLAN"}
+              <span className="hidden sm:inline">{isPro ? "PRO PLAN" : "FREE PLAN"}</span>
+              <span className="sm:hidden">{isPro ? "PRO" : "FREE"}</span>
             </Link>
 
-            {/* Profile Avatar Pill */}
+            {/* Profile Avatar */}
             <Link
               href="/health-profile"
-              className="flex items-center gap-2 pl-2 pr-3 py-1 rounded-full border border-zinc-200 hover:border-zinc-300 bg-white shadow-xs transition-all group"
+              className="flex items-center gap-2 sm:pl-2 sm:pr-3 py-0.5 sm:py-1 rounded-full sm:border sm:border-zinc-200 hover:border-zinc-300 sm:bg-white shadow-xs transition-all group"
             >
-              <div className="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+              <div className="w-7 h-7 sm:w-6 sm:h-6 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs sm:text-[10px] font-bold shrink-0">
                 {initials}
               </div>
-              <span className="text-xs font-semibold text-zinc-800 group-hover:text-zinc-950 truncate max-w-[120px]">
+              <span className="hidden sm:inline text-xs font-semibold text-zinc-800 group-hover:text-zinc-950 truncate max-w-[120px]">
                 {displayName}
               </span>
             </Link>
@@ -394,106 +406,69 @@ export default function AuthenticatedShell({
         {children}
       </main>
 
-      {/* Mobile Slideable Bottom Navigation */}
+      {/* Mobile Bottom Navigation Bar (Matching Reference 1:1) */}
       <nav
         aria-label="Mobile Bottom Navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 shadow-lg"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200/90 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] flex items-stretch h-[60px]"
       >
-        {/* Row 1: Section Sliding Tabs */}
+        {/* Horizontally Slideable Navigation Rail */}
         <div
-          ref={sectionTabsRef}
-          className="flex items-center gap-1.5 px-3 py-1.5 overflow-x-auto no-scrollbar border-b border-zinc-100 scroll-smooth"
+          ref={railRef}
+          className="flex-1 flex items-center overflow-x-auto no-scrollbar scroll-smooth px-1.5 gap-0.5"
         >
-          {NAV_SECTIONS.map((section, idx) => {
-            const isSelected = activeSectionIdx === idx;
-            const containsCurrentPage = section.items.some((i) => i.href === pathname);
-            return (
-              <button
-                key={section.title}
-                data-active={isSelected ? "true" : "false"}
-                onClick={() => setActiveSectionIdx(idx)}
-                className={`px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider whitespace-nowrap shrink-0 transition-all ${
-                  isSelected
-                    ? "bg-emerald-600 text-white font-bold shadow-xs scale-102"
-                    : containsCurrentPage
-                    ? "bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200"
-                    : "bg-zinc-100 text-zinc-600 hover:text-zinc-900 border border-zinc-200"
-                }`}
-              >
-                {section.title}
-              </button>
-            );
-          })}
-          {/* Quick "ALL (24)" Bottom Sheet Expander */}
-          <button
-            onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
-            className="px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider whitespace-nowrap shrink-0 bg-zinc-800 text-white font-bold flex items-center gap-1 active:scale-95 transition-transform"
-            aria-label="All navigation links"
-          >
-            <span className="material-symbols-outlined text-xs">
-              {bottomSheetOpen ? "expand_more" : "grid_view"}
-            </span>
-            <span>ALL (24)</span>
-          </button>
-        </div>
-
-        {/* Row 2: Navigation Items (Horizontally Slideable) */}
-        <div
-          ref={itemsRailRef}
-          className="flex items-center gap-2 px-3 py-2 overflow-x-auto no-scrollbar scroll-smooth"
-        >
-          {/* Previous section shortcut */}
-          {activeSectionIdx > 0 && (
-            <button
-              onClick={() => setActiveSectionIdx(activeSectionIdx - 1)}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-mono text-zinc-500 bg-zinc-100 border border-zinc-200 shrink-0 hover:bg-zinc-200 active:scale-95 transition-all"
-              title={`Previous: ${NAV_SECTIONS[activeSectionIdx - 1].title}`}
-            >
-              <span className="material-symbols-outlined text-xs">arrow_back</span>
-              <span>Prev</span>
-            </button>
-          )}
-
-          {NAV_SECTIONS[activeSectionIdx]?.items.map((item) => {
+          {MOBILE_NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 data-active={isActive ? "true" : "false"}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all active:scale-95 ${
-                  isActive
-                    ? "bg-emerald-600 text-white font-semibold shadow-xs"
-                    : "bg-zinc-50 border border-zinc-200 text-zinc-700 hover:text-zinc-950 hover:bg-zinc-100"
+                className={`flex flex-col items-center justify-center shrink-0 min-w-[62px] h-full py-1 px-1.5 transition-colors group active:scale-95 ${
+                  isActive ? "text-emerald-600 font-bold" : "text-zinc-500 hover:text-zinc-800"
                 }`}
               >
                 <span
-                  className={`material-symbols-outlined text-base ${
-                    isActive ? "text-white" : "text-emerald-700"
+                  className={`material-symbols-outlined text-[22px] leading-none mb-1 transition-transform group-active:scale-90 ${
+                    isActive ? "text-emerald-600" : "text-zinc-500"
                   }`}
                 >
                   {item.icon}
                 </span>
-                <span>{item.name}</span>
-                {isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-white ml-0.5 shrink-0" />
-                )}
+                <span
+                  className={`text-[10px] tracking-tight truncate max-w-[62px] leading-none ${
+                    isActive ? "text-emerald-600 font-bold" : "text-zinc-500 font-medium"
+                  }`}
+                >
+                  {item.shortName || item.name}
+                </span>
               </Link>
             );
           })}
-
-          {/* Next section shortcut */}
-          {activeSectionIdx < NAV_SECTIONS.length - 1 && (
-            <button
-              onClick={() => setActiveSectionIdx(activeSectionIdx + 1)}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-mono text-zinc-500 bg-zinc-100 border border-zinc-200 shrink-0 hover:bg-zinc-200 active:scale-95 transition-all"
-              title={`Next: ${NAV_SECTIONS[activeSectionIdx + 1].title}`}
-            >
-              <span>Next</span>
-              <span className="material-symbols-outlined text-xs">arrow_forward</span>
-            </button>
-          )}
         </div>
+
+        {/* Pinned Bottom Hamburger Menu Button (Icon stacked above text) */}
+        <button
+          onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
+          className={`flex flex-col items-center justify-center shrink-0 min-w-[62px] h-full px-2 py-1 border-l border-zinc-200/80 bg-white transition-colors group active:bg-zinc-50 ${
+            bottomSheetOpen ? "text-emerald-600 font-bold" : "text-zinc-600 hover:text-zinc-950"
+          }`}
+          aria-label="Toggle full menu directory"
+        >
+          <span
+            className={`material-symbols-outlined text-[22px] leading-none mb-1 transition-transform group-active:scale-90 ${
+              bottomSheetOpen ? "text-emerald-600" : "text-zinc-700"
+            }`}
+          >
+            {bottomSheetOpen ? "close" : "menu"}
+          </span>
+          <span
+            className={`text-[10px] tracking-tight font-medium leading-none ${
+              bottomSheetOpen ? "text-emerald-600 font-bold" : "text-zinc-700"
+            }`}
+          >
+            Menu
+          </span>
+        </button>
       </nav>
 
       {/* Slide-Up Bottom Sheet for Full Directory (Slides up from bottom) */}
@@ -530,21 +505,10 @@ export default function AuthenticatedShell({
 
             {/* Scrollable Directory Content */}
             <div className="overflow-y-auto p-4 space-y-5">
-              {NAV_SECTIONS.map((section, sIdx) => (
+              {NAV_SECTIONS.map((section) => (
                 <div key={section.title} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-bold font-mono tracking-wider text-zinc-400 uppercase">
-                      {section.title}
-                    </span>
-                    <button
-                      onClick={() => {
-                        setActiveSectionIdx(sIdx);
-                        setBottomSheetOpen(false);
-                      }}
-                      className="text-[10px] font-medium text-emerald-600 hover:underline"
-                    >
-                      Focus Rail
-                    </button>
+                  <div className="text-[11px] font-bold font-mono tracking-wider text-zinc-400 uppercase">
+                    {section.title}
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {section.items.map((item) => {
@@ -553,10 +517,7 @@ export default function AuthenticatedShell({
                         <Link
                           key={item.href}
                           href={item.href}
-                          onClick={() => {
-                            setActiveSectionIdx(sIdx);
-                            setBottomSheetOpen(false);
-                          }}
+                          onClick={() => setBottomSheetOpen(false)}
                           className={`flex items-center gap-2 p-2 rounded-lg text-xs transition-colors font-medium border ${
                             isActive
                               ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-semibold"

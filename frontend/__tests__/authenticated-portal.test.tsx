@@ -134,8 +134,16 @@ describe("Authenticated Portal Shell & Navigation", () => {
     const mobileNav = screen.getByRole("navigation", { name: "Mobile Bottom Navigation" });
     expect(mobileNav).toBeDefined();
 
-    // Verify "ALL (24)" directory expander button is present
-    const allBtn = screen.getByRole("button", { name: /all navigation links/i });
-    expect(allBtn).toBeDefined();
+    // Verify primary items matching reference (Home, Scanner, Pantry, Grocery, Profile) are present in bottom nav
+    expect(screen.getAllByText("Home").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Scanner").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Pantry").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Grocery").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Profile").length).toBeGreaterThan(0);
+
+    // Verify pinned Menu button is present
+    const menuBtn = screen.getByRole("button", { name: /toggle full menu directory/i });
+    expect(menuBtn).toBeDefined();
+    expect(screen.getAllByText("Menu").length).toBeGreaterThan(0);
   });
 });
