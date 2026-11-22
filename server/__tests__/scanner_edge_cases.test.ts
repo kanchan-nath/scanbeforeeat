@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import app from "../src/index.js";
 import { db } from "../src/db.js";
 import http from "node:http";
+import { generateJwtToken } from "../src/middleware/auth.js";
 
 let server: http.Server;
 const PORT = 4098;
@@ -141,9 +142,13 @@ describe("Scanner Exhaustive Edge Cases & Failure Resilience", () => {
   });
 
   it("Edge Case 6: should reject request with missing userId", async () => {
+    const token = generateJwtToken({ id: testUserId, email: `${testUserId}@example.com` });
     const res = await fetch(`${BASE_URL}/scan`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({ barcode: "8901058852331" }),
     });
 

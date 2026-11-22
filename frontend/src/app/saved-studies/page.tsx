@@ -6,13 +6,9 @@ import { useAuth } from "@/lib/auth-context";
 import { fetchSavedStudies, deleteSavedStudy, SavedStudy } from "@/lib/api";
 
 export default function SavedStudiesPage() {
-  const { user, loginDemo } = useAuth();
+  const { user } = useAuth();
   const [studies, setStudies] = useState<SavedStudy[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user) loginDemo("monthly_pro");
-  }, [user, loginDemo]);
 
   const loadStudies = () => {
     if (user?.id) {

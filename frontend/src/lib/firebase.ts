@@ -5,6 +5,8 @@ import {
   createUserWithEmailAndPassword,
   signOut as firebaseSignOut,
   GoogleAuthProvider,
+  TwitterAuthProvider,
+  GithubAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
   User as FirebaseUser,
@@ -22,6 +24,8 @@ export const firebaseConfig = {
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+export const twitterProvider = new TwitterAuthProvider();
+export const githubProvider = new GithubAuthProvider();
 
 export {
   signInWithEmailAndPassword,

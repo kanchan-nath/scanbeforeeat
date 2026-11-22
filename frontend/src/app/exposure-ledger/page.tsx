@@ -6,13 +6,9 @@ import { useAuth } from "@/lib/auth-context";
 import { fetchExposureLedger } from "@/lib/api";
 
 export default function ExposureLedgerPage() {
-  const { user, loginDemo } = useAuth();
+  const { user } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user) loginDemo("monthly_pro");
-  }, [user, loginDemo]);
 
   useEffect(() => {
     if (user?.id) {
