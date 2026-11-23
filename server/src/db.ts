@@ -1,4 +1,5 @@
 import { DatabaseSync } from "node:sqlite";
+import { Pool } from "pg";
 import path from "node:path";
 import fs from "node:fs";
 
@@ -10,6 +11,20 @@ if (!fs.existsSync(dataDir)) {
 const defaultName = process.env.NODE_ENV === "test" ? "test.sqlite" : "scanbeforeeat.sqlite";
 const dbPath = process.env.DATABASE_PATH || path.join(dataDir, defaultName);
 export const db = new DatabaseSync(dbPath);
+
+const SUPABASE_DATABASE_URL =
+  process.env.DATABASE_URL ||
+  "postgresql://postgres.tkwrktpoaiplurjmrqfd:ScanBeforeEat2026SecurePass99@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres";
+
+export const pgPool =
+  process.env.NODE_ENV !== "test" && SUPABASE_DATABASE_URL
+    ? new Pool({
+        connectionString: SUPABASE_DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        max: 10,
+        idleTimeoutMillis: 30000,
+      })
+    : null;
 
 export function initDatabase() {
   db.exec(`
@@ -544,5 +559,149 @@ function seedInitialUserData() {
     `);
 
     insertWh.run("wh_1", "demo_pro", "https://api.mygroceryapp.com/webhooks/scanbeforeeat", JSON.stringify(["scan.completed", "allergen.triggered"]), "whsec_live_9a8b7c6d5e", "active");
+  }
+}
+
+// -------------------------------------------------------------
+// Direct Supabase Cloud Persistence Helpers
+// -------------------------------------------------------------
+
+export interface SupabaseProductRecord {
+  barcode: string;
+  name: string;
+  brand: string;
+  category: string;
+  healthScore: number;
+  novaGroup: number;
+  ingredientsText?: string;
+  additivesJson: string;
+  allergensJson: string;
+  deductionsJson: string;
+  alternativesJson: string;
+}
+
+export async function saveProductToSupabase(product: SupabaseProductRecord): Promise<void> {
+  if (!pgPool) return;
+  try {
+    await pgPool.query(
+      `
+      INSERT INTO public.products (
+        "barcode", "name", "brand", "category",
+        "healthScore", "novaGroup", "ingredientsText",
+        "additivesJson", "allergensJson", "deductionsJson", "alternativesJson"
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      ON CONFLICT ("barcode") DO UPDATE SET
+        "name" = EXCLUDED."name",
+        "brand" = EXCLUDED."brand",
+        "category" = EXCLUDED."category",
+        "healthScore" = EXCLUDED."healthScore",
+        "novaGroup" = EXCLUDED."novaGroup",
+        "ingredientsText" = EXCLUDED."ingredientsText",
+        "additivesJson" = EXCLUDED."additivesJson",
+        "allergensJson" = EXCLUDED."allergensJson",
+        "deductionsJson" = EXCLUDED."deductionsJson",
+        "alternativesJson" = EXCLUDED."alternativesJson";
+      `,
+      [
+        product.barcode,
+        product.name,
+        product.brand,
+        product.category,
+        product.healthScore,
+        product.novaGroup,
+        product.ingredientsText || "",
+        product.additivesJson,
+        product.allergensJson,
+        product.deductionsJson,
+        product.alternativesJson,
+      ]
+    );
+  } catch (err) {
+    console.warn("[Supabase] Failed to persist product to cloud:", err);
+  }
+}
+
+export async function getProductFromSupabase(barcode: string): Promise<any | null> {
+  if (!pgPool) return null;
+  try {
+    const res = await pgPool.query(
+      `SELECT * FROM public.products WHERE "barcode" = $1 LIMIT 1;`,
+      [barcode]
+    );
+    return res.rows[0] || null;
+  } catch (err) {
+    console.warn("[Supabase] Failed to fetch product from cloud:", err);
+    return null;
+  }
+}
+
+export interface SupabaseScanRecord {
+  id: string;
+  userId: string;
+  barcode: string;
+  productName: string;
+  brand?: string;
+  healthScore: number;
+  novaGroup: number;
+  scannedAt?: string;
+}
+
+export async function saveScanToSupabase(scan: SupabaseScanRecord): Promise<void> {
+  if (!pgPool) return;
+  try {
+    await pgPool.query(
+      `
+      INSERT INTO public.scans (
+        "id", "userId", "barcode", "productName", "brand", "healthScore", "novaGroup", "scannedAt"
+      )
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      ON CONFLICT ("id") DO NOTHING;
+      `,
+      [
+        scan.id,
+        scan.userId,
+        scan.barcode,
+        scan.productName,
+        scan.brand || "Food Item",
+        scan.healthScore,
+        scan.novaGroup,
+        scan.scannedAt || new Date().toISOString(),
+      ]
+    );
+  } catch (err) {
+    console.warn("[Supabase] Failed to persist scan to cloud:", err);
+  }
+}
+
+export async function updateUserQuotaInSupabase(userId: string): Promise<void> {
+  if (!pgPool) return;
+  try {
+    await pgPool.query(
+      `UPDATE public.users SET "scansUsed" = "scansUsed" + 1 WHERE "id" = $1;`,
+      [userId]
+    );
+  } catch (err) {
+    console.warn("[Supabase] Failed to update user quota in cloud:", err);
+  }
+}
+
+export async function getScanHistoryFromSupabase(userId: string, limit = 50): Promise<any[]> {
+  if (!pgPool) return [];
+  try {
+    const res = await pgPool.query(
+      `
+      SELECT "id", "userId", "barcode", "productName", "brand", "healthScore", "novaGroup", "scannedAt"
+      FROM public.scans
+      WHERE "userId" = $1
+      ORDER BY "scannedAt" DESC
+      LIMIT $2;
+      `,
+      [userId, limit]
+    );
+    return res.rows;
+  } catch (err) {
+    console.warn("[Supabase] Failed to fetch scan history from cloud:", err);
+    return [];
   }
 }

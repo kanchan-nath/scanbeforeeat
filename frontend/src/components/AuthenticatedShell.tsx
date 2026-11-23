@@ -112,9 +112,9 @@ const MOBILE_NAV_ITEMS: NavItem[] = [
 ];
 
 const SEARCH_CATALOG = [
-  { title: "Maggi 2-Minute Masala Noodles", subtitle: "UPC: 8901058852331 • Score: 38 (NOVA 4)", href: "/product/8901058852331", type: "Product" },
-  { title: "Barista Edition Oat Milk (Oatly)", subtitle: "UPC: 7394376616037 • Score: 72 (NOVA 3)", href: "/product/7394376616037", type: "Product" },
-  { title: "Himalayan Pink Gold Organic Popcorn", subtitle: "UPC: 0855238004128 • Score: 86 (NOVA 1)", href: "/product/0855238004128", type: "Product" },
+  { title: "Maggi 2-Minute Masala Noodles", subtitle: "UPC: 8901058852331 • Score: 38 (NOVA 4)", href: "/scanner?barcode=8901058852331", type: "Product" },
+  { title: "Barista Edition Oat Milk (Oatly)", subtitle: "UPC: 7394376616037 • Score: 72 (NOVA 3)", href: "/scanner?barcode=7394376616037", type: "Product" },
+  { title: "Himalayan Pink Gold Organic Popcorn", subtitle: "UPC: 0855238004128 • Score: 86 (NOVA 1)", href: "/scanner?barcode=0855238004128", type: "Product" },
   { title: "Tartrazine (E102 / Yellow 5)", subtitle: "Synthetic Azo Dye • High Pediatric Risk", href: "/additives", type: "Additive" },
   { title: "TBHQ (Tertiary Butylhydroquinone / E319)", subtitle: "Synthetic Preservative • High Risk", href: "/banned-additives", type: "Additive" },
   { title: "Sodium Benzoate (E211)", subtitle: "Preservative • Vitamin C Synergy Alert", href: "/synergy-alerts", type: "Additive" },

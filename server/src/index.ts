@@ -2,7 +2,15 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import crypto from "node:crypto";
-import { initDatabase, db } from "./db.js";
+import {
+  initDatabase,
+  db,
+  saveProductToSupabase,
+  getProductFromSupabase,
+  saveScanToSupabase,
+  updateUserQuotaInSupabase,
+  getScanHistoryFromSupabase,
+} from "./db.js";
 import { generateInvoicePdf } from "./services/pdf.js";
 import { fetchFromOpenFoodFacts } from "./services/openfoodfacts.js";
 import { computeUserExposure } from "./services/toxicology.js";
@@ -455,6 +463,20 @@ app.post("/api/scan", requireAuth, async (req: Request, res: Response) => {
   }
 
   // Cache/persist product in database for instant future lookups
+  const productRecord = {
+    barcode: productResult.barcode,
+    name: productResult.name || "Audited Food Product",
+    brand: productResult.brand || "Detected Brand",
+    category: productResult.category || "General Packaged Food",
+    healthScore: productResult.healthScore ?? 50,
+    novaGroup: productResult.novaGroup ?? 3,
+    ingredientsText: productResult.ingredientsText || "",
+    additivesJson: JSON.stringify(productResult.additives || []),
+    allergensJson: JSON.stringify(productResult.allergens || []),
+    deductionsJson: JSON.stringify(productResult.deductions || []),
+    alternativesJson: JSON.stringify(productResult.alternatives || [])
+  };
+
   try {
     db.prepare(`
       INSERT OR REPLACE INTO products (
@@ -462,30 +484,35 @@ app.post("/api/scan", requireAuth, async (req: Request, res: Response) => {
         ingredientsText, additivesJson, allergensJson, deductionsJson, alternativesJson
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(
-      productResult.barcode,
-      productResult.name || "Audited Food Product",
-      productResult.brand || "Detected Brand",
-      productResult.category || "General Packaged Food",
-      productResult.healthScore ?? 50,
-      productResult.novaGroup ?? 3,
-      productResult.ingredientsText || "",
-      JSON.stringify(productResult.additives || []),
-      JSON.stringify(productResult.allergens || []),
-      JSON.stringify(productResult.deductions || []),
-      JSON.stringify(productResult.alternatives || [])
+      productRecord.barcode,
+      productRecord.name,
+      productRecord.brand,
+      productRecord.category,
+      productRecord.healthScore,
+      productRecord.novaGroup,
+      productRecord.ingredientsText,
+      productRecord.additivesJson,
+      productRecord.allergensJson,
+      productRecord.deductionsJson,
+      productRecord.alternativesJson
     );
   } catch (cacheErr) {
-    console.warn("[Database] Could not cache scanned product:", cacheErr);
+    console.warn("[Database] Could not cache scanned product locally:", cacheErr);
   }
 
-  // Deduct 1 scan quota
-  db.prepare("UPDATE users SET scansUsed = scansUsed + 1 WHERE id = ?").run(userId);
+  // Persist immediately to Supabase Cloud Database
+  await saveProductToSupabase(productRecord);
 
-  // Record scan history
+  // Deduct 1 scan quota (local + Supabase Cloud)
+  db.prepare("UPDATE users SET scansUsed = scansUsed + 1 WHERE id = ?").run(userId);
+  await updateUserQuotaInSupabase(userId);
+
+  // Record scan history (local + Supabase Cloud)
   const scanId = `scn_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+  const nowIso = new Date().toISOString();
   db.prepare(`
-    INSERT INTO scans (id, userId, barcode, productName, brand, healthScore, novaGroup)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO scans (id, userId, barcode, productName, brand, healthScore, novaGroup, scannedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     scanId,
     userId,
@@ -493,8 +520,20 @@ app.post("/api/scan", requireAuth, async (req: Request, res: Response) => {
     productResult.name,
     productResult.brand,
     productResult.healthScore,
-    productResult.novaGroup
+    productResult.novaGroup,
+    nowIso
   );
+
+  await saveScanToSupabase({
+    id: scanId,
+    userId,
+    barcode: productResult.barcode,
+    productName: productResult.name,
+    brand: productResult.brand,
+    healthScore: productResult.healthScore,
+    novaGroup: productResult.novaGroup,
+    scannedAt: nowIso
+  });
 
   const updatedUser = db.prepare("SELECT * FROM users WHERE id = ?").get(userId) as any;
 
@@ -510,6 +549,30 @@ app.post("/api/scan", requireAuth, async (req: Request, res: Response) => {
 
 app.get("/api/products/:barcode", async (req: Request, res: Response) => {
   const { barcode } = req.params;
+
+  // 1. Try Supabase Cloud Database first
+  try {
+    const cloudProduct = await getProductFromSupabase(barcode);
+    if (cloudProduct) {
+      return res.json({
+        barcode: cloudProduct.barcode,
+        name: cloudProduct.name,
+        brand: cloudProduct.brand,
+        category: cloudProduct.category,
+        healthScore: cloudProduct.healthScore,
+        novaGroup: cloudProduct.novaGroup,
+        ingredientsText: cloudProduct.ingredientsText,
+        additives: typeof cloudProduct.additivesJson === "string" ? JSON.parse(cloudProduct.additivesJson) : (cloudProduct.additivesJson || []),
+        allergens: typeof cloudProduct.allergensJson === "string" ? JSON.parse(cloudProduct.allergensJson) : (cloudProduct.allergensJson || []),
+        deductions: typeof cloudProduct.deductionsJson === "string" ? JSON.parse(cloudProduct.deductionsJson) : (cloudProduct.deductionsJson || []),
+        alternatives: typeof cloudProduct.alternativesJson === "string" ? JSON.parse(cloudProduct.alternativesJson) : (cloudProduct.alternativesJson || []),
+      });
+    }
+  } catch (err) {
+    console.warn("[Supabase] Cloud lookup fallback:", err);
+  }
+
+  // 2. Check local database cache
   const product = db.prepare("SELECT * FROM products WHERE barcode = ?").get(barcode) as any;
 
   if (product) {
@@ -522,9 +585,22 @@ app.get("/api/products/:barcode", async (req: Request, res: Response) => {
     });
   }
 
-  // Try Open Food Facts
+  // 3. Try Open Food Facts
   const liveProduct = await fetchFromOpenFoodFacts(barcode);
   if (liveProduct) {
+    saveProductToSupabase({
+      barcode: liveProduct.barcode,
+      name: liveProduct.name,
+      brand: liveProduct.brand,
+      category: liveProduct.category,
+      healthScore: liveProduct.healthScore,
+      novaGroup: liveProduct.novaGroup,
+      ingredientsText: liveProduct.ingredientsText,
+      additivesJson: JSON.stringify(liveProduct.additives || []),
+      allergensJson: JSON.stringify(liveProduct.allergens || []),
+      deductionsJson: JSON.stringify(liveProduct.deductions || []),
+      alternativesJson: JSON.stringify(liveProduct.alternatives || []),
+    }).catch(console.warn);
     return res.json(liveProduct);
   }
 
@@ -551,6 +627,20 @@ app.get("/api/products/:barcode", async (req: Request, res: Response) => {
       JSON.stringify(synthetic.deductions),
       JSON.stringify(synthetic.alternatives)
     );
+
+    saveProductToSupabase({
+      barcode: synthetic.barcode,
+      name: synthetic.name,
+      brand: synthetic.brand,
+      category: synthetic.category,
+      healthScore: synthetic.healthScore,
+      novaGroup: synthetic.novaGroup,
+      ingredientsText: synthetic.ingredientsText,
+      additivesJson: JSON.stringify(synthetic.additives),
+      allergensJson: JSON.stringify(synthetic.allergens),
+      deductionsJson: JSON.stringify(synthetic.deductions),
+      alternativesJson: JSON.stringify(synthetic.alternatives),
+    }).catch(console.warn);
   } catch {}
 
   res.json(synthetic);
@@ -601,8 +691,20 @@ app.post("/api/duel", async (req: Request, res: Response) => {
 });
 
 // Scan History
-app.get("/api/user/history/:userId", requireAuth, (req: Request, res: Response) => {
+app.get("/api/user/history/:userId", requireAuth, async (req: Request, res: Response) => {
   const { userId } = req.params;
+
+  // 1. Fetch live records from Supabase Cloud Database
+  try {
+    const cloudHistory = await getScanHistoryFromSupabase(userId, 50);
+    if (cloudHistory && cloudHistory.length > 0) {
+      return res.json(cloudHistory);
+    }
+  } catch (err) {
+    console.warn("[Supabase] Cloud history lookup error:", err);
+  }
+
+  // 2. Fallback to local SQLite cache
   const history = db
     .prepare("SELECT * FROM scans WHERE userId = ? ORDER BY scannedAt DESC LIMIT 50")
     .all(userId) as any[];

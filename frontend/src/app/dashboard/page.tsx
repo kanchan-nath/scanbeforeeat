@@ -368,7 +368,7 @@ export default function DashboardPage() {
                       <td className="px-6 py-4 text-zinc-500 font-mono text-[11px]">{scan.scannedAt}</td>
                       <td className="px-6 py-4 text-right">
                         <Link
-                          href={`/product/${encodeURIComponent(scan.barcode)}`}
+                          href={`/scanner?barcode=${encodeURIComponent(scan.barcode)}`}
                           className="px-3 py-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-medium rounded-md transition-colors"
                         >
                           Audit
