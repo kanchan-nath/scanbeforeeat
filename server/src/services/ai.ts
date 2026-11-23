@@ -330,15 +330,19 @@ const ALLERGEN_RULES = [
   { pattern: /\b(celery)\b/i, label: "Celery" },
 ];
 
-// Non-Food Detection
-const NON_FOOD_KEYWORDS = [
-  "keyboard", "laptop", "mouse", "monitor", "iphone", "android phone",
-  "shoe", "sneaker", "shirt", "t-shirt", "pants", "dress", "clothing",
-  "furniture", "chair", "table", "desk", "car", "bicycle", "tire",
-  "receipt", "invoice", "bank statement", "lorem ipsum", "software code",
-  "javascript", "typescript", "python", "html", "css",
-  "ignore previous", "ignore all", "disregard previous", "system prompt",
-  "prompt injection", "set score to", "dan mode", "override rules", "jailbreak"
+// Non-Food Detection Patterns (with strict whole-word boundaries)
+const NON_FOOD_PATTERNS = [
+  /\b(keyboard|laptop|mouse|monitor|iphone|android phone|smartphone)\b/i,
+  /\b(shoe|sneaker|shirt|t-shirt|pants|dress|clothing|apparel)\b/i,
+  /\b(furniture|chair|desk|automobile|vehicle|\bcar\b|bicycle|tire)\b/i,
+  /\b(receipt|invoice|bank statement|lorem ipsum|software code)\b/i,
+  /\b(javascript|typescript|python|html|css|c\+\+|golang)\b/i,
+  /\b(ignore (all )?(previous|prior) (instructions|rules|prompts))\b/i,
+  /\b(override (all )?(rules|instructions)|set score to \d+|dan mode|jailbreak)\b/i,
+];
+
+const FOOD_CONFIRMATION_PATTERNS = [
+  /\b(ingredient|ingredients|nutrition|flavor|flavour|spices|salt|sugar|oil|flour|wheat|water|protein|starch|extract|syrup|acid|milk|dairy|cocoa|powder|noodles|preservative|emulsifier|thickener)\b/i,
 ];
 
 const PROMPT_INJECTION_PATTERN = /\b(ignore\s+(all\s+)?(previous|prior)\s+(instructions|rules|prompts)|override\s+(all\s+)?(rules|instructions)|set\s+score\s+to\s+\d+|dan\s+mode|jailbreak)\b/i;
@@ -353,9 +357,11 @@ export function analyzeIngredientsHeuristic(
   const cleanText = ingredientsText.trim();
   const lower = cleanText.toLowerCase();
 
-  // Edge Case: Check for nonsensical or non-food queries
-  const isNonFood = NON_FOOD_KEYWORDS.some((kw) => lower.includes(kw));
-  if (isNonFood && !lower.includes("ingredient") && !lower.includes("food") && !lower.includes("nutrition")) {
+  // Edge Case: Check for nonsensical or non-food queries using strict word boundary patterns
+  const hasFoodMarkers = FOOD_CONFIRMATION_PATTERNS.some((p) => p.test(cleanText));
+  const isNonFood = NON_FOOD_PATTERNS.some((p) => p.test(cleanText)) && !hasFoodMarkers;
+
+  if (isNonFood) {
     return {
       barcode: `NF-${Date.now().toString().slice(-6)}`,
       name: productNameHint || "Non-Food Object Detected",
@@ -676,8 +682,7 @@ export async function analyzeFoodImageWithAI(
 
   // If nameHint flags a non-food item, reject early
   if (nameHint) {
-    const hintLower = nameHint.toLowerCase();
-    const isNonFood = NON_FOOD_KEYWORDS.some((kw) => hintLower.includes(kw));
+    const isNonFood = NON_FOOD_PATTERNS.some((p) => p.test(nameHint)) && !FOOD_CONFIRMATION_PATTERNS.some((p) => p.test(nameHint));
     if (isNonFood) {
       return analyzeIngredientsHeuristic(nameHint, nameHint);
     }

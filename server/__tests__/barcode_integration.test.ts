@@ -14,6 +14,7 @@ beforeAll(async () => {
   db.prepare("DELETE FROM users WHERE id = ?").run(TEST_USER_ID);
   db.prepare("DELETE FROM products WHERE barcode = ?").run("9991234567890");
   db.prepare("DELETE FROM products WHERE barcode = ?").run("3017620422003");
+  db.prepare("DELETE FROM products WHERE barcode = ?").run("8901058017687");
 
   // Create test user with fresh 15 scans
   db.prepare(`
@@ -32,6 +33,7 @@ afterAll(async () => {
   db.prepare("DELETE FROM users WHERE id = ?").run(TEST_USER_ID);
   db.prepare("DELETE FROM products WHERE barcode = ?").run("9991234567890");
   db.prepare("DELETE FROM products WHERE barcode = ?").run("3017620422003");
+  db.prepare("DELETE FROM products WHERE barcode = ?").run("8901058017687");
 
   await new Promise<void>((resolve) => {
     server.close(() => resolve());
@@ -262,5 +264,54 @@ describe("Barcode Scanner & OpenFoodFacts Catalog Integration", () => {
     // Quota check
     expect(body.quota.scansUsed).toBe(4);
     expect(body.quota.remainingScans).toBe(11);
+  });
+
+  it("Scan 5: User-provided Maggi Barcode (8901058017687) - live API + AI toxicology model pipeline without hardcoded mocks", async () => {
+    const barcode = "8901058017687";
+    db.prepare("DELETE FROM products WHERE barcode = ?").run(barcode);
+
+    const res = await fetch(`${BASE_URL}/scan`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: TEST_USER_ID, barcode }),
+    });
+
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    const p = body.product;
+
+    // Verify fetched real product metadata
+    expect(p.barcode).toBe(barcode);
+    expect(p.name.toLowerCase()).toContain("maggi");
+    expect(p.brand.toLowerCase()).toContain("maggi");
+    expect(p.category.toLowerCase()).toContain("noodle");
+
+    // Real dynamic toxicology scoring
+    expect(typeof p.healthScore).toBe("number");
+    expect(p.healthScore).toBeGreaterThan(0);
+    expect(p.novaGroup).toBe(4); // Maggi UPF formulation
+
+    // Additives & Allergens
+    expect(Array.isArray(p.additives)).toBe(true);
+    expect(p.additives.length).toBeGreaterThanOrEqual(5);
+    expect(Array.isArray(p.allergens)).toBe(true);
+    expect(p.allergens.some((a: string) => a.toLowerCase().includes("gluten"))).toBe(true);
+
+    // Dynamic clean-label alternatives tailored to noodles
+    expect(Array.isArray(p.alternatives)).toBe(true);
+    expect(p.alternatives.length).toBeGreaterThan(0);
+    expect(p.alternatives.some((alt: any) => alt.name.toLowerCase().includes("ramen") || alt.name.toLowerCase().includes("noodle"))).toBe(true);
+
+    // Verify saved to database
+    const prodRow = db.prepare("SELECT * FROM products WHERE barcode = ?").get(barcode) as any;
+    expect(prodRow).toBeDefined();
+    expect(prodRow.barcode).toBe(barcode);
+
+    const scanRow = db.prepare(
+      "SELECT * FROM scans WHERE userId = ? AND barcode = ? ORDER BY scannedAt DESC LIMIT 1"
+    ).get(TEST_USER_ID, barcode) as any;
+    expect(scanRow).toBeDefined();
+    expect(scanRow.barcode).toBe(barcode);
+    expect(scanRow.healthScore).toBe(p.healthScore);
   });
 });

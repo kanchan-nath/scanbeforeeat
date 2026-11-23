@@ -155,4 +155,30 @@ describe("ScannerPage Edge Cases & Interactive Modes", () => {
 
     expect(screen.getByTestId("barcode-camera-mock")).toBeDefined();
   });
+
+  it("should look up genuine user barcode 8901058017687 and render in-page result card", async () => {
+    await act(async () => {
+      render(<ScannerPage />);
+    });
+
+    // Switch to manual input
+    const manualTab = screen.getByText("Manual Input");
+    await act(async () => {
+      fireEvent.click(manualTab);
+    });
+
+    const input = screen.getByPlaceholderText("8901058852331");
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "8901058017687" } });
+    });
+
+    const lookupBtn = screen.getByText("Lookup");
+    await act(async () => {
+      fireEvent.click(lookupBtn);
+    });
+
+    // Result must render in-page with action buttons
+    expect(screen.getByText("Scan Another")).toBeDefined();
+    expect(screen.getByText("Compare in Duel")).toBeDefined();
+  });
 });
