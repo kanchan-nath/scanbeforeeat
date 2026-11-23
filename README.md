@@ -1,217 +1,215 @@
-# ScanBeforeEat — AI-Powered Food Ingredient Intelligence Platform
+# ScanBeforeEat
 
-[![Node.js CI](https://img.shields.io/badge/Node.js-v20%2B-brightgreen.svg)](https://nodejs.org)
-[![PWA Ready](https://img.shields.io/badge/PWA-Mobile--First-lime.svg)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
-[![Security Audited](https://img.shields.io/badge/Security-Argon2id%20%7C%20CSRF%20%7C%20CSP-black.svg)](docs/SECURITY.md)
-[![Backend Audit](https://img.shields.io/badge/Backend%20Audit-Complete%20%26%20Documented-emerald.svg)](BACKEND_AUDIT_README.md)
+> An open-source food ingredient toxicology and additive intelligence platform translating complex food package labels into transparent, evidence-aware nutritional health guidance.
 
-> 📋 **Comprehensive Production Backend Audit & Roadmap Available:**  
-> A full route-by-route audit of all 28 authenticated pages, 84 interactive UI elements, payment gateway integration gaps, invoice PDF generation requirements, and 6 structured production batch tasks has been generated in [BACKEND_AUDIT_README.md](file:///Users/kanchannath/Coding/scanbeforeeat/BACKEND_AUDIT_README.md).
-
-**ScanBeforeEat** is a mobile-first Progressive Web Application (PWA) that translates complex food-package ingredient labels into understandable, evidence-aware consumer health intelligence.
-
----
-
-## 🌟 Key Features
-
-1. **Mobile-Only Interface & Dedicated Desktop Blocker**:
-   - Built exclusively for mobile devices (viewport widths up to 599px).
-   - Desktop and laptop screens (≥ 600px) display an off-white and lime-green desktop blocker featuring a CSS phone illustration, QR code, and copy-link action.
-2. **Multi-Modal Ingredient Capture**:
-   - **Live Camera Scanner**: `navigator.mediaDevices` with real-time framing guide and camera switching.
-   - **Client-Side OCR**: `Tesseract.js` worker with canvas preprocessing (grayscale, contrast enhancement) and text normalization.
-   - **Barcode Identification**: `@zxing/browser` camera scanner integrated with Open Food Facts API and MySQL caching.
-   - **Manual Text Entry**: Paste or type ingredients with demo sample buttons.
-3. **Mandatory OCR Review & Correction**:
-   - Users review and correct extracted text before submitting it for AI analysis.
-4. **Constrained AI Ingredient Intelligence**:
-   - Integrated with **NVIDIA NIM** (`meta/llama-3.3-70b-instruct`) with strict Zod JSON schema validation.
-   - Deterministic development mock mode for local testing without external API dependency.
-   - Explains ingredient technological functions, potential benefits, and evidence quality.
-   - Discloses non-food uses (cosmetics, pharmaceuticals, industrial) with educational clarity.
-5. **Transparent Educational Profile Scoring (v1.0)**:
-   - Educational score from 15 to 95 based on whole-food foundations and declared sugars, sodium, and saturated fats.
-   - Returns `null` when data is insufficient, preventing false precision.
-6. **Scientific Integrity & Disease Context**:
-   - Strictly prohibits fabricated percentage gauges (e.g. *"73% chance of diabetes"*).
-   - Distinguishes observational dietary associations from direct causal claims.
-   - References authoritative public health sources (WHO, FSSAI, US FDA, EFSA).
-7. **Personal Scan History & Multi-Product Comparison**:
-   - Server-side search, filtering by scan method and verdict, and pagination.
-   - Side-by-side comparison of 2 to 3 saved products.
-8. **Security & Privacy by Design**:
-   - Multi-tenant data ownership verification at both route and database query levels.
-   - Cryptographic CSRF protection, Helmet Content Security Policy, and rate limiting.
-   - `argon2id` password hashing and persistent MySQL session store.
-   - Full GDPR-compliant data export (JSON) and one-click permanent account deletion.
+[![Node.js Version](https://img.shields.io/badge/Node.js-%3E%3D22.0.0-339933.svg?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Next.js Version](https://img.shields.io/badge/Next.js-16.4.6-000000.svg?logo=next.js&logoColor=white)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![License: MIT Permissive](https://img.shields.io/badge/License-MIT_Permissive-blue.svg)](LICENSE)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-green.svg)](SECURITY.md)
 
 ---
 
-## 🏗️ Technology Stack
+## 🥗 Overview
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | Vanilla JavaScript (ES Modules), HTML5, CSS3 Custom Properties, Progressive Web App |
-| **Scanning & OCR** | `Tesseract.js` (Client-side), `@zxing/browser` (Barcode reader), HTML5 Canvas |
-| **Backend** | Node.js (v24), Express.js (ES modules) |
-| **Database** | MySQL 8.0+ (`mysql2/promise`), Native MySQL Session Store |
-| **Security** | `argon2`, `helmet` (CSP), `express-rate-limit`, `cookie-parser`, CSRF Middleware |
-| **Validation** | `zod` for request and AI response validation |
-| **AI Provider** | NVIDIA NIM LLM API (`https://integrate.api.nvidia.com/v1`) |
-| **Catalogue API** | Open Food Facts API (with compliant User-Agent attribution) |
+**ScanBeforeEat** bridges the gap between opaque food industry ingredient lists and everyday consumers. By combining mobile-first camera scanning, optical character recognition (OCR), Open Food Facts catalog integration, and evidence-grounded toxicology indexing, ScanBeforeEat surfaces critical facts regarding food additives, ultra-processed ingredients (UPFs), preservative synergy risks, and declared nutritional metrics.
 
 ---
 
-## 🚀 Quick Start Guide
+## ⚡ Core Capabilities
+
+- **Multi-Modal Ingredient Capture**:
+  - **Barcode Scanning**: Instant lookup against the Open Food Facts global database via HTML5 QR/Barcode reader.
+  - **In-Browser OCR**: High-performance camera framing with client-side text extraction powered by `Tesseract.js` workers and HTML5 canvas normalization.
+  - **Manual Label Input**: Direct input for uncataloged artisanal or regional food packaging.
+- **Toxicology & Additive Analytics**:
+  - Automated classification of E-numbers, preservatives, colorants, emulsifiers, and synthetic sweeteners.
+  - Chemical synergy hazard detection highlighting potentially adverse additive combinations.
+  - Objective classification along NOVA ultra-processed food scales.
+- **Evidence-Based Health Grounding**:
+  - Health insights citing peer-reviewed literature and published standards from public health institutions (WHO, EFSA, US FDA, FSSAI).
+  - Explicit distinction between observational lifestyle correlations and direct scientific causality.
+- **User Exposure & Pantry History**:
+  - Additive exposure ledger tracking cumulative consumption across meals and days.
+  - Safe pantry indexing and intelligent, healthier alternative recommendations.
+- **Developer API & Accounting Utilities**:
+  - Robust REST API endpoints for external integrations.
+  - Dynamic PDF invoice and scan summary generation powered by PDFKit.
+
+---
+
+## 🛠️ Technology Stack
+
+ScanBeforeEat is built as a high-performance monorepo composed of a modern web application, an API server, and automated data pipelines:
+
+| Layer | Technologies & Libraries | Purpose & Function |
+|:---|:---|:---|
+| **Frontend Framework** | **Next.js 16 (App Router)** & **React 19** | Server-side rendering, static route generation, and interactive mobile-first layout |
+| **Styling & Icons** | **Tailwind CSS v4** & **Lucide React** | Modern, responsive component styling and iconography |
+| **Testing & Build Tools** | **Vite / Vitest**, **Testing Library**, **ESLint** | Ultra-fast unit testing across client components and backend services |
+| **Client-Side Scanner** | **Tesseract.js**, **html5-qrcode** | Zero-latency, browser-native barcode decoding and OCR text extraction |
+| **Authentication** | **Firebase Auth** (Client) & **JWT** (Server) | Multi-provider authentication (Google, GitHub, Twitter/X, Email OTP) and stateless session validation |
+| **API Server** | **Node.js (v22+)** & **Express 4 (TypeScript)** | Business logic, toxicology computation, PDF creation, and webhook handlers |
+| **Relational Database** | **PostgreSQL** & **SQLite (`node:sqlite`)** | Production cloud persistence via Supabase with zero-config embedded SQLite for local development |
+| **Data Modeling** | **Prisma ORM** (Architecture Roadmap) | Type-safe schema definition and database migration workflow |
+| **Document Archiving** | **Mongoose / MongoDB** (Architecture Roadmap) | Semi-structured ingredient catalog caching and historical batch scan archives |
+| **Asynchronous Queues** | **Redis / BullMQ** (Architecture Roadmap) | Scalable background worker queues for asynchronous high-volume batch image OCR |
+| **Real-Time Push** | **Socket.io** (Architecture Roadmap) | Live WebSocket event streaming for real-time batch processing updates |
+| **Vector Search** | **Pinecone** (Architecture Roadmap) | High-dimensional vector index for semantic similarity retrieval over toxicology studies |
+
+---
+
+## 📂 Repository Folder Structure
+
+```
+scanbeforeeat/
+├── frontend/                     # Next.js 16 App Router web application
+│   ├── src/
+│   │   ├── app/                  # Application routes, layouts, and pages
+│   │   ├── components/           # Reusable UI components and scanner widgets
+│   │   ├── content/              # Editorial articles and educational blog guides
+│   │   └── lib/                  # Client utilities, API clients, and scoring engines
+│   ├── public/                   # Static media, icons, and sitemap definitions
+│   └── package.json              # Frontend workspace dependencies
+├── server/                       # Node.js TypeScript Express API server
+│   ├── src/
+│   │   ├── services/             # AI, toxicology, PDF, payment, and email engines
+│   │   ├── middleware/           # JWT authentication and security middleware
+│   │   ├── db.ts                 # SQLite / PostgreSQL connection layer
+│   │   └── index.ts              # API server entrypoint and route declarations
+│   ├── scripts/                  # Database migration and synchronization tools
+│   ├── __tests__/                # Vitest backend integration test suites
+│   └── package.json              # Server workspace dependencies
+├── docs/                         # In-depth architectural and operational guides
+│   ├── ARCHITECTURE.md           # System design diagrams and component flow
+│   ├── DATABASE.md               # Schema definitions and data models
+│   ├── SECURITY.md               # Security architecture and threat boundaries
+│   ├── DEPLOYMENT.md             # Production hosting and cloud procedures
+│   └── BACKEND_AUDIT.md          # Comprehensive backend route audit and roadmap
+├── scripts/                      # Autonomous pipelines and operations
+│   └── seo-pipeline/             # Evidence-backed nutritional content generator
+├── .env.example                  # Full environment variable configuration template
+├── .gitignore                    # Production version control exclusions
+├── package.json                  # Top-level npm monorepo workspace definition
+├── render.yaml                   # Infrastructure-as-code deployment blueprint
+├── CONTRIBUTING.md               # Contributor workflow and testing rules
+├── CODE_OF_CONDUCT.md           # Community guidelines and collaboration standards
+├── SECURITY.md                   # Security vulnerability reporting policy
+└── LICENSE                       # Open-source permissive license
+```
+
+---
+
+## 🚀 Getting Started
 
 ### 1. Prerequisites
-- **Node.js**: v20 or newer (`node -v`)
-- **MySQL**: 8.0+ or compatible running locally or via Docker (`mysql --version`)
+- **Node.js**: `v22.0.0` or later ([nodejs.org](https://nodejs.org))
+- **npm**: `v10.0.0` or later
+- **Python**: `3.10+` (optional, for `scripts/seo-pipeline`)
 
 ### 2. Installation
+Clone the repository and install dependencies across the monorepo:
+
 ```bash
 git clone https://github.com/kanchan-nath/scanbeforeeat.git
 cd scanbeforeeat
 npm install
 ```
 
-### 3. Database Setup
-Log into MySQL and create the database:
-```sql
-CREATE DATABASE IF NOT EXISTS scanbeforeeat CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER IF NOT EXISTS 'scanbeforeeat_app'@'localhost' IDENTIFIED BY 'scanbeforeeat_dev_2026';
-GRANT ALL PRIVILEGES ON scanbeforeeat.* TO 'scanbeforeeat_app'@'localhost';
-FLUSH PRIVILEGES;
-```
+### 3. Environment Configuration
+Create a `.env` configuration file from the template:
 
-### 4. Environment Configuration
-Copy the example environment file:
 ```bash
 cp .env.example .env
 ```
 
-Verify your `.env` settings:
-```dotenv
-NODE_ENV=development
-PORT=3000
-APP_BASE_URL=http://localhost:3000
+Review and adjust variables in `.env` as required for your local setup. See [Environment Variables](#-environment-variables) below.
 
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_NAME=scanbeforeeat
-DB_USER=scanbeforeeat_app
-DB_PASSWORD=scanbeforeeat_dev_2026
-DB_SOCKET_PATH=/tmp/mysql_brew.sock # or leave empty if using TCP
-DB_SSL=false
+### 4. Running the Development Servers
+You can start the frontend, backend, or both simultaneously:
 
-SESSION_SECRET=dev_scanbeforeeat_secret_session_key_32_chars_long_minimum_value
-
-# NVIDIA NIM API (Leave empty for deterministic mock mode)
-NVIDIA_API_KEY=
-NVIDIA_API_BASE_URL=https://integrate.api.nvidia.com/v1
-NVIDIA_MODEL=meta/llama-3.3-70b-instruct
-
-AI_MOCK_MODE=true
-```
-
-### 5. Run Database Migrations & Demonstration Seed
 ```bash
-# Run relational table migrations
-npm run db:migrate
+# Start the Next.js frontend development server (http://localhost:3000)
+npm run dev:frontend
 
-# Seed realistic demo products and initial scans
-npm run db:seed
-```
+# Start the Express API server with automatic hot reloading (http://localhost:4000)
+npm run dev:server
 
-### 6. Start the Server
-```bash
-# Production mode
-npm start
-
-# Or Development mode with live watcher
+# Run the complete stack concurrently from root
 npm run dev
 ```
 
-Visit the application at [http://localhost:3000](http://localhost:3000).
+---
+
+## 🔐 Environment Variables
+
+All configuration settings are documented in [.env.example](file:///.env.example). Never commit production secrets or live credentials to source control.
+
+Key configuration groupings include:
+- **Frontend Configuration**:
+  - `NEXT_PUBLIC_SITE_URL`: Canonical site origin (e.g. `http://localhost:3000`).
+  - `NEXT_PUBLIC_API_URL`: Backend API URL (e.g. `http://localhost:4000/api`).
+  - `NEXT_PUBLIC_FIREBASE_*`: Public credentials for Firebase Authentication.
+- **Backend Server Settings**:
+  - `PORT`: HTTP port for Express (default: `4000`).
+  - `NODE_ENV`: Runtime environment (`development`, `production`, `test`).
+  - `JWT_SECRET`: Secret key for cryptographic session tokens.
+- **Persistence & Cloud Sync**:
+  - `DATABASE_PATH`: Local SQLite path (defaults to `./data/scanbeforeeat.sqlite`).
+  - `DATABASE_URL`: Optional PostgreSQL connection URI for Supabase or Render Postgres.
+- **Third-Party Services**:
+  - `NVIDIA_API_KEY`: NVIDIA NIM inference key for deep ingredient synthesis.
+  - `RAZORPAY_KEY_ID` & `RAZORPAY_KEY_SECRET`: Razorpay billing gateway credentials.
+  - `SMTP_*`: Mail server connection credentials for email OTP authentication.
 
 ---
 
-## 🧪 Running Automated Tests
+## 🧪 Testing & Verification
 
-Run the full automated test suite (Unit, Integration, and Security tests):
+ScanBeforeEat enforces strict verification gates. Always run the automated test suites before committing changes:
+
 ```bash
+# Run all server tests (53+ test cases)
+npm --prefix server test
+
+# Run all frontend tests (74+ test cases)
+npm --prefix frontend test
+
+# Run all test suites across the monorepo
 npm test
+
+# Verify production builds
+npm --prefix server run build
+npm --prefix frontend run build
 ```
 
-Test coverage includes:
-- ✅ Barcode format and length validation
-- ✅ Educational scoring algorithm (modifiers, fiber bonus, sugar penalties, clamping)
-- ✅ Zod AI report schema validation & mock generation
-- ✅ 401 unauthenticated endpoint protection
-- ✅ Cryptographic CSRF token enforcement (403 on missing token)
-- ✅ User registration & session generation
-- ✅ Multi-tenant scan ownership isolation (User B cannot read or delete User A's data)
-- ✅ Full AI analysis and transactional report generation
+---
+
+## 🚢 Deployment
+
+The repository includes a production-ready [render.yaml](file:///render.yaml) configuration specifying:
+1. **Frontend Web Service**: Static Next.js distribution with edge rewriting.
+2. **API Server**: Node.js web service running the compiled Express TypeScript backend with health-check monitoring at `/api/health`.
+
+For custom infrastructure deployments (Docker, AWS, Vercel), consult [docs/DEPLOYMENT.md](file:///docs/DEPLOYMENT.md).
 
 ---
 
-## 📱 Testing on Physical Mobile Devices (Over HTTPS)
+## 🤝 Contributing
 
-The Browser Camera API (`navigator.mediaDevices.getUserMedia`) requires a **secure HTTPS context** to operate on remote mobile devices.
-
-To test camera scanning and barcode detection on your smartphone:
-
-1. **Start the local server**:
-   ```bash
-   npm start
-   ```
-2. **Create an HTTPS tunnel using ngrok**:
-   ```bash
-   ngrok http 3000
-   ```
-3. Open the generated `https://xxxx.ngrok-free.app` URL on your smartphone's browser (Safari on iOS or Chrome on Android).
-4. Tap **"Scan ingredients"** -> **"Camera Label Scanner"** and grant camera permission when prompted.
+We welcome community contributions! Please review:
+- [CONTRIBUTING.md](file:///CONTRIBUTING.md) for branch naming conventions, workflow policies, and our mandatory testing checklist.
+- [CODE_OF_CONDUCT.md](file:///CODE_OF_CONDUCT.md) for community behavior expectations.
 
 ---
 
-## 📚 Technical Documentation
+## 🛡️ Security
 
-- [System Architecture](docs/ARCHITECTURE.md)
-- [Database Schema & ER Diagram](docs/DATABASE.md)
-- [Security & Abuse Prevention](docs/SECURITY.md)
-- [AI Intelligence & Evidence Standards](docs/AI_AND_EVIDENCE.md)
-- [Production Deployment Guide](docs/DEPLOYMENT.md)
+To report security vulnerabilities or privacy concerns, please read [SECURITY.md](file:///SECURITY.md) for our private disclosure process.
 
 ---
 
-## ⚖️ Scientific & Medical Disclaimer
+## 📄 License
 
-ScanBeforeEat provides educational ingredient context synthesized from food regulations and scientific literature. It does **not** provide clinical diagnosis, individual medical recommendations, or emergency assistance for acute allergic reactions. Consumers should always consult qualified healthcare professionals for personal dietary and medical decisions.
-
-
-<!-- AUTHOR_START -->
----
-
-## 👨‍💻 Author & Maintainer
-
-### **Kanchan Nath**
-Full-Stack Engineer & AI Builder | Founder @ [StudeQ](https://studeq.onrender.com) | Creator @ [The Rover Kanchan](https://www.youtube.com/channel/UCAwncfqYOJwAY8yAnF5_hMQ)
-
-> Hey, I'm Kanchan. I run [The Rover Kanchan](https://www.youtube.com/channel/UCAwncfqYOJwAY8yAnF5_hMQ), where I talk about AI and tech in English — the kind of stuff I wish someone had explained to me when I started: how LLMs actually work under the hood, practical dev tutorials, and the real (often messy) lessons from building things in production.
-> 
-> By day, I'm a full stack engineer, and I'm the solo founder behind [StudeQ](https://studeq.onrender.com), an AI-powered study platform with notes, quizzes, flashcards, and PDF chat that I built from scratch, start to finish. I'm doing all this while still in college, pursuing my B.Tech in Biotechnology at NIT Durgapur. I also spend some time training and evaluating AI models part time at Outlier AI.
-> 
-> For business stuff, reach me at [kanchannath.webdev@gmail.com](mailto:kanchannath.webdev@gmail.com).
-
-### 🌐 Connect With Me
-
-[![YouTube](https://img.shields.io/badge/YouTube-The_Rover_Kanchan-FF0000?style=flat&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCAwncfqYOJwAY8yAnF5_hMQ)
-[![Portfolio](https://img.shields.io/badge/Portfolio-kanchan--nath.github.io-blue?style=flat&logo=Google-Chrome&logoColor=white)](https://kanchan-nath.github.io/)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-kanchan--nath-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/kanchan-nath/)
-[![GitHub](https://img.shields.io/badge/GitHub-kanchan--nath-181717?style=flat&logo=github)](https://github.com/kanchan-nath)
-[![X (Twitter)](https://img.shields.io/badge/X-@KanchanNathDev-black?style=flat&logo=x)](https://x.com/KanchanNathDev)
-[![Instagram](https://img.shields.io/badge/Instagram-@hey.kanchan05-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/hey.kanchan05/)
-[![Blog](https://img.shields.io/badge/Hashnode-kanchannath-2962FF?style=flat&logo=hashnode)](https://kanchannath.hashnode.dev/)
-[![LeetCode](https://img.shields.io/badge/LeetCode-kanchan--nath-FFA116?style=flat&logo=leetcode)](https://leetcode.com/u/kanchan-nath/)
-
-<!-- AUTHOR_END -->
+This project is licensed under the permissive terms of the [LICENSE](file:///LICENSE).

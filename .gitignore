@@ -14,7 +14,7 @@ credentials/
 service_account.json
 google-indexing-key.json
 
-# Database files
+# Database & SQLite Storage
 *.sqlite
 *.sqlite3
 *.db
@@ -28,26 +28,50 @@ npm-debug.log*
 yarn-debug.log*
 scripts/seo-pipeline/*.json
 !scripts/seo-pipeline/quality_rules.json
-__pycache__/
-*.pyc
 
-# OS Files
+# Python Cache & SEO Pipeline Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS Files & System Metadata
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Test coverage & artifacts
+# IDE & Editor Settings
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# Test Coverage & Framework Artifacts
 coverage/
 .nyc_output/
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json
 
-# Build and cache
+# Build Outputs & Framework Caches
 .cache/
 dist/
 build/
 server/dist/
 frontend/.next/
 frontend/out/
-testsprite_tests/tmp/
-testsprite_tests/tmp/config.json
+*.tsbuildinfo
+.turbo/
+.vercel/
 
-# Tooling dumps
+# Tooling & Repository Exports
 repomix-output.xml
