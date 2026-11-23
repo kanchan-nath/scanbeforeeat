@@ -44,11 +44,11 @@ export default function BlogIndexPage() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 mb-4">
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 <span className="font-label text-xs font-semibold text-emerald-800 uppercase tracking-wider">
-                  Scientific Research & Investigations v2.4
+                  Scientific Research & Investigations
                 </span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-extrabold text-zinc-950 tracking-tight font-headline mb-4">
-                ScanBeforeEat Scientific Blog
+                ScanBeforeEat Blog
               </h1>
               <p className="text-base sm:text-lg text-zinc-600 leading-relaxed">
                 Peer-reviewed toxicology breakdowns, food additive exposés, and rigorous nutritional science to help you cut through industrial marketing.

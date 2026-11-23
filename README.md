@@ -167,13 +167,18 @@ Key configuration groupings include:
 
 ## 🧪 Testing & Verification
 
-ScanBeforeEat enforces strict verification gates. Always run the automated test suites before committing changes:
+ScanBeforeEat enforces strict verification gates. Run the all-in-one verification command from the project root:
 
 ```bash
-# Run all server tests (53+ test cases)
+# Run all server tests, frontend tests, and production builds in one shot
+npm run check
+# or: npm run verify / ./verify.sh
+
+# Individual commands if needed:
+# Run all server tests
 npm --prefix server test
 
-# Run all frontend tests (74+ test cases)
+# Run all frontend tests
 npm --prefix frontend test
 
 # Run all test suites across the monorepo

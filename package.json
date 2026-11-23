@@ -18,6 +18,8 @@
     "server"
   ],
   "scripts": {
+    "check": "bash verify.sh",
+    "verify": "bash verify.sh",
     "dev": "npm --prefix frontend run dev",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:server": "npm --prefix server run dev",
