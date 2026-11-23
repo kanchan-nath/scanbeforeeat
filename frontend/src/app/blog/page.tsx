@@ -16,7 +16,7 @@ export const metadata: Metadata = {
       "Investigative research on ultra-processed foods, hazardous additives, and food toxicology.",
   },
   alternates: {
-    canonical: "/blog",
+    canonical: "/blog/",
   },
 };
 
