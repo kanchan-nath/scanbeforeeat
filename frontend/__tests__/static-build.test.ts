@@ -111,4 +111,29 @@ describe("Static Export Build Validation", () => {
       expect(content.length).toBeGreaterThan(1000);
     }
   });
+
+  it("verifies out/blog/index.html is distinct from out/index.html so reloads do not return homepage", () => {
+    const blogIndexHtml = path.join(outDir, "blog", "index.html");
+    const homeIndexHtml = path.join(outDir, "index.html");
+
+    expect(fs.existsSync(blogIndexHtml)).toBe(true);
+    expect(fs.existsSync(homeIndexHtml)).toBe(true);
+
+    const blogContent = fs.readFileSync(blogIndexHtml, "utf-8");
+    const homeContent = fs.readFileSync(homeIndexHtml, "utf-8");
+
+    // Blog index must contain blog-specific content and not be identical to homepage
+    expect(blogContent).toContain("ScanBeforeEat Blog");
+    expect(blogContent).toContain("Scientific Research &amp; Investigations");
+    expect(blogContent).not.toEqual(homeContent);
+  });
+
+  it("ensures render.yaml does not contain SPA catch-all rewrite rules that hijack static routes", () => {
+    const renderYamlPath = path.resolve(__dirname, "../../render.yaml");
+    if (fs.existsSync(renderYamlPath)) {
+      const renderContent = fs.readFileSync(renderYamlPath, "utf-8");
+      // Must not rewrite /* to /index.html as it breaks reloading on static subpages like /blog
+      expect(renderContent).not.toMatch(/destination:\s*\/index\.html/);
+    }
+  });
 });

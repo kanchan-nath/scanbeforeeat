@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
   ...(isProd ? { output: "export" } : {}),
   images: { unoptimized: true },
   trailingSlash: true,
-  skipTrailingSlashRedirect: true,
   turbopack: {
     root: path.resolve(__dirname),
   },
