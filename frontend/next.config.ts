@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
   ...(isProd ? { output: "export" } : {}),
   images: { unoptimized: true },
   trailingSlash: true,
-  turbopack: {
-    root: path.resolve(__dirname),
-  },
   ...(!isProd
     ? {
         async rewrites() {
