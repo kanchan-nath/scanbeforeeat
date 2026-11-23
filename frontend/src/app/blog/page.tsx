@@ -5,11 +5,12 @@ import { Footer } from "@/components/layout/Footer";
 import { getAllBlogPosts, getFeaturedPost } from "@/content/blog";
 import { BreadcrumbSchema } from "@/components/seo/JsonLd";
 import { Icon } from "@/components/ui/Icon";
+import { BlogExplorer } from "@/components/blog/BlogExplorer";
 
 export const metadata: Metadata = {
-  title: "Food Science, Additives & Nutrition Research Blog",
+  title: "Food Science, Additives & Nutrition Research Blog | ScanBeforeEat",
   description:
-    "Investigative research on ultra-processed foods, hazardous food additives, E-numbers, and evidence-based nutrition science from the ScanBeforeEat scientific team.",
+    "Peer-reviewed toxicological breakdowns, hazardous food additives, E-numbers, and evidence-based nutrition science from the ScanBeforeEat scientific team.",
   openGraph: {
     title: "Food Science, Additives & Nutrition Research Blog | ScanBeforeEat",
     description:
@@ -23,15 +24,6 @@ export const metadata: Metadata = {
 export default function BlogIndexPage() {
   const posts = getAllBlogPosts();
   const featured = getFeaturedPost();
-  const remainingPosts = posts.filter((p) => p.slug !== featured.slug);
-
-  const categories = [
-    "All Articles",
-    "Ultra-Processed Foods",
-    "Food Additives",
-    "Toxicology",
-    "Scientific Research",
-  ];
 
   return (
     <>
@@ -50,33 +42,17 @@ export default function BlogIndexPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 mb-4">
-                <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 <span className="font-label text-xs font-semibold text-emerald-800 uppercase tracking-wider">
-                  Scientific Research & Investigations
+                  Scientific Research & Investigations v2.4
                 </span>
               </div>
               <h1 className="text-3xl sm:text-5xl font-extrabold text-zinc-950 tracking-tight font-headline mb-4">
-                ScanBeforeEat Blog
+                ScanBeforeEat Scientific Blog
               </h1>
               <p className="text-base sm:text-lg text-zinc-600 leading-relaxed">
                 Peer-reviewed toxicology breakdowns, food additive exposés, and rigorous nutritional science to help you cut through industrial marketing.
               </p>
-            </div>
-
-            {/* Category Filter Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto pt-8 pb-2 scrollbar-none">
-              {categories.map((cat, idx) => (
-                <span
-                  key={cat}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                    idx === 0
-                      ? "bg-emerald-600 text-white shadow-xs"
-                      : "bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-                  }`}
-                >
-                  {cat}
-                </span>
-              ))}
             </div>
           </div>
         </section>
@@ -84,13 +60,13 @@ export default function BlogIndexPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-10">
           {/* Featured Post Card */}
           {featured && (
-            <div className="mb-14">
+            <div className="mb-12">
               <div className="text-xs font-label uppercase tracking-wider text-zinc-400 font-semibold mb-3">
-                Featured Investigation
+                Featured Clinical Investigation
               </div>
               <Link
                 href={`/blog/${featured.slug}`}
-                className="group block bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-200"
+                className="group block bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-300 transition-all duration-200"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
                   <div className="lg:col-span-7 p-6 sm:p-10 flex flex-col justify-between">
@@ -160,54 +136,11 @@ export default function BlogIndexPage() {
             </div>
           )}
 
-          {/* Recent Articles Grid */}
-          <div className="mb-16">
-            <h3 className="text-xl font-bold text-zinc-950 font-headline mb-6">
-              Recent Articles & Field Guides
-            </h3>
+          {/* Interactive Semantic Search, Skin Templates, and Filter Deck */}
+          <BlogExplorer initialPosts={posts} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {remainingPosts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="group bg-white rounded-2xl border border-zinc-200 p-6 flex flex-col justify-between hover:border-zinc-300 hover:shadow-md transition-all duration-200"
-                >
-                  <div>
-                    <div className="flex items-center gap-2.5 mb-3 text-xs">
-                      <span className="px-2.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 font-semibold text-[11px]">
-                        {post.category}
-                      </span>
-                      <span className="text-zinc-400">{post.readTime}</span>
-                      <span className="text-zinc-300">•</span>
-                      <span className="text-zinc-400">{post.publishedDate}</span>
-                    </div>
-
-                    <h4 className="text-lg font-bold text-zinc-950 group-hover:text-emerald-700 transition-colors font-headline mb-3 leading-snug">
-                      {post.title}
-                    </h4>
-
-                    <p className="text-zinc-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-6">
-                      {post.excerpt}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-zinc-100 pt-4 mt-auto">
-                    <span className="text-xs font-semibold text-zinc-700">
-                      {post.author.name}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 group-hover:translate-x-0.5 transition-transform">
-                      <span>Read</span>
-                      <Icon name="arrow_forward" className="text-sm" />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Newsletter Box */}
-          <div className="bg-gradient-to-b from-white via-emerald-50/40 to-emerald-50/70 rounded-2xl p-8 sm:p-12 text-zinc-900 text-center border border-emerald-200/80 shadow-sm">
+          {/* Weekly Newsletter Box */}
+          <div className="mt-16 bg-gradient-to-b from-white via-emerald-50/40 to-emerald-50/70 rounded-2xl p-8 sm:p-12 text-zinc-900 text-center border border-emerald-200/80 shadow-sm">
             <div className="max-w-xl mx-auto">
               <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-label text-xs uppercase tracking-wider font-semibold">
                 Weekly Food Science Dossier
@@ -226,7 +159,7 @@ export default function BlogIndexPage() {
                 />
                 <button
                   type="button"
-                  className="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition-all active:scale-[0.98] shadow-xs"
+                  className="px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition-all active:scale-[0.98] shadow-xs cursor-pointer"
                 >
                   Subscribe
                 </button>
