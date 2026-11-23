@@ -1,0 +1,52 @@
+{
+  "name": "scanbeforeeat-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ScanBeforeEat — Food Ingredient Toxicology & Additive Intelligence Platform",
+  "author": "Kanchan Nath <kanchannath.webdev@gmail.com> (https://github.com/kanchan-nath)",
+  "license": "MIT",
+  "homepage": "https://scanbeforeeat.onrender.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kanchan-nath/scanbeforeeat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kanchan-nath/scanbeforeeat/issues"
+  },
+  "workspaces": [
+    "frontend",
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm --prefix server run build && npm --prefix frontend run build",
+    "build:server": "npm --prefix server run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "test": "npm --prefix server test && npm --prefix frontend test",
+    "test:server": "npm --prefix server test",
+    "test:frontend": "npm --prefix frontend test",
+    "lint": "npm --prefix frontend run lint",
+    "db:status": "npm --prefix server run db:status",
+    "db:push": "npm --prefix server run db:push",
+    "db:pull": "npm --prefix server run db:pull"
+  },
+  "keywords": [
+    "nutrition",
+    "food-safety",
+    "ingredient-analysis",
+    "toxicology",
+    "open-food-facts",
+    "pwa",
+    "nextjs",
+    "react",
+    "typescript",
+    "tailwind-css",
+    "open-source"
+  ],
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  }
+}
