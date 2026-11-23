@@ -511,16 +511,40 @@ function generateCleanAlternatives(text: string, currentNova: number): CleanProd
       { name: "Lotus Foods Organic Millet & Brown Rice Noodles", score: 92, nova: 1, note: "Single whole grain ingredient" },
     ];
   }
-  if (lower.includes("chip") || lower.includes("dorito")) {
+  if (lower.includes("chip") || lower.includes("dorito") || lower.includes("tortilla")) {
     return [
       { name: "LesserEvil Organic Himalayan Gold Popcorn", score: 88, nova: 1, note: "Organic coconut oil & sea salt only" },
       { name: "Siete Sea Salt Grain-Free Tortilla Chips", score: 84, nova: 2, note: "Cooked in avocado oil, zero artificial dyes" },
     ];
   }
-  if (lower.includes("milk") || lower.includes("drink")) {
+  if (lower.includes("milk") || lower.includes("drink") || lower.includes("beverage")) {
     return [
       { name: "MALK Pure Organic Almond Milk", score: 94, nova: 1, note: "3 ingredients: Filtered water, organic almonds, sea salt" },
       { name: "Oatly Organic Whole Oat Milk", score: 86, nova: 2, note: "Certified organic, zero dipotassium phosphate" },
+    ];
+  }
+  if (lower.includes("nutella") || lower.includes("chocolate") || lower.includes("spread") || lower.includes("cacao") || lower.includes("hazelnut")) {
+    return [
+      { name: "Artisana Organics Raw Hazelnut Cacao Spread", score: 91, nova: 1, note: "Raw organic hazelnuts & coconut sugar, zero palm oil" },
+      { name: "Rigoni di Asiago Nocciolata Organic Spread", score: 85, nova: 2, note: "Fair trade cocoa, organic sunflower oil, zero trans fats" },
+    ];
+  }
+  if (lower.includes("cookie") || lower.includes("biscuit") || lower.includes("snack")) {
+    return [
+      { name: "Simple Mills Crunchy Chocolate Chip Cookies", score: 86, nova: 2, note: "Nut & seed flour blend, organic coconut oil, zero high fructose corn syrup" },
+      { name: "Hu Kitchen Grain-Free Snickerdoodle Cookies", score: 89, nova: 1, note: "Zero refined sugars, zero cane sugar, certified clean label" },
+    ];
+  }
+  if (lower.includes("soda") || lower.includes("cola") || lower.includes("carbonated")) {
+    return [
+      { name: "OLIPOP Vintage Cola Prebiotic Botanical Soda", score: 85, nova: 2, note: "Plant fiber, prebiotic botanicals, only 2g natural sugar" },
+      { name: "Sound Organic Sparkling Tea", score: 93, nova: 1, note: "Unsweetened organic tea extract, zero artificial sweeteners" },
+    ];
+  }
+  if (lower.includes("sauce") || lower.includes("ketchup") || lower.includes("condiment")) {
+    return [
+      { name: "Primal Kitchen Organic Unsweetened Ketchup", score: 90, nova: 1, note: "Organic tomato concentrate, balsamic vinegar, zero added sugar" },
+      { name: "Chosen Foods Avocado Oil Classic Mayo", score: 86, nova: 2, note: "100% pure avocado oil, cage-free eggs, zero canola/soy oil" },
     ];
   }
 

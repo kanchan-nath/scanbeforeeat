@@ -12,6 +12,7 @@ import {
   analyzeIngredientsTextWithAI,
   analyzeFoodImageWithAI,
   getAiServiceStatus,
+  analyzeIngredientsHeuristic,
 } from "./services/ai.js";
 import {
   generateJwtToken,
@@ -527,8 +528,31 @@ app.get("/api/products/:barcode", async (req: Request, res: Response) => {
     return res.json(liveProduct);
   }
 
-  // Synthetic fallback
-  const synthetic = synthesizeScanResult(barcode, "Packaged Grocery Ingredient Matrix");
+  // Synthetic fallback via AI analysis
+  const synthetic = synthesizeScanResult(barcode, `Packaged Grocery Item ${barcode}`);
+
+  // Persist into database so it is cached for future requests
+  try {
+    db.prepare(`
+      INSERT OR REPLACE INTO products (
+        barcode, name, brand, category, healthScore, novaGroup,
+        ingredientsText, additivesJson, allergensJson, deductionsJson, alternativesJson
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      synthetic.barcode,
+      synthetic.name,
+      synthetic.brand,
+      synthetic.category,
+      synthetic.healthScore,
+      synthetic.novaGroup,
+      synthetic.ingredientsText,
+      JSON.stringify(synthetic.additives),
+      JSON.stringify(synthetic.allergens),
+      JSON.stringify(synthetic.deductions),
+      JSON.stringify(synthetic.alternatives)
+    );
+  } catch {}
+
   res.json(synthetic);
 });
 
@@ -1308,75 +1332,10 @@ app.delete("/api/user/account/:userId", (req: Request, res: Response) => {
 // Helper: Heuristic Synthesis Fallback
 // -------------------------------------------------------------
 function synthesizeScanResult(barcode: string, text: string) {
-  const lower = text.toLowerCase();
-  const additives: any[] = [];
-  const deductions: any[] = [{ title: "Base Scientific Baseline", points: 100, reason: "Initial unpenalized score" }];
-  const allergens: string[] = [];
-
-  let healthScore = 88;
-  let novaGroup = 2;
-
-  if (lower.includes("tartrazine") || lower.includes("e102") || lower.includes("yellow 5")) {
-    additives.push({
-      name: "Tartrazine (E102 / Yellow 5)",
-      functionDesc: "Synthetic Colorant",
-      riskLevel: "high",
-      clinicalEvidence: "EFSA Mandatory Warning: May impair child activity",
-    });
-    deductions.push({ title: "Synthetic Azo Colorant", points: -20, reason: "Flagged pediatric hyperactivity warning" });
-    healthScore -= 20;
-    novaGroup = 4;
-  }
-
-  if (lower.includes("msg") || lower.includes("monosodium") || lower.includes("e621")) {
-    additives.push({
-      name: "Monosodium Glutamate (E621)",
-      functionDesc: "Flavor Enhancer",
-      riskLevel: "moderate",
-      clinicalEvidence: "124 peer-reviewed excitotoxin & headache studies",
-    });
-    deductions.push({ title: "Excitotoxin Flavor Enhancer", points: -16, reason: "MSG industrial synthesis" });
-    healthScore -= 16;
-    novaGroup = 4;
-  }
-
-  if (lower.includes("palm oil") || lower.includes("hydrogenated")) {
-    additives.push({
-      name: "Refined Palm Oil",
-      functionDesc: "Processed Fat Matrix",
-      riskLevel: "moderate",
-      clinicalEvidence: "High saturated palmitic fatty acid profile (49%)",
-    });
-    deductions.push({ title: "High Saturated Fat Matrix", points: -14, reason: "Refined frying fat" });
-    healthScore -= 14;
-    novaGroup = Math.max(novaGroup, 3);
-  }
-
-  if (lower.includes("sugar") || lower.includes("corn syrup") || lower.includes("sucrose")) {
-    deductions.push({ title: "Added Refined Sugars", points: -12, reason: "Elevated glycemic index load" });
-    healthScore -= 12;
-  }
-
-  if (lower.includes("milk") || lower.includes("dairy") || lower.includes("whey")) allergens.push("Dairy (Lactose)");
-  if (lower.includes("wheat") || lower.includes("gluten") || lower.includes("maida")) allergens.push("Gluten (Wheat)");
-  if (lower.includes("soy") || lower.includes("soya")) allergens.push("Soy");
-  if (lower.includes("nut") || lower.includes("peanut")) allergens.push("Nuts");
-
+  const result = analyzeIngredientsHeuristic(text, `Product ${barcode}`);
   return {
+    ...result,
     barcode,
-    name: "Analyzed Packaged Item",
-    brand: "Detected Brand",
-    category: "Packaged Food",
-    healthScore: Math.max(12, Math.min(100, healthScore)),
-    novaGroup,
-    ingredientsText: text,
-    additives,
-    allergens: allergens.length > 0 ? allergens : ["None detected"],
-    deductions,
-    alternatives: [
-      { name: "LesserEvil Organic Himalayan Popcorn", score: 86, nova: 1, note: "Zero synthetic additives • Whole grain" },
-      { name: "Koyo Organic Garlic Pepper Ramen", score: 74, nova: 2, note: "Baked not fried • Zero MSG / TBHQ" },
-    ],
   };
 }
 

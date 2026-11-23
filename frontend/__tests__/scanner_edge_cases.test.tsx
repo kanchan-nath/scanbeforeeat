@@ -10,6 +10,7 @@ vi.mock("next/navigation", () => ({
     replace: vi.fn(),
   }),
   usePathname: () => "/scanner",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 // Mock auth context
@@ -129,5 +130,29 @@ describe("ScannerPage Edge Cases & Interactive Modes", () => {
 
     // Should display validation error
     expect(screen.getByText(/Barcode is too short/i)).toBeDefined();
+  });
+
+  it("should display scan results directly within authenticated scanner without redirecting", async () => {
+    await act(async () => {
+      render(<ScannerPage />);
+    });
+
+    const simulateBtn = screen.getByText("Simulate Detect Barcode");
+    await act(async () => {
+      fireEvent.click(simulateBtn);
+    });
+
+    // Verify product result is rendered directly on screen without leaving /scanner
+    expect(screen.getByText("Maggi 2-Min Noodles")).toBeDefined();
+    expect(screen.getByText("Scan Another")).toBeDefined();
+    expect(screen.getByText("Compare in Duel")).toBeDefined();
+
+    // Clicking "Scan Another" should return to camera
+    const scanAnotherBtn = screen.getAllByText("Scan Another")[0];
+    await act(async () => {
+      fireEvent.click(scanAnotherBtn);
+    });
+
+    expect(screen.getByTestId("barcode-camera-mock")).toBeDefined();
   });
 });
