@@ -270,7 +270,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <div className="text-xs font-bold text-zinc-900">Digital Pantry</div>
-              <div className="text-[11px] text-zinc-500">4 items cataloged</div>
+              <div className="text-[11px] text-zinc-500">Live stock & expiry</div>
             </div>
           </Link>
 

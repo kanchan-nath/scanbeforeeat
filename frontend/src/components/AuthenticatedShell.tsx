@@ -119,7 +119,7 @@ const SEARCH_CATALOG = [
   { title: "Tartrazine (E102 / Yellow 5)", subtitle: "Synthetic Azo Dye • High Pediatric Risk", href: "/additives", type: "Additive" },
   { title: "TBHQ (Tertiary Butylhydroquinone / E319)", subtitle: "Synthetic Preservative • High Risk", href: "/banned-additives", type: "Additive" },
   { title: "Sodium Benzoate (E211)", subtitle: "Preservative • Vitamin C Synergy Alert", href: "/synergy-alerts", type: "Additive" },
-  { title: "Digital Pantry Inventory", subtitle: "4 items cataloged • Expiry tracking", href: "/pantry", type: "Page" },
+  { title: "Digital Pantry Inventory", subtitle: "Live pantry stock • Expiry tracking", href: "/pantry", type: "Page" },
   { title: "Smart Grocery Shopping List", subtitle: "Clean items & pantry replenishment", href: "/shopping-list", type: "Page" },
   { title: "Personal Toxicological Exposure Ledger", subtitle: "Cumulative additive bio-burden tracker", href: "/exposure-ledger", type: "Page" },
   { title: "Allergen Matrix Manager", subtitle: "Configure strict exclusion parameters", href: "/allergens", type: "Page" },

@@ -263,7 +263,10 @@ export interface PantryItem {
 }
 
 export async function fetchPantryItems(userId: string): Promise<PantryItem[]> {
-  const res = await fetch(`${API_BASE}/pantry/${encodeURIComponent(userId)}`);
+  const res = await fetch(`${API_BASE}/pantry/${encodeURIComponent(userId)}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Failed to fetch pantry items");
   return res.json();
 }
@@ -279,7 +282,8 @@ export async function addPantryItem(params: {
 }): Promise<PantryItem> {
   const res = await fetch(`${API_BASE}/pantry`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    credentials: "include",
     body: JSON.stringify(params),
   });
   if (!res.ok) throw new Error("Failed to add pantry item");
@@ -289,6 +293,8 @@ export async function addPantryItem(params: {
 export async function deletePantryItem(id: string) {
   const res = await fetch(`${API_BASE}/pantry/${encodeURIComponent(id)}`, {
     method: "DELETE",
+    headers: authHeaders(),
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to delete pantry item");
   return res.json();

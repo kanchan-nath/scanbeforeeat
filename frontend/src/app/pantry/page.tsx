@@ -296,7 +296,7 @@ export default function PantryPage() {
 
                 <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center gap-2">
                   <Link
-                    href={`/duel`}
+                    href={`/duel?p1=${encodeURIComponent(item.productName)}`}
                     className="flex-1 py-1.5 px-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-semibold rounded-lg text-center transition-colors"
                   >
                     Compare
