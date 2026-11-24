@@ -9,7 +9,7 @@ import { performScan, fetchAiStatus, fetchProduct, type AiStatusResponse, type P
 import BarcodeCamera from "@/components/scanner/BarcodeCamera";
 import IngredientCamera from "@/components/scanner/IngredientCamera";
 import { ScanResultCard } from "@/components/scanner/ScanResultCard";
-import { validateBarcode } from "@/lib/camera";
+import { validateBarcode, stopAllCameraStreams } from "@/lib/camera";
 
 const PRESET_PRODUCTS = [
   { barcode: "8901058852331", name: "Maggi 2-Min Noodles", score: 38, nova: 4, type: "Ultra-Processed" },
@@ -37,6 +37,26 @@ function ScannerMainContent() {
       .then((res) => setAiStatus(res))
       .catch((err) => console.warn("Could not fetch AI status:", err));
   }, []);
+
+  // Ensure all camera streams are terminated when unmounting, navigating away, or on page hide
+  useEffect(() => {
+    const handlePageExit = () => {
+      stopAllCameraStreams();
+    };
+    window.addEventListener("pagehide", handlePageExit);
+    window.addEventListener("beforeunload", handlePageExit);
+
+    return () => {
+      window.removeEventListener("pagehide", handlePageExit);
+      window.removeEventListener("beforeunload", handlePageExit);
+      stopAllCameraStreams();
+    };
+  }, []);
+
+  // Terminate any active camera streams when changing tabs or displaying a product monograph
+  useEffect(() => {
+    stopAllCameraStreams();
+  }, [activeTab, scanResult]);
 
   // If query parameter ?barcode=... is provided, auto-load that product monograph
   useEffect(() => {

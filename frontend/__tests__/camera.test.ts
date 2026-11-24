@@ -1,5 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { validateBarcode, isCameraSupported } from "../src/lib/camera";
+import { describe, it, expect, vi } from "vitest";
+import {
+  validateBarcode,
+  isCameraSupported,
+  stopMediaTracks,
+  stopAllCameraStreams,
+  queryCameraPermission,
+} from "../src/lib/camera";
 
 describe("Camera & Barcode Utilities", () => {
   describe("EAN-13 Validation", () => {
@@ -131,6 +137,89 @@ describe("Camera & Barcode Utilities", () => {
     it("should safely evaluate camera support in current environment", () => {
       const status = isCameraSupported();
       expect(status).toHaveProperty("supported");
+    });
+  });
+
+  describe("MediaStream Track Teardown & Lifecycle Cleanup", () => {
+    it("should stop all tracks on a MediaStream object", () => {
+      const stop1 = vi.fn();
+      const stop2 = vi.fn();
+      const mockStream = {
+        getTracks: vi.fn().mockReturnValue([
+          { stop: stop1, kind: "video" },
+          { stop: stop2, kind: "audio" },
+        ]),
+      };
+
+      stopMediaTracks(mockStream as any);
+      expect(stop1).toHaveBeenCalledTimes(1);
+      expect(stop2).toHaveBeenCalledTimes(1);
+    });
+
+    it("should stop tracks and reset srcObject on HTMLVideoElement", () => {
+      const trackStop = vi.fn();
+      const pause = vi.fn();
+      const mockVideo = {
+        srcObject: {
+          getTracks: vi.fn().mockReturnValue([{ stop: trackStop }]),
+        },
+        pause,
+      };
+
+      stopMediaTracks(mockVideo as any);
+      expect(trackStop).toHaveBeenCalledTimes(1);
+      expect(pause).toHaveBeenCalledTimes(1);
+      expect(mockVideo.srcObject).toBeNull();
+    });
+
+    it("should stop tracks for all video elements within a container element", () => {
+      const trackStop1 = vi.fn();
+      const trackStop2 = vi.fn();
+      const video1 = {
+        srcObject: { getTracks: vi.fn().mockReturnValue([{ stop: trackStop1 }]) },
+        pause: vi.fn(),
+      };
+      const video2 = {
+        srcObject: { getTracks: vi.fn().mockReturnValue([{ stop: trackStop2 }]) },
+        pause: vi.fn(),
+      };
+
+      const container = {
+        querySelectorAll: vi.fn().mockReturnValue([video1, video2]),
+      };
+
+      stopMediaTracks(container as any);
+      expect(trackStop1).toHaveBeenCalledTimes(1);
+      expect(trackStop2).toHaveBeenCalledTimes(1);
+      expect(video1.srcObject).toBeNull();
+      expect(video2.srcObject).toBeNull();
+    });
+
+    it("should safely handle null, undefined, or empty targets without throwing", () => {
+      expect(() => stopMediaTracks(null)).not.toThrow();
+      expect(() => stopMediaTracks(undefined)).not.toThrow();
+    });
+
+    it("should perform global stopAllCameraStreams safely across document", () => {
+      const trackStop = vi.fn();
+      const videoEl = {
+        srcObject: { getTracks: vi.fn().mockReturnValue([{ stop: trackStop }]) },
+        pause: vi.fn(),
+      };
+
+      const originalQSA = document.querySelectorAll;
+      document.querySelectorAll = vi.fn().mockReturnValue([videoEl]);
+
+      stopAllCameraStreams();
+      expect(trackStop).toHaveBeenCalledTimes(1);
+      expect(videoEl.srcObject).toBeNull();
+
+      document.querySelectorAll = originalQSA;
+    });
+
+    it("should query camera permissions safely or return unsupported", async () => {
+      const result = await queryCameraPermission();
+      expect(["granted", "denied", "prompt", "unsupported"]).toContain(result);
     });
   });
 });

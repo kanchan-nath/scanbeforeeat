@@ -115,6 +115,100 @@ export function isCameraSupported(): { supported: boolean; reason?: string } {
 }
 
 /**
+ * Safely stops all media tracks associated with a MediaStream, a video element,
+ * or any video elements nested within a given container element.
+ * Guarantees the browser/OS immediately shuts down camera hardware and status LED.
+ */
+export function stopMediaTracks(
+  target?: MediaStream | HTMLVideoElement | HTMLElement | null
+): void {
+  if (typeof window === "undefined" || !target) return;
+
+  try {
+    // 1. Direct MediaStream instance or object with getTracks()
+    if ("getTracks" in target && typeof (target as any).getTracks === "function") {
+      const tracks: MediaStreamTrack[] = (target as any).getTracks();
+      tracks.forEach((track) => {
+        try {
+          track.stop();
+        } catch (_) {}
+      });
+      return;
+    }
+
+    // 2. HTMLVideoElement
+    if ("srcObject" in target) {
+      const video = target as HTMLVideoElement;
+      if (video.srcObject && "getTracks" in (video.srcObject as any)) {
+        const tracks: MediaStreamTrack[] = (video.srcObject as any).getTracks();
+        tracks.forEach((track) => {
+          try {
+            track.stop();
+          } catch (_) {}
+        });
+      }
+      video.srcObject = null;
+      try {
+        video.pause();
+      } catch (_) {}
+      return;
+    }
+
+    // 3. HTMLElement container with querySelectorAll
+    if ("querySelectorAll" in target && typeof (target as any).querySelectorAll === "function") {
+      const videos = (target as HTMLElement).querySelectorAll("video");
+      videos.forEach((video) => {
+        if (video.srcObject && "getTracks" in (video.srcObject as any)) {
+          const tracks: MediaStreamTrack[] = (video.srcObject as any).getTracks();
+          tracks.forEach((track) => {
+            try {
+              track.stop();
+            } catch (_) {}
+          });
+        }
+        video.srcObject = null;
+        try {
+          video.pause();
+        } catch (_) {}
+      });
+    }
+  } catch (err) {
+    console.warn("[Camera] Error stopping media tracks:", err);
+  }
+}
+
+/**
+ * Global fail-safe: queries the entire DOM document for any active video elements
+ * streaming media and stops every track immediately.
+ */
+export function stopAllCameraStreams(): void {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  try {
+    const videos = document.querySelectorAll("video");
+    videos.forEach((video) => {
+      stopMediaTracks(video);
+    });
+  } catch (err) {
+    console.warn("[Camera] Error during global camera stream stop:", err);
+  }
+}
+
+/**
+ * Queries current browser camera permission status if supported by navigator.permissions.
+ */
+export async function queryCameraPermission(): Promise<PermissionState | "unsupported"> {
+  if (typeof window === "undefined" || !navigator.permissions || !navigator.permissions.query) {
+    return "unsupported";
+  }
+  try {
+    const status = await navigator.permissions.query({ name: "camera" as any });
+    return status.state;
+  } catch {
+    return "unsupported";
+  }
+}
+
+/**
  * Compresses an image file or Base64 data URL via HTML5 Canvas
  * Downsamples high-resolution smartphone photos (e.g. 12-48MP) to maximum dimension <= 1600px
  * and compresses to JPEG with 85% quality to keep payload well under 1MB.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { isCameraSupported, compressImageForUpload } from "@/lib/camera";
+import { isCameraSupported, compressImageForUpload, stopMediaTracks } from "@/lib/camera";
 
 interface IngredientCameraProps {
   onAnalyzeImage: (imageBase64: string, mimeType: string, extractedText?: string) => void;
@@ -16,7 +16,9 @@ export default function IngredientCamera({
   isScanning,
   onSwitchToBarcode,
 }: IngredientCameraProps) {
-  const [cameraState, setCameraState] = useState<"idle" | "running" | "denied" | "error" | "unsupported">("idle");
+  const [cameraState, setCameraState] = useState<
+    "idle" | "requesting" | "running" | "stopped" | "denied" | "error" | "unsupported"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [capturedMime, setCapturedMime] = useState<string>("image/jpeg");
@@ -32,23 +34,25 @@ export default function IngredientCamera({
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isMountedRef = useRef(true);
+  const startSeqRef = useRef(0);
+  const userDisabledRef = useRef(false);
 
   const stopCamera = useCallback(() => {
+    // 1. Immediately stop all tracks on the active stream
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
+      stopMediaTracks(streamRef.current);
       streamRef.current = null;
     }
+    // 2. Stop and clear the video element
     if (videoRef.current) {
-      try {
-        videoRef.current.pause();
-      } catch {
-        // Ignore pause errors
-      }
-      videoRef.current.srcObject = null;
+      stopMediaTracks(videoRef.current);
     }
   }, []);
 
   const startCamera = useCallback(async () => {
+    const currentSeq = ++startSeqRef.current;
+    userDisabledRef.current = false;
+
     const support = isCameraSupported();
     if (!support.supported) {
       if (isMountedRef.current) {
@@ -60,6 +64,12 @@ export default function IngredientCamera({
 
     try {
       stopCamera();
+      if (!isMountedRef.current || currentSeq !== startSeqRef.current || userDisabledRef.current) {
+        return;
+      }
+
+      setCameraState("requesting");
+      setErrorMessage("");
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -70,9 +80,9 @@ export default function IngredientCamera({
         audio: false,
       });
 
-      // If unmounted while getUserMedia was resolving, release stream immediately
-      if (!isMountedRef.current) {
-        stream.getTracks().forEach((t) => t.stop());
+      // If unmounted or cancelled while getUserMedia was resolving, release stream immediately!
+      if (!isMountedRef.current || currentSeq !== startSeqRef.current || userDisabledRef.current) {
+        stopMediaTracks(stream);
         return;
       }
 
@@ -93,16 +103,20 @@ export default function IngredientCamera({
         }
       }
 
-      if (isMountedRef.current) {
-        setCameraState("running");
-        setErrorMessage("");
+      // Check once more after playPromise
+      if (!isMountedRef.current || currentSeq !== startSeqRef.current || userDisabledRef.current) {
+        stopCamera();
+        return;
       }
+
+      setCameraState("running");
+      setErrorMessage("");
     } catch (err: any) {
       if (err?.name === "AbortError" || err?.message?.includes("interrupted")) {
         return;
       }
-      console.warn("[IngredientCamera] Camera error:", err);
-      if (!isMountedRef.current) return;
+      stopCamera();
+      if (!isMountedRef.current || currentSeq !== startSeqRef.current) return;
 
       const name = err?.name || "";
       if (name === "NotAllowedError" || name === "PermissionDeniedError") {
@@ -121,13 +135,51 @@ export default function IngredientCamera({
     }
   }, [stopCamera]);
 
+  const handleToggleCameraPower = async () => {
+    if (cameraState === "running" || cameraState === "requesting") {
+      userDisabledRef.current = true;
+      stopCamera();
+      setCameraState("stopped");
+    } else {
+      userDisabledRef.current = false;
+      startCamera();
+    }
+  };
+
+  // Lifecycle listeners: Cleanly release tracks on unmount, page hide, visibility loss, or tab leave
   useEffect(() => {
     isMountedRef.current = true;
+    userDisabledRef.current = false;
     if (!capturedImage) {
       startCamera();
     }
+
+    const handlePageHide = () => {
+      stopCamera();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        stopCamera();
+      } else if (
+        document.visibilityState === "visible" &&
+        !userDisabledRef.current &&
+        !capturedImage &&
+        isMountedRef.current
+      ) {
+        startCamera();
+      }
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("beforeunload", handlePageHide);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       isMountedRef.current = false;
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("beforeunload", handlePageHide);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       stopCamera();
     };
   }, [startCamera, stopCamera, capturedImage]);
@@ -276,6 +328,16 @@ export default function IngredientCamera({
 
             {cameraState === "running" && (
               <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-center">
+                {/* Floating Power Off Button */}
+                <button
+                  type="button"
+                  onClick={handleToggleCameraPower}
+                  className="absolute top-3 right-3 p-2 rounded-full bg-slate-950/80 text-rose-300 hover:text-white hover:bg-rose-950/80 border border-slate-700 hover:border-rose-700 pointer-events-auto transition-colors"
+                  title="Turn Off Camera"
+                >
+                  <span className="material-symbols-outlined text-base">videocam_off</span>
+                </button>
+
                 {/* Ingredient Label Alignment Frame */}
                 <div className="relative w-72 h-56 sm:w-80 sm:h-64 border border-emerald-400/30 rounded-xl">
                   <div className="absolute -top-1 -left-1 w-6 h-6 border-t-3 border-l-3 border-emerald-400 rounded-tl shadow-[0_0_12px_rgba(16,185,129,0.9)]"></div>
@@ -295,7 +357,7 @@ export default function IngredientCamera({
                   <button
                     type="button"
                     onClick={handleSnapPhoto}
-                    className="w-16 h-16 rounded-full bg-white/90 hover:bg-white p-1 shadow-lg shadow-black/50 transition-transform active:scale-95 flex items-center justify-center group"
+                    className="w-16 h-16 rounded-full bg-white/90 hover:bg-white p-1 shadow-lg shadow-black/50 transition-transform active:scale-95 flex items-center justify-center group cursor-pointer"
                     title="Take Photo"
                   >
                     <div className="w-13 h-13 rounded-full border-2 border-slate-900 flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -327,33 +389,66 @@ export default function IngredientCamera({
         {!capturedImage && cameraState !== "running" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-slate-900/95 space-y-4">
             <div className="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center text-zinc-400">
-              <span className="material-symbols-outlined text-3xl">document_scanner</span>
+              <span className="material-symbols-outlined text-3xl">
+                {cameraState === "denied"
+                  ? "no_photography"
+                  : cameraState === "unsupported"
+                  ? "videocam_off"
+                  : cameraState === "requesting"
+                  ? "photo_camera"
+                  : cameraState === "stopped"
+                  ? "videocam_off"
+                  : "document_scanner"}
+              </span>
             </div>
 
             <div className="max-w-md space-y-1">
               <h3 className="text-sm font-bold text-white font-display">
-                Capture Ingredients Label
+                {cameraState === "denied"
+                  ? "Camera Permission Denied"
+                  : cameraState === "unsupported"
+                  ? "Camera Hardware Not Available"
+                  : cameraState === "requesting"
+                  ? "Requesting Camera Access..."
+                  : cameraState === "stopped"
+                  ? "Camera is Turned Off"
+                  : "Capture Ingredients Label"}
               </h3>
               <p className="text-xs text-zinc-400">
-                {errorMessage ||
-                  "Take a photo of the ingredients panel or upload an image from your device."}
+                {cameraState === "requesting"
+                  ? "Please allow camera access in your browser prompt so the site can capture ingredient labels."
+                  : cameraState === "stopped"
+                  ? "Camera feed is turned off. Click below to re-enable camera."
+                  : errorMessage ||
+                    "Take a photo of the ingredients panel or upload an image from your device."}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => startCamera()}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-base">videocam</span>
-                <span>Enable Camera</span>
-              </button>
+              {cameraState === "stopped" ? (
+                <button
+                  type="button"
+                  onClick={handleToggleCameraPower}
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-base">videocam</span>
+                  <span>Turn On Camera</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => startCamera()}
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-base">videocam</span>
+                  <span>{cameraState === "requesting" ? "Waiting for Permission..." : "Enable Camera"}</span>
+                </button>
+              )}
 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-zinc-200 border border-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-zinc-200 border border-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-base">upload_file</span>
                 <span>Upload Label Photo</span>

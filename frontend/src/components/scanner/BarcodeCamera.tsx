@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
-import { isCameraSupported, validateBarcode } from "@/lib/camera";
+import { isCameraSupported, validateBarcode, stopMediaTracks } from "@/lib/camera";
 
 interface BarcodeCameraProps {
   onDetected: (barcode: string) => void;
@@ -17,7 +17,9 @@ export default function BarcodeCamera({
   onSwitchToManual,
   onSwitchToOcr,
 }: BarcodeCameraProps) {
-  const [cameraState, setCameraState] = useState<"idle" | "running" | "denied" | "error" | "unsupported">("idle");
+  const [cameraState, setCameraState] = useState<
+    "idle" | "requesting" | "running" | "stopped" | "denied" | "error" | "unsupported"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [cameras, setCameras] = useState<Array<{ id: string; label: string }>>([]);
   const [selectedCameraId, setSelectedCameraId] = useState<string>("");
@@ -26,9 +28,12 @@ export default function BarcodeCamera({
   const [lastDetectedCode, setLastDetectedCode] = useState<string | null>(null);
 
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const viewportRef = useRef<HTMLDivElement | null>(null);
   const isCooldownRef = useRef(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isMountedRef = useRef(true);
+  const startSeqRef = useRef(0);
+  const userDisabledRef = useRef(false);
 
   const playBeep = () => {
     try {
@@ -52,125 +57,188 @@ export default function BarcodeCamera({
   };
 
   const stopScanner = useCallback(async () => {
+    // 1. Immediately terminate all video tracks in DOM to shut off camera sensor and LED instantly
+    stopMediaTracks(viewportRef.current || document.getElementById("reader-viewport"));
+
+    // 2. Safely stop and clear Html5Qrcode instance
     if (scannerRef.current) {
-      try {
-        if (scannerRef.current.isScanning) {
-          await scannerRef.current.stop();
-        }
-        await scannerRef.current.clear();
-      } catch (err) {
-        console.warn("[BarcodeCamera] Error stopping camera:", err);
-      }
+      const qr = scannerRef.current;
       scannerRef.current = null;
+      try {
+        const state = qr.getState();
+        // Html5QrcodeScannerState: 2 = SCANNING, 3 = PAUSED
+        if (state === 2 || state === 3) {
+          await qr.stop();
+        }
+      } catch (err) {
+        // Ignore unmount stop race errors
+      }
+      try {
+        qr.clear();
+      } catch (_) {}
     }
+
+    // 3. Final safety sweep on viewport container
+    stopMediaTracks(viewportRef.current || document.getElementById("reader-viewport"));
   }, []);
 
-  const startScanner = useCallback(async (cameraIdOrFacing?: string | { facingMode: string }) => {
-    const support = isCameraSupported();
-    if (!support.supported) {
-      setCameraState("unsupported");
-      setErrorMessage(support.reason || "Camera not supported on this browser.");
-      return;
-    }
+  const startScanner = useCallback(
+    async (cameraIdOrFacing?: string | { facingMode: string }) => {
+      const currentSeq = ++startSeqRef.current;
+      userDisabledRef.current = false;
 
-    try {
-      await stopScanner();
-
-      const html5QrCode = new Html5Qrcode("reader-viewport", {
-        verbose: false,
-        formatsToSupport: [
-          Html5QrcodeSupportedFormats.EAN_13,
-          Html5QrcodeSupportedFormats.EAN_8,
-          Html5QrcodeSupportedFormats.UPC_A,
-          Html5QrcodeSupportedFormats.UPC_E,
-          Html5QrcodeSupportedFormats.CODE_128,
-          Html5QrcodeSupportedFormats.CODE_39,
-          Html5QrcodeSupportedFormats.QR_CODE,
-          Html5QrcodeSupportedFormats.DATA_MATRIX,
-        ],
-      });
-
-      scannerRef.current = html5QrCode;
-
-      // Enumerate available devices
-      try {
-        const devices = await Html5Qrcode.getCameras();
-        if (devices && devices.length > 0) {
-          setCameras(devices);
+      const support = isCameraSupported();
+      if (!support.supported) {
+        if (isMountedRef.current) {
+          setCameraState("unsupported");
+          setErrorMessage(support.reason || "Camera not supported on this browser.");
         }
-      } catch {
-        // Enumerate fallback
-      }
-
-      const cameraConfig = cameraIdOrFacing || { facingMode: "environment" };
-
-      await html5QrCode.start(
-        cameraConfig,
-        {
-          fps: 15,
-          qrbox: (viewfinderWidth, viewfinderHeight) => {
-            const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-            const edge = Math.floor(minEdge * 0.75);
-            return { width: Math.max(260, edge), height: Math.max(160, Math.floor(edge * 0.65)) };
-          },
-          aspectRatio: 1.0,
-        },
-        (decodedText) => {
-          if (isCooldownRef.current) return;
-
-          const validation = validateBarcode(decodedText);
-          if (validation.valid) {
-            isCooldownRef.current = true;
-            playBeep();
-            setLastDetectedCode(decodedText);
-            onDetected(decodedText);
-
-            // 2.5s debounce lock
-            setTimeout(() => {
-              isCooldownRef.current = false;
-            }, 2500);
-          }
-        },
-        () => {
-          // Frame without barcode - normal scanning loop
-        }
-      );
-
-      setCameraState("running");
-      setErrorMessage("");
-
-      // Check torch capability
-      try {
-        const capabilities = html5QrCode.getRunningTrackCameraCapabilities();
-        if ((capabilities as any)?.torchFeature?.().isSupported?.()) {
-          setTorchSupported(true);
-        }
-      } catch {
-        setTorchSupported(false);
-      }
-    } catch (err: any) {
-      if (err?.name === "AbortError" || err?.message?.includes("interrupted")) {
         return;
       }
-      console.warn("[BarcodeCamera] Camera start failure:", err);
-      if (!isMountedRef.current) return;
 
-      const name = err?.name || "";
-      if (name === "NotAllowedError" || name === "PermissionDeniedError") {
-        setCameraState("denied");
-        setErrorMessage("Camera access was blocked. Please allow camera permissions in your browser address bar.");
-      } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
-        setCameraState("error");
-        setErrorMessage("No camera hardware detected on this device.");
-      } else if (name === "NotReadableError" || name === "TrackStartError") {
-        setCameraState("error");
-        setErrorMessage("Camera is currently in use by another app or browser tab.");
-      } else {
-        setCameraState("error");
-        setErrorMessage(err?.message || "Unable to start camera stream.");
+      try {
+        await stopScanner();
+        if (!isMountedRef.current || currentSeq !== startSeqRef.current || userDisabledRef.current) {
+          return;
+        }
+
+        setCameraState("requesting");
+        setErrorMessage("");
+
+        const html5QrCode = new Html5Qrcode("reader-viewport", {
+          verbose: false,
+          formatsToSupport: [
+            Html5QrcodeSupportedFormats.EAN_13,
+            Html5QrcodeSupportedFormats.EAN_8,
+            Html5QrcodeSupportedFormats.UPC_A,
+            Html5QrcodeSupportedFormats.UPC_E,
+            Html5QrcodeSupportedFormats.CODE_128,
+            Html5QrcodeSupportedFormats.CODE_39,
+            Html5QrcodeSupportedFormats.QR_CODE,
+            Html5QrcodeSupportedFormats.DATA_MATRIX,
+          ],
+        });
+
+        scannerRef.current = html5QrCode;
+
+        // Enumerate available devices
+        try {
+          const devices = await Html5Qrcode.getCameras();
+          if (devices && devices.length > 0 && isMountedRef.current) {
+            setCameras(devices);
+          }
+        } catch {
+          // Enumerate fallback
+        }
+
+        if (!isMountedRef.current || currentSeq !== startSeqRef.current || userDisabledRef.current) {
+          scannerRef.current = null;
+          try {
+            html5QrCode.clear();
+          } catch (_) {}
+          stopMediaTracks(viewportRef.current || document.getElementById("reader-viewport"));
+          return;
+        }
+
+        const cameraConfig = cameraIdOrFacing || { facingMode: "environment" };
+
+        await html5QrCode.start(
+          cameraConfig,
+          {
+            fps: 15,
+            qrbox: (viewfinderWidth, viewfinderHeight) => {
+              const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+              const edge = Math.floor(minEdge * 0.75);
+              return { width: Math.max(260, edge), height: Math.max(160, Math.floor(edge * 0.65)) };
+            },
+            aspectRatio: 1.0,
+          },
+          (decodedText) => {
+            if (isCooldownRef.current) return;
+
+            const validation = validateBarcode(decodedText);
+            if (validation.valid) {
+              isCooldownRef.current = true;
+              playBeep();
+              setLastDetectedCode(decodedText);
+              onDetected(decodedText);
+
+              // 2.5s debounce lock
+              setTimeout(() => {
+                isCooldownRef.current = false;
+              }, 2500);
+            }
+          },
+          () => {
+            // Frame without barcode - normal scanning loop
+          }
+        );
+
+        // Verification guard after async start:
+        // If unmounted or user paused while browser permission prompt was resolving, shutdown immediately!
+        if (!isMountedRef.current || currentSeq !== startSeqRef.current || userDisabledRef.current) {
+          try {
+            const state = html5QrCode.getState();
+            if (state === 2 || state === 3) {
+              await html5QrCode.stop();
+            }
+          } catch (_) {}
+          try {
+            html5QrCode.clear();
+          } catch (_) {}
+          stopMediaTracks(viewportRef.current || document.getElementById("reader-viewport"));
+          scannerRef.current = null;
+          return;
+        }
+
+        setCameraState("running");
+        setErrorMessage("");
+
+        // Check torch capability
+        try {
+          const capabilities = html5QrCode.getRunningTrackCameraCapabilities();
+          if ((capabilities as any)?.torchFeature?.().isSupported?.()) {
+            setTorchSupported(true);
+          }
+        } catch {
+          setTorchSupported(false);
+        }
+      } catch (err: any) {
+        if (err?.name === "AbortError" || err?.message?.includes("interrupted")) {
+          return;
+        }
+        stopMediaTracks(viewportRef.current || document.getElementById("reader-viewport"));
+        if (!isMountedRef.current || currentSeq !== startSeqRef.current) return;
+
+        const name = err?.name || "";
+        if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+          setCameraState("denied");
+          setErrorMessage("Camera access was blocked. Please allow camera permissions in your browser address bar.");
+        } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
+          setCameraState("error");
+          setErrorMessage("No camera hardware detected on this device.");
+        } else if (name === "NotReadableError" || name === "TrackStartError") {
+          setCameraState("error");
+          setErrorMessage("Camera is currently in use by another app or browser tab.");
+        } else {
+          setCameraState("error");
+          setErrorMessage(err?.message || "Unable to start camera stream.");
+        }
       }
+    },
+    [onDetected, stopScanner]
+  );
+
+  const handleToggleCameraPower = async () => {
+    if (cameraState === "running" || cameraState === "requesting") {
+      userDisabledRef.current = true;
+      await stopScanner();
+      setCameraState("stopped");
+    } else {
+      userDisabledRef.current = false;
+      startScanner();
     }
-  }, [onDetected, stopScanner]);
+  };
 
   const toggleTorch = async () => {
     if (!scannerRef.current || !torchSupported) return;
@@ -226,11 +294,37 @@ export default function BarcodeCamera({
     }
   };
 
+  // Lifecycle listeners: Cleanly release tracks on unmount, page hide, visibility loss, or tab leave
   useEffect(() => {
     isMountedRef.current = true;
+    userDisabledRef.current = false;
     startScanner();
+
+    const handlePageHide = () => {
+      stopScanner();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        stopScanner();
+      } else if (
+        document.visibilityState === "visible" &&
+        !userDisabledRef.current &&
+        isMountedRef.current
+      ) {
+        startScanner();
+      }
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    window.addEventListener("beforeunload", handlePageHide);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       isMountedRef.current = false;
+      window.removeEventListener("pagehide", handlePageHide);
+      window.removeEventListener("beforeunload", handlePageHide);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       stopScanner();
     };
   }, [startScanner, stopScanner]);
@@ -244,6 +338,7 @@ export default function BarcodeCamera({
 
         {/* Live Camera Element */}
         <div
+          ref={viewportRef}
           id="reader-viewport"
           className="w-full h-full object-cover [&_video]:w-full [&_video]:h-full [&_video]:object-cover"
         />
@@ -307,6 +402,16 @@ export default function BarcodeCamera({
                     <span className="material-symbols-outlined text-base">flip_camera_ios</span>
                   </button>
                 )}
+
+                {/* Explicit Camera Power Off Button */}
+                <button
+                  type="button"
+                  onClick={handleToggleCameraPower}
+                  className="p-2 rounded-full bg-slate-900/80 text-rose-300 hover:text-white hover:bg-rose-950/80 border border-slate-700 hover:border-rose-700 transition-colors"
+                  title="Turn Off Camera"
+                >
+                  <span className="material-symbols-outlined text-base">videocam_off</span>
+                </button>
               </div>
             </div>
           </div>
@@ -322,7 +427,7 @@ export default function BarcodeCamera({
           </div>
         )}
 
-        {/* Fallback View when camera cannot run */}
+        {/* Fallback View when camera cannot run or is requesting / stopped */}
         {cameraState !== "running" && (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-slate-900/95 space-y-4">
             <div className="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center text-zinc-400">
@@ -330,6 +435,10 @@ export default function BarcodeCamera({
                 {cameraState === "denied"
                   ? "no_photography"
                   : cameraState === "unsupported"
+                  ? "videocam_off"
+                  : cameraState === "requesting"
+                  ? "photo_camera"
+                  : cameraState === "stopped"
                   ? "videocam_off"
                   : "barcode_scanner"}
               </span>
@@ -341,28 +450,47 @@ export default function BarcodeCamera({
                   ? "Camera Permission Denied"
                   : cameraState === "unsupported"
                   ? "Camera Hardware Not Available"
+                  : cameraState === "requesting"
+                  ? "Requesting Camera Access..."
+                  : cameraState === "stopped"
+                  ? "Camera is Turned Off"
                   : "Live Camera Unavailable"}
               </h3>
               <p className="text-xs text-zinc-400">
-                {errorMessage ||
-                  "Ensure camera permissions are granted or upload a photo of the product barcode."}
+                {cameraState === "requesting"
+                  ? "Please allow camera access in your browser prompt so the site can scan barcodes."
+                  : cameraState === "stopped"
+                  ? "Camera was turned off to save battery and privacy. Click below to resume scanning."
+                  : errorMessage ||
+                    "Ensure camera permissions are granted or upload a photo of the product barcode."}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => startScanner()}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5"
-              >
-                <span className="material-symbols-outlined text-base">refresh</span>
-                <span>Retry Camera</span>
-              </button>
+              {cameraState === "stopped" ? (
+                <button
+                  type="button"
+                  onClick={handleToggleCameraPower}
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-base">videocam</span>
+                  <span>Turn On Camera</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => startScanner()}
+                  className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-base">refresh</span>
+                  <span>{cameraState === "requesting" ? "Waiting for Permission..." : "Retry Camera"}</span>
+                </button>
+              )}
 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-zinc-200 border border-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-zinc-200 border border-slate-700 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-base">upload_file</span>
                 <span>Upload Barcode Image</span>
@@ -372,7 +500,7 @@ export default function BarcodeCamera({
                 <button
                   type="button"
                   onClick={onSwitchToManual}
-                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-base">dialpad</span>
                   <span>Type Code</span>
