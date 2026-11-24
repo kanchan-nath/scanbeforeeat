@@ -1,11 +1,39 @@
 import React from "react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig, navItems } from "@/lib/config";
 
+// Mock next/navigation
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: mockReplace,
+  }),
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+// Mock Auth Context
+let mockUser: any = null;
+vi.mock("@/lib/auth-context", () => ({
+  useAuth: () => ({
+    user: mockUser,
+    firebaseUser: null,
+    loading: false,
+    logout: vi.fn(),
+    refreshProfile: vi.fn(),
+  }),
+}));
+
 describe("Navbar Component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockUser = null;
+  });
   it("renders brand logo, title, and links to home", () => {
     render(<Navbar />);
     
@@ -74,6 +102,26 @@ describe("Navbar Component", () => {
     fireEvent.click(menuButton);
     expect(menuButton).toHaveAttribute("aria-expanded", "false");
   });
+
+  it("redirects unauthenticated users to /auth?redirect=/scanner when clicking scan CTA", () => {
+    mockUser = null;
+    render(<Navbar />);
+
+    const scanLinks = screen.getAllByRole("link", { name: /start scanning|scan now/i });
+    fireEvent.click(scanLinks[0]);
+
+    expect(mockPush).toHaveBeenCalledWith("/auth?redirect=/scanner");
+  });
+
+  it("navigates authenticated users directly to /scanner when clicking scan CTA", () => {
+    mockUser = { id: "user_123", email: "tester@scanbeforeeat.com" };
+    render(<Navbar />);
+
+    const scanLinks = screen.getAllByRole("link", { name: /start scanning|scan now/i });
+    fireEvent.click(scanLinks[0]);
+
+    expect(mockPush).toHaveBeenCalledWith("/scanner");
+  });
 });
 
 describe("Footer Component", () => {
@@ -104,6 +152,16 @@ describe("Footer Component", () => {
 
     const apiDocs = screen.getByRole("link", { name: "API Docs" });
     expect(apiDocs).toHaveAttribute("href", "/api-docs");
+  });
+
+  it("redirects unauthenticated users to /auth?redirect=/scanner when clicking Footer Scanner App", () => {
+    mockUser = null;
+    render(<Footer />);
+
+    const scannerApp = screen.getByRole("link", { name: "Scanner App" });
+    fireEvent.click(scannerApp);
+
+    expect(mockPush).toHaveBeenCalledWith("/auth?redirect=/scanner");
   });
 
   it("renders Legal & Trust section links including privacy, terms, and security", () => {

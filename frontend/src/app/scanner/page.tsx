@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import AuthenticatedShell from "@/components/AuthenticatedShell";
 import { useAuth } from "@/lib/auth-context";
 import { performScan, fetchAiStatus, fetchProduct, type AiStatusResponse, type ProductDetail } from "@/lib/api";
@@ -19,9 +19,17 @@ const PRESET_PRODUCTS = [
 ];
 
 function ScannerMainContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const initialBarcode = searchParams.get("barcode");
-  const { user, refreshProfile } = useAuth();
+  const { user, loading, refreshProfile } = useAuth();
+
+  // Route guard: immediately bounce unauthenticated visitors to login
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/auth?redirect=/scanner");
+    }
+  }, [loading, user, router]);
 
   const [activeTab, setActiveTab] = useState<"barcode" | "ocr" | "manual">("barcode");
   const [manualBarcode, setManualBarcode] = useState("8901058852331");
@@ -82,7 +90,13 @@ function ScannerMainContent() {
     setErrorMessage("");
     setIsScanning(true);
 
-    const activeUserId = user?.id || "demo_pro";
+    if (!user) {
+      router.replace("/auth?redirect=/scanner");
+      setIsScanning(false);
+      return;
+    }
+
+    const activeUserId = user.id;
     const targetBarcode = codeToScan || (activeTab === "manual" ? manualBarcode.trim() : undefined);
     const targetText = textToScan || (activeTab === "ocr" && !imageToScan ? rawText.trim() : undefined);
 

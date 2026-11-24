@@ -1,7 +1,21 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { pricingPlans } from "@/lib/config";
 import { Icon } from "@/components/ui/Icon";
+import { useAuth } from "@/lib/auth-context";
 
 export function PricingSection() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handlePlanClick = (e: React.MouseEvent, ctaHref: string) => {
+    if (!user) {
+      e.preventDefault();
+      router.push(`/auth?redirect=${encodeURIComponent(ctaHref)}`);
+    }
+  };
   return (
     <section className="py-20 bg-zinc-50 border-b border-zinc-200" id="pricing">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -88,8 +102,9 @@ export function PricingSection() {
 
               {/* Action Button */}
               <div>
-                <a
+                <Link
                   href={plan.ctaHref}
+                  onClick={(e) => handlePlanClick(e, plan.ctaHref)}
                   className={`w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all active:scale-[0.98] ${
                     plan.highlight
                       ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/25"
@@ -98,7 +113,7 @@ export function PricingSection() {
                 >
                   <span>{plan.ctaText}</span>
                   <Icon name="arrow_forward" className="text-sm" />
-                </a>
+                </Link>
               </div>
             </div>
           ))}

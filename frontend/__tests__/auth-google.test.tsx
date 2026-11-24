@@ -5,10 +5,14 @@ import AuthPage from "@/app/auth/page";
 
 // Mock next/navigation
 const mockPush = vi.fn();
+const mockReplace = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
     push: mockPush,
+    replace: mockReplace,
   }),
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => "/auth",
 }));
 
 // Mock Auth Context

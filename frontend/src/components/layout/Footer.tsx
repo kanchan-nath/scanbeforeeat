@@ -1,8 +1,23 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { siteConfig } from "@/lib/config";
 
 export function Footer() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleScanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      router.push("/scanner");
+    } else {
+      router.push("/auth?redirect=/scanner");
+    }
+  };
   return (
     <footer className="w-full bg-zinc-50 border-t border-zinc-200 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16">
@@ -39,9 +54,13 @@ export function Footer() {
             <h4 className="font-label font-bold uppercase tracking-wider text-zinc-900 text-[11px]">
               Product
             </h4>
-            <a href={siteConfig.scanUrl} className="text-zinc-600 hover:text-emerald-700 transition-colors">
+            <Link
+              href="/scanner"
+              onClick={handleScanClick}
+              className="text-zinc-600 hover:text-emerald-700 transition-colors"
+            >
               Scanner App
-            </a>
+            </Link>
             <Link href="/additives" className="text-zinc-600 hover:text-emerald-700 transition-colors">
               Ingredient Database
             </Link>

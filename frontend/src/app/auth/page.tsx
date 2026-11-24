@@ -1,15 +1,20 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Icon } from "@/components/ui/Icon";
 import { useAuth } from "@/lib/auth-context";
 
-export default function AuthPage() {
+function AuthPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+  const redirectTarget = redirectParam && redirectParam.startsWith("/") && !redirectParam.startsWith("//")
+    ? redirectParam
+    : "/dashboard";
   const { signInGoogle, signInTwitter, signInGithub, sendOtp, verifyOtp, loginDemo, user } = useAuth();
 
   // "signin" | "signup"
@@ -58,7 +63,13 @@ export default function AuthPage() {
     }
   }, [step]);
 
-  // If already logged in, show quick redirect option
+  // If already logged in, auto-redirect or show quick redirect option
+  useEffect(() => {
+    if (user) {
+      router.replace(redirectTarget);
+    }
+  }, [user, redirectTarget, router]);
+
   if (user) {
     return (
       <>
@@ -77,18 +88,20 @@ export default function AuthPage() {
             </p>
             <div className="flex flex-col gap-3">
               <Link
-                href="/scanner"
+                href={redirectTarget}
                 className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all flex items-center justify-center gap-2"
               >
-                <Icon name="qr_code_scanner" className="text-base" />
-                <span>Go to Barcode Scanner</span>
+                <Icon name="arrow_forward" className="text-base" />
+                <span>Continue to {redirectTarget === "/scanner" ? "Scanner" : "Dashboard"}</span>
               </Link>
-              <Link
-                href="/dashboard"
-                className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 transition-all flex items-center justify-center gap-2"
-              >
-                <span>View Dashboard & Quota</span>
-              </Link>
+              {redirectTarget !== "/dashboard" && (
+                <Link
+                  href="/dashboard"
+                  className="w-full py-3 px-4 rounded-xl text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-800 transition-all flex items-center justify-center gap-2"
+                >
+                  <span>View Dashboard & Quota</span>
+                </Link>
+              )}
             </div>
           </div>
         </main>
@@ -164,7 +177,7 @@ export default function AuthPage() {
 
     try {
       await verifyOtp(email.trim(), fullOtp, displayName.trim() || undefined);
-      router.push("/dashboard");
+      router.push(redirectTarget);
     } catch (err: any) {
       setErrorMsg(err.message || "Invalid or expired code. Please verify and try again.");
     } finally {
@@ -221,7 +234,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       await signInGoogle();
-      router.push("/dashboard");
+      router.push(redirectTarget);
     } catch (err: any) {
       setErrorMsg(err.message || "Google sign in was interrupted.");
     } finally {
@@ -235,7 +248,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       await signInTwitter();
-      router.push("/dashboard");
+      router.push(redirectTarget);
     } catch (err: any) {
       setErrorMsg(err.message || "X (Twitter) sign in was interrupted.");
     } finally {
@@ -249,7 +262,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       await signInGithub();
-      router.push("/dashboard");
+      router.push(redirectTarget);
     } catch (err: any) {
       setErrorMsg(err.message || "GitHub sign in was interrupted.");
     } finally {
@@ -262,7 +275,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       await loginDemo(plan);
-      router.push("/dashboard");
+      router.push(redirectTarget);
     } finally {
       setIsSubmitting(false);
     }
@@ -680,5 +693,22 @@ export default function AuthPage() {
 
       <Footer />
     </>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs font-mono text-zinc-500">Loading authentication...</p>
+          </div>
+        </div>
+      }
+    >
+      <AuthPageContent />
+    </Suspense>
   );
 }

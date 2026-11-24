@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { siteConfig, navItems } from "@/lib/config";
 import { Icon } from "@/components/ui/Icon";
 import { useAuth } from "@/lib/auth-context";
@@ -9,6 +10,16 @@ import { useAuth } from "@/lib/auth-context";
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
+
+  const handleScanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      router.push("/scanner");
+    } else {
+      router.push("/auth?redirect=/scanner");
+    }
+  };
 
   return (
     <header
@@ -73,6 +84,7 @@ export function Navbar() {
           )}
           <Link
             href="/scanner"
+            onClick={handleScanClick}
             className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs hover:shadow-emerald-500/25 active:scale-[0.98] transition-all duration-150 gap-1.5"
           >
             <Icon name="qr_code_scanner" className="text-sm" />
@@ -84,6 +96,7 @@ export function Navbar() {
         <div className="flex md:hidden items-center gap-2">
           <Link
             href="/scanner"
+            onClick={handleScanClick}
             className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-1.5 text-xs font-semibold shadow-xs active:scale-95 transition-transform flex items-center gap-1"
           >
             <span>Scan Now</span>
@@ -156,7 +169,10 @@ export function Navbar() {
             )}
             <Link
               href="/scanner"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                handleScanClick(e);
+              }}
               className="text-center py-2.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-xs flex items-center justify-center gap-1.5"
             >
               <Icon name="qr_code_scanner" className="text-sm" />

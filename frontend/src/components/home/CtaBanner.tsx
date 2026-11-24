@@ -1,7 +1,24 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/config";
 import { Icon } from "@/components/ui/Icon";
+import { useAuth } from "@/lib/auth-context";
 
 export function CtaBanner() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleScanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      router.push("/scanner");
+    } else {
+      router.push("/auth?redirect=/scanner");
+    }
+  };
+
   return (
     <section className="bg-white py-16 sm:py-24" id="start">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -23,14 +40,15 @@ export function CtaBanner() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href={siteConfig.scanUrl}
+              <Link
+                href="/scanner"
+                onClick={handleScanClick}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg text-sm font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98] transition-all"
               >
                 <Icon name="photo_camera" className="text-base" />
-                <span>Get Started Free</span>
+                <span>{user ? "Open Live Scanner" : "Get Started (Sign In)"}</span>
                 <Icon name="arrow_forward" className="text-base" />
-              </a>
+              </Link>
               <span className="text-xs font-label text-zinc-500">Instant access in your mobile browser</span>
             </div>
           </div>

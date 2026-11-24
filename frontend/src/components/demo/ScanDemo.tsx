@@ -1,13 +1,27 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { DEMO_PRODUCTS, DemoProduct } from "./mockScanData";
 import { siteConfig } from "@/lib/config";
 import { Icon } from "@/components/ui/Icon";
+import { useAuth } from "@/lib/auth-context";
 
 export function ScanDemo() {
+  const router = useRouter();
+  const { user } = useAuth();
   const [selectedProduct, setSelectedProduct] = useState<DemoProduct>(DEMO_PRODUCTS[0]);
   const [isScanning, setIsScanning] = useState(false);
+
+  const handleScanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      router.push("/scanner");
+    } else {
+      router.push("/auth?redirect=/scanner");
+    }
+  };
 
   const handleSelect = (prod: DemoProduct) => {
     setIsScanning(true);
@@ -284,13 +298,14 @@ export function ScanDemo() {
             </div>
 
             {/* CTA App Action */}
-            <a
+            <Link
               href={siteConfig.scanUrl}
+              onClick={handleScanClick}
               className="w-full mt-1 border border-slate-200 hover:border-slate-300 py-2.5 px-3 rounded-lg text-xs font-semibold text-slate-800 flex items-center justify-center gap-1.5 bg-slate-50 active:scale-[0.99] transition-all"
             >
               <Icon name="qr_code_scanner" className="text-slate-600 text-base" />
               <span>Scan Your Own Food Product Now</span>
-            </a>
+            </Link>
           </div>
         </div>
 

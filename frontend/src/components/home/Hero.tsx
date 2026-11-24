@@ -1,7 +1,24 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/config";
 import { Icon } from "@/components/ui/Icon";
+import { useAuth } from "@/lib/auth-context";
 
 export function Hero() {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleScanClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (user) {
+      router.push("/scanner");
+    } else {
+      router.push("/auth?redirect=/scanner");
+    }
+  };
+
   return (
     <section className="relative border-b border-zinc-200 overflow-hidden bg-white grid-pattern">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-16 md:py-24">
@@ -25,14 +42,15 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mb-8 sm:mb-10">
-              <a
-                href={siteConfig.scanUrl}
+              <Link
+                href="/scanner"
+                onClick={handleScanClick}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-sm font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 active:scale-[0.98] transition-all"
               >
                 <Icon name="photo_camera" className="text-base" />
-                <span>Start Scanning Free</span>
+                <span>{user ? "Open Live Scanner" : "Start Scanning (Sign In)"}</span>
                 <Icon name="arrow_forward" className="text-base" />
-              </a>
+              </Link>
               <a
                 href="#how-it-works"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg text-sm font-semibold text-zinc-700 bg-white border border-zinc-200 hover:bg-zinc-50 active:scale-[0.98] transition-all"
@@ -48,7 +66,7 @@ export function Hero() {
               <span>
                 Over 1.2M+ foods analyzed{" "}
                 <span className="text-zinc-300 mx-1.5">•</span> 0% corporate food lobby sponsorship{" "}
-                <span className="text-zinc-300 mx-1.5">•</span> 15 free scans without signup
+                <span className="text-zinc-300 mx-1.5">•</span> 15 free scans with account
               </span>
             </div>
           </div>
