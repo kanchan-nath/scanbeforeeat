@@ -74,4 +74,32 @@ describe("Blog Content & Dynamic Routes", () => {
     expect(generatedSlugs).toContain("e-numbers-explained");
     expect(generatedSlugs).toContain("nova-classification-food-science");
   });
+
+  it("every blog post is free of broken ASCII box art, raw code fences, and em-dashes", () => {
+    const posts = getAllBlogPosts();
+    for (const post of posts) {
+      // 1. Prohibit ASCII art boxes that break mobile and paragraph layouts
+      expect(
+        post.content,
+        `Article '${post.slug}' contains raw ASCII box art '+---'`
+      ).not.toContain("+---");
+
+      expect(
+        post.content,
+        `Article '${post.slug}' contains raw ASCII box art '+==='`
+      ).not.toContain("+===");
+
+      // 2. Prohibit unrendered or raw code fences
+      expect(
+        post.content,
+        `Article '${post.slug}' contains raw code fence '\`\`\`'`
+      ).not.toContain("```");
+
+      // 3. Prohibit em-dashes (per editorial quality rules)
+      expect(
+        post.content,
+        `Article '${post.slug}' contains prohibited em-dash '—'`
+      ).not.toContain("—");
+    }
+  });
 });

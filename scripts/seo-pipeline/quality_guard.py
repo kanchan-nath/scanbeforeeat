@@ -46,10 +46,17 @@ def audit_post(post: dict) -> list[str]:
         if re.search(pattern, content, re.IGNORECASE):
             violations.append(f"Contains banned AI slop word: '{word}'.")
 
-    # 3. Prohibited Characters Check (Em-dashes)
+    # 3. Prohibited Characters & Broken Patterns Check (Em-dashes, ASCII art, raw fences)
     for char in rules.get("prohibited_characters", []):
         if char in content:
             violations.append(f"Contains prohibited character: '{char}' (em-dash). Use commas, hyphens, or parentheses.")
+
+    for pattern in rules.get("prohibited_patterns", []):
+        if pattern in content:
+            violations.append(
+                f"Contains prohibited pattern: '{pattern}'. "
+                "Blog articles must use clean markdown (bullet lists, markdown tables, or sub-headings) instead of ASCII box art or raw code blocks."
+            )
 
     # 4. Author Persona Verification
     if any(name in author_name.lower() for name in ["kanchan", "aris thorne"]):

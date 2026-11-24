@@ -328,6 +328,86 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                       return <hr key={idx} className="my-8 border-zinc-200" />;
                     }
 
+                    // Markdown Table
+                    if (trimmed.startsWith("|") && trimmed.includes("\n|")) {
+                      const rows = trimmed
+                        .split("\n")
+                        .map((r) => r.trim())
+                        .filter((r) => r.startsWith("|"));
+
+                      if (rows.length >= 2) {
+                        const parseCells = (rowStr: string) =>
+                          rowStr
+                            .split("|")
+                            .slice(1, -1)
+                            .map((c) => c.trim());
+
+                        const headers = parseCells(rows[0]);
+                        const isSeparator = (r: string) => /^\|[\s\-:|]+\|$/.test(r);
+                        const bodyRows = rows.slice(1).filter((r) => !isSeparator(r)).map(parseCells);
+
+                        return (
+                          <div key={idx} className="my-8 overflow-x-auto rounded-xl border border-zinc-200 shadow-xs">
+                            <table className="min-w-full divide-y divide-zinc-200 text-left text-xs sm:text-sm">
+                              <thead className="bg-zinc-50 font-semibold text-zinc-900">
+                                <tr>
+                                  {headers.map((h, hi) => (
+                                    <th key={hi} className="px-4 py-3 font-semibold text-zinc-900">
+                                      {renderInlineMarkdown(h)}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-zinc-100 bg-white text-zinc-700">
+                                {bodyRows.map((cols, ri) => (
+                                  <tr key={ri} className="hover:bg-zinc-50/60 transition-colors">
+                                    {cols.map((col, ci) => (
+                                      <td key={ci} className="px-4 py-3 leading-relaxed">
+                                        {renderInlineMarkdown(col)}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        );
+                      }
+                    }
+
+                    // Code / Preformatted Block
+                    if (trimmed.startsWith("```")) {
+                      const lines = trimmed.split("\n");
+                      const codeLines = lines.slice(
+                        lines[0].startsWith("```") ? 1 : 0,
+                        lines[lines.length - 1].startsWith("```") ? -1 : undefined
+                      );
+                      const code = codeLines.join("\n");
+                      return (
+                        <div
+                          key={idx}
+                          className="my-6 rounded-xl overflow-x-auto bg-zinc-900 p-4 border border-zinc-800 text-zinc-100 font-mono text-xs leading-relaxed"
+                        >
+                          <pre className="whitespace-pre overflow-x-auto">
+                            <code>{code}</code>
+                          </pre>
+                        </div>
+                      );
+                    }
+
+                    // Blockquote
+                    if (trimmed.startsWith("> ")) {
+                      const quoteText = trimmed.replace(/^>\s*/gm, "");
+                      return (
+                        <blockquote
+                          key={idx}
+                          className="border-l-4 border-emerald-500 pl-4 py-2 italic text-zinc-700 my-4 bg-emerald-50/30 rounded-r-lg"
+                        >
+                          {renderInlineMarkdown(quoteText)}
+                        </blockquote>
+                      );
+                    }
+
                     return (
                       <p key={idx} className="text-sm sm:text-base leading-relaxed my-4 text-zinc-700">
                         {renderInlineMarkdown(trimmed)}

@@ -86,18 +86,9 @@ An emulsifier solves this thermodynamic dilemma through its amphiphilic molecula
 1. A hydrophilic (water-loving) polar head group that readily forms electrostatic or hydrogen bonds with surrounding water molecules.
 2. A lipophilic (fat-loving) non-polar hydrocarbon tail that dissolves directly into the hydrophobic lipid phase.
 
-\`\`\`
-+-------------------------------------------------------------------+
-|               AMPHIPHILIC EMULSIFIER MOLECULE ARCHITECTURE         |
-+-------------------------------------------------------------------+
-                                                                     
-          [ Hydrophilic Polar Head ]   <--- Interacts with Water     
-                     ( o )                                           
-                     /   \                                           
-                    /     \                                          
-                   /       \                                         
-        [ Lipophilic Hydrocarbon Tails ] <--- Dissolves in Lipids    
-\`\`\`
+- **Hydrophilic Polar Head**: Readily forms hydrogen and electrostatic bonds with surrounding water molecules.
+- **Lipophilic Hydrocarbon Tail**: Dissolves directly into non-polar lipids, oils, and triglycerides.
+- **Interfacial Film Stabilization**: Molecules spontaneously align at the phase boundary, lowering interfacial tension and forming an electrostatic or steric repulsion barrier that stops droplet coalescence.
 
 When an emulsifier is introduced to an oil-in-water mixture, the molecules spontaneously orient themselves at the boundary between phases. The lipophilic tails embed inside the oil droplet, while the polar heads project outward into the surrounding water. 
 
@@ -137,20 +128,9 @@ By utilizing powerful synthetic emulsifiers, manufacturers can construct micro-e
 
 One of the largest industrial consumers of emulsifiers is the commercial baking industry. When bread is baked, wheat starch granules absorb water and gelatinize. As baked bread cools and ages, the linear starch polymers (amylose and amylopectin) slowly re-align, expel water, and recrystallize into a rigid crystalline structure. This process is known as starch retrogradation, recognized by consumers as bread staling.
 
-\`\`\`
-+-------------------------------------------------------------------+
-|               STARCH RETROGRADATION RETARDATION MECHANISM          |
-+-------------------------------------------------------------------+
-                                                                     
-   Linear Amylose Helix:   ~~~~(  HYDROPHOBIC CAVITY  )~~~~          
-                                        |                            
-                                        v                            
-   Emulsifier Fatty Tail:  ====[ MONOGLYCERIDE TAIL ]====            
-                                        |                            
-                                        v                            
-   Outcome: Rigid inclusion complex blocks recrystallization        
-            Bread crumb remains soft and pliable for 21+ days        
-\`\`\`
+- **Linear Amylose Helices**: In freshly baked crumb, gelatinized amylose forms open helical cavities that tend to re-crystallize and expel water as bread cools.
+- **Monoglyceride Tail Insertion**: The hydrophobic hydrocarbon tail of distilled monoglycerides (E471) inserts directly into the core of amylose coils, forming a stable inclusion complex.
+- **Inclusion Complex Outcome**: The steric barrier prevents amylose chains from locking together, preserving crumb elasticity and softness for weeks without refrigeration.
 
 Distilled monoglycerides (E471) and sodium stearoyl lactylate (E481) possess long, saturated fatty acid tails that slip directly into the helical interior of amylose molecules, forming a stable inclusion complex. This chemical steric hindrance physically blocks amylose chains from recrystallizing together. As a direct result, factory-sliced sandwich bread retains an unnaturally soft, spongy texture for three to four weeks on supermarket shelves.
 
@@ -186,25 +166,11 @@ Beverage manufacturers deploy high-HLB emulsifiers like polysorbates and modifie
 
 Not all emulsifiers are chemically identical. They span a broad spectrum ranging from minimally processed natural lipids to complex industrial surfactants synthesized through chemical esterification.
 
-\`\`\`
-+-----------------------------------+-----------------------------------+-----------------------------------------+
-| Category                          | Common Additives & Codes          | Typical Supermarket Applications        |
-+-----------------------------------+-----------------------------------+-----------------------------------------+
-| Natural Phospholipids             | Soy Lecithin (E322)               | Chocolate, baked goods, infant milk     |
-|                                   | Sunflower Lecithin                | Clean-label plant milks, nutrition bars |
-|                                   | Egg Yolk (Phosphatidylcholine)    | Traditional mayonnaise, hollandaise     |
-+-----------------------------------+-----------------------------------+-----------------------------------------+
-| Semi-Synthetic Lipid Esters       | Mono- & Diglycerides (E471)       | Sliced sandwich bread, peanut butter    |
-|                                   | DATEM (E472e)                     | Commercial bagels, hamburger buns       |
-|                                   | PGPR (E476)                       | Discount chocolate bars, frostings      |
-|                                   | Sodium Stearoyl Lactylate (E481)  | Tortillas, pancake mixes, snack cakes   |
-+-----------------------------------+-----------------------------------+-----------------------------------------+
-| Synthetic Detergents & Polymers   | Polysorbate 80 (E433)             | Commercial ice cream, salad dressings   |
-|                                   | Polysorbate 60 (E435)             | Cake icings, non-dairy coffee creamers  |
-|                                   | Carboxymethylcellulose (E466)     | Diet drinks, dessert sauces, syrups     |
-|                                   | Carrageenan (E407)                | Deli poultry, almond milk, cottage cheese|
-+-----------------------------------+-----------------------------------+-----------------------------------------+
-\`\`\`
+| Category | Common Additives & Codes | Typical Supermarket Applications |
+| :--- | :--- | :--- |
+| **Natural Phospholipids** | Soy Lecithin (E322), Sunflower Lecithin, Egg Yolk (Phosphatidylcholine) | Chocolate, baked goods, infant milk, clean-label plant milks, traditional mayonnaise |
+| **Semi-Synthetic Lipid Esters** | Mono- & Diglycerides (E471), DATEM (E472e), PGPR (E476), Sodium Stearoyl Lactylate (E481) | Sliced sandwich bread, peanut butter, commercial bagels, hamburger buns, discount chocolate bars |
+| **Synthetic Detergents & Polymers** | Polysorbate 80 (E433), Polysorbate 60 (E435), Carboxymethylcellulose (E466), Carrageenan (E407) | Commercial ice cream, salad dressings, cake icings, non-dairy coffee creamers, diet drinks, deli poultry |
 
 ### Natural Phospholipids
 
@@ -263,41 +229,11 @@ The additives bind added water into an internal gel, increasing final retail pro
 
 The physical properties that make emulsifiers effective industrial surfactants, specifically their ability to blend oils and water and break down surface tension, are the exact characteristics that create biological complications inside the gastrointestinal tract.
 
-\`\`\`
-+-------------------------------------------------------------------+
-|               INTESTINAL LUMEN: DIETARY SURFACTANTS (CMC / P80)   |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 1. Detergent-Like Solubilization of MUC2 Mucus Polymer Sheets     |
-|    -> Inner sterile mucus layer thins from ~50 um to <15 um       |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 2. Microbial Encroachment Across Protective Barrier               |
-|    -> Commensal bacteria make direct physical epithelial contact  |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 3. Pattern Recognition Receptor Ligation (TLR4 & TLR5)            |
-|    -> LPS & flagellin trigger MyD88 intracellular signaling       |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 4. NF-kappa-B Translocation and Cytokine Storm                     |
-|    -> Secretion of IL-1beta, IL-6, TNF-alpha, and CXCL8           |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 5. Tight Junction Disassembly (Claudin-1, Occludin, ZO-1)         |
-|    -> Paracellular hyperpermeability ("Leaky Gut") & Endotoxemia  |
-+-------------------------------------------------------------------+
-\`\`\`
+- **Step 1: Solubilization of MUC2 Mucus Sheets**: Surfactant molecules integrate into protective mucin polymers in a detergent-like manner, thinning the sterile inner mucus layer from approximately 50 micrometers to under 15 micrometers.
+- **Step 2: Microbial Encroachment Across the Barrier**: Commensal gut bacteria translocate through the degraded mucus layer and make direct physical contact with epithelial microvilli.
+- **Step 3: Pattern Recognition Receptor Ligation (TLR4 & TLR5)**: Bacterial lipopolysaccharides and flagellin bind directly to epithelial Toll-Like Receptors 4 and 5, initiating intracellular MyD88 signaling.
+- **Step 4: NF-kappa-B Translocation and Cytokine Secretion**: Nuclear translocation of NF-kappa-B induces persistent secretion of pro-inflammatory cytokines, including IL-1beta, IL-6, TNF-alpha, and CXCL8.
+- **Step 5: Tight Junction Disassembly & Paracellular Leak**: Phosphorylation-dependent disruption of Claudin-1, Occludin, and ZO-1 unseals the intestinal barrier, triggering systemic endotoxemia and low-grade metabolic inflammation.
 
 ### The Intestinal Mucus Shield
 
@@ -551,41 +487,11 @@ Subsequent fermentation by colonic bacteria in the large intestine creates an en
 
 The fact that carrageenan does not trigger human taste buds has obscured its biological activity inside the intestine. While the oral cavity registers neutrality, the epithelial cells of the gut lining react aggressively to sulfated polygalactans.
 
-\`\`\`
-+-------------------------------------------------------------------+
-|               INTESTINAL LUMEN: DIETARY CARRAGEENAN               |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 1. Detergent-like interaction with MUC2 mucin polymers             |
-|    -> Depletion of protective inner mucus layer                   |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 2. Direct contact with epithelial cell membrane                   |
-|    -> Binding to Toll-Like Receptor 4 (TLR4)                      |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 3. Recruitment of MyD88 adapter protein                           |
-|    -> Phosphorylation of I-kappa-B kinase (IKK)                   |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 4. Nuclear translocation of NF-kappa-B transcription factor       |
-|    -> Upregulation of Interleukin-8 (IL-8) and TNF-alpha          |
-+-------------------------------------------------------------------+
-                                  |
-                                  v
-+-------------------------------------------------------------------+
-| 5. Breakdown of Claudin-1 & Occludin tight junction complexes      |
-|    -> Intestinal hyperpermeability ("Leaky Gut")                  |
-+-------------------------------------------------------------------+
-\`\`\`
+- **Step 1: Detergent-Like Interaction with MUC2 Mucin Polymers**: Depletion of the protective inner colonic mucus layer.
+- **Step 2: Direct Contact with Epithelial Cell Membrane**: Bacterial translocation across the thinned barrier initiates binding to Toll-Like Receptor 4 (TLR4).
+- **Step 3: Recruitment of MyD88 Adapter Protein**: Intracellular phosphorylation and activation of I-kappa-B kinase (IKK).
+- **Step 4: Nuclear Translocation of NF-kappa-B Transcription Factor**: Upregulation and persistent transcription of pro-inflammatory cytokines, including Interleukin-8 (IL-8) and TNF-alpha.
+- **Step 5: Breakdown of Claudin-1 & Occludin Tight Junction Complexes**: Disruption of intercellular seals, leading to intestinal hyperpermeability and systemic endotoxin translocation.
 
 ### 1. Mucus Layer Depletion and Bacterial Contact
 
@@ -650,17 +556,13 @@ Consequently, the European Union strictly prohibits carrageenan from all infant 
 
 Because carrageenan has no distinctive flavor, you cannot rely on taste or smell to protect your digestive barrier. Identification requires attentive label literacy.
 
-\`\`\`
-+---------------------------+-----------------------------------+-----------------------------------------+
-| Supermarket Category      | Common Carrageenan Formulation    | Clean, Additive-Free Whole Food Swaps   |
-+---------------------------+-----------------------------------+-----------------------------------------+
-| Plant-Based Milk          | Almond/Oat milk + E407 + Oils     | 2-ingredient milks (Filtered water, nut)|
-| Heavy / Whipping Cream    | Pasteurized cream + Carrageenan   | 100% pure organic heavy cream without gum|
-| Processed Deli Turkey     | Meat + Water + Phosphate + E407   | Fresh whole roasted turkey breast       |
-| Commercial Ice Cream      | Skim milk + Corn syrup + E407     | Whole milk, cream, egg yolk, cane sugar |
-| Sour Cream / Cottage Cheese| Skim milk + Carrageenan + Starches| Traditional fermented cream & live cultures|
-+---------------------------+-----------------------------------+-----------------------------------------+
-\`\`\`
+| Supermarket Category | Common Carrageenan Formulation | Clean, Additive-Free Whole Food Swaps |
+| :--- | :--- | :--- |
+| **Plant-Based Milk** | Almond/Oat milk + E407 + Oils | 2-ingredient milks (Filtered water, nuts) |
+| **Heavy / Whipping Cream** | Pasteurized cream + Carrageenan | 100% pure organic heavy cream without gums |
+| **Processed Deli Turkey** | Meat + Water + Phosphate + E407 | Fresh whole roasted turkey breast |
+| **Commercial Ice Cream** | Skim milk + Corn syrup + E407 | Whole milk, fresh cream, egg yolk, cane sugar |
+| **Sour Cream / Cottage Cheese** | Skim milk + Carrageenan + Starches | Traditional fermented cream & live cultures |
 
 ### Label Synonyms to Watch For
 
@@ -935,7 +837,7 @@ These findings dismantle the assumption that non-absorbable food additives are b
 
 The "E" in E-numbers stands for "Europe." Originally established by the European Economic Community (EEC) in the 1960s, the numbering system was created to establish a harmonized regulatory catalog of approved food additives across member states.
 
-Today, consumers frequently view all E-numbers with suspicion. However, the prefix simply indicates regulatory categorization — it does not inherently dictate safety or hazard.
+Today, consumers frequently view all E-numbers with suspicion. However, the prefix simply indicates regulatory categorization, it does not inherently dictate safety or hazard.
 
 ---
 
@@ -1165,7 +1067,7 @@ In vivo toxicological studies show potassium bromate induces oxidative DNA base 
     slug: "seed-oils-oxidation-and-aldehydes",
     title: "Seed Oil Oxidation in Ultra-Processed Foods: Cytotoxic Aldehydes and Lipid Peroxidation",
     subtitle: "What happens when linoleic acid undergoes repeated industrial heating, refining, and air exposure during commercial snack manufacturing.",
-    excerpt: "Explore the biochemistry of toxic lipid breakdown products—including 4-HNE and malondialdehyde—generated when polyunsaturated vegetable oils are thermally stressed in factory fryers.",
+    excerpt: "Explore the biochemistry of toxic lipid breakdown products - including 4-HNE and malondialdehyde - generated when polyunsaturated vegetable oils are thermally stressed in factory fryers.",
     category: "Ultra-Processed Foods",
     readTime: "12 min read",
     publishedDate: "2026-11-08",
@@ -1226,7 +1128,7 @@ Sodium benzoate (E211) is an antimicrobial salt of benzoic acid added to carbona
 
 ## The Hydroxyl Radical Fenton Reaction
 
-Ascorbic acid reduces metal ions, which subsequently react with dissolved oxygen to generate hydroxyl free radicals (•OH). These highly reactive radicals attack the benzene ring of benzoate, causing oxidative decarboxylation that yields free **benzene**—a Group 1 proven human leukemia carcinogen.
+Ascorbic acid reduces metal ions, which subsequently react with dissolved oxygen to generate hydroxyl free radicals (•OH). These highly reactive radicals attack the benzene ring of benzoate, causing oxidative decarboxylation that yields free **benzene** - a Group 1 proven human leukemia carcinogen.
     `,
   },
   {

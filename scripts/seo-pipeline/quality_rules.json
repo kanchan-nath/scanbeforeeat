@@ -29,6 +29,11 @@
   "prohibited_characters": [
     "—"
   ],
+  "prohibited_patterns": [
+    "+---",
+    "+===",
+    "```"
+  ],
   "author_requirements": {
     "must_be_real_researcher": true,
     "prohibit_founder_as_biologist": true,
