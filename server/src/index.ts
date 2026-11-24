@@ -23,6 +23,8 @@ import {
   analyzeFoodImageWithAI,
   getAiServiceStatus,
   analyzeIngredientsHeuristic,
+  generateCleanAlternatives,
+  inferCategory,
 } from "./services/ai.js";
 import {
   generateJwtToken,
@@ -832,7 +834,7 @@ app.post("/api/shopping-list", requireAuth, (req: Request, res: Response) => {
   res.json(item);
 });
 
-app.patch("/api/shopping-list/:id/toggle", (req: Request, res: Response) => {
+app.patch("/api/shopping-list/:id/toggle", requireAuth, (req: Request, res: Response) => {
   const { id } = req.params;
   const current = db.prepare("SELECT checked FROM shopping_items WHERE id = ?").get(id) as any;
   if (!current) return res.status(404).json({ error: "Item not found" });
@@ -999,29 +1001,108 @@ app.get("/api/synergies/:userId", (req: Request, res: Response) => {
   res.json(data.flaggedSynergies);
 });
 
-app.get("/api/alternatives/:userId", (req: Request, res: Response) => {
+app.get("/api/alternatives/:userId", async (req: Request, res: Response) => {
   const { userId } = req.params;
-  // Recommend alternatives based on user's lowest-scoring scans
-  const lowScans = db
-    .prepare("SELECT barcode, productName, healthScore FROM scans WHERE userId = ? AND healthScore < 60 ORDER BY scannedAt DESC LIMIT 4")
-    .all(userId) as any[];
 
-  const defaults = [
-    {
-      id: "alt1",
-      category: "Instant Noodles & Meals",
-      upfItem: { name: "Maggi 2-Minute Masala Instant Noodles", score: 38, nova: 4, flaws: ["TBHQ (E319)", "Tartrazine (E102)", "MSG"] },
-      cleanAlternative: { name: "Koyo Organic Garlic Pepper Ramen", score: 84, nova: 1, highlights: ["Baked not fried", "Zero synthetic additives"] },
-    },
-    {
-      id: "alt2",
-      category: "Dairy & Plant Milks",
-      upfItem: { name: "Commercial Barista Oat Milk", score: 62, nova: 3, flaws: ["Dipotassium Phosphate", "Canola Emulsion"] },
-      cleanAlternative: { name: "Malk Pure Organic Almond Milk", score: 95, nova: 1, highlights: ["3 ingredients only", "Zero gums or oils"] },
-    },
-  ];
+  let scans: any[] = [];
+  try {
+    const cloudScans = await getScanHistoryFromSupabase(userId, 20);
+    if (cloudScans && cloudScans.length > 0) {
+      scans = cloudScans;
+    }
+  } catch {}
 
-  res.json(defaults);
+  if (scans.length === 0) {
+    scans = db.prepare(`
+      SELECT s.barcode, s.productName, s.healthScore, s.scannedAt,
+             p.name, p.brand, p.category, p.healthScore as prodScore, p.novaGroup,
+             p.ingredientsText, p.additivesJson, p.allergensJson, p.deductionsJson, p.alternativesJson
+      FROM scans s
+      LEFT JOIN products p ON s.barcode = p.barcode
+      WHERE s.userId = ?
+      ORDER BY s.scannedAt DESC
+      LIMIT 20
+    `).all(userId) as any[];
+  }
+
+  if (scans.length === 0) {
+    return res.json([]);
+  }
+
+  const seen = new Set<string>();
+  const pairs: any[] = [];
+
+  for (const scan of scans) {
+    const key = scan.barcode || scan.productName || scan.name;
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+
+    let prod = scan;
+    if (!prod.alternativesJson && scan.barcode) {
+      const dbProd = db.prepare("SELECT * FROM products WHERE barcode = ?").get(scan.barcode) as any;
+      if (dbProd) prod = { ...scan, ...dbProd };
+    }
+
+    const upfName = prod.name || prod.productName || "Audited Food Product";
+    const upfScore = prod.healthScore ?? prod.prodScore ?? 45;
+    const upfNova = prod.novaGroup ?? 4;
+    const category = prod.category || inferCategory(upfName);
+
+    let flaws: string[] = [];
+    try {
+      const additives = prod.additivesJson ? (typeof prod.additivesJson === "string" ? JSON.parse(prod.additivesJson) : prod.additivesJson) : (prod.additives || []);
+      if (Array.isArray(additives)) {
+        flaws.push(...additives.map((a: any) => typeof a === "string" ? a : `${a.name || a.code || "Additive"} (${a.risk || "Risk"})`));
+      }
+    } catch {}
+    try {
+      const deductions = prod.deductionsJson ? (typeof prod.deductionsJson === "string" ? JSON.parse(prod.deductionsJson) : prod.deductionsJson) : (prod.deductions || []);
+      if (Array.isArray(deductions)) {
+        flaws.push(...deductions.map((d: any) => d.reason || d.description || ""));
+      }
+    } catch {}
+    flaws = flaws.filter(Boolean);
+    if (flaws.length === 0) {
+      flaws = ["Ultra-processed NOVA formulation", "Industrial ingredient matrix"];
+    }
+
+    let cleanAlts: any[] = [];
+    try {
+      if (prod.alternativesJson) {
+        cleanAlts = typeof prod.alternativesJson === "string" ? JSON.parse(prod.alternativesJson) : prod.alternativesJson;
+      } else if (Array.isArray(prod.alternatives)) {
+        cleanAlts = prod.alternatives;
+      }
+    } catch {}
+
+    if (!Array.isArray(cleanAlts) || cleanAlts.length === 0) {
+      cleanAlts = generateCleanAlternatives(prod.ingredientsText || upfName, upfNova);
+    }
+
+    for (let i = 0; i < cleanAlts.length; i++) {
+      const alt = cleanAlts[i];
+      pairs.push({
+        id: `alt_${scan.barcode || Math.random().toString(36).slice(2, 6)}_${i}`,
+        category,
+        upfItem: {
+          barcode: scan.barcode,
+          name: upfName,
+          score: upfScore,
+          nova: upfNova,
+          flaws: flaws.slice(0, 4),
+        },
+        cleanAlternative: {
+          name: alt.name,
+          score: alt.score || 88,
+          nova: alt.nova || 1,
+          highlights: alt.note ? [alt.note] : ["100% clean whole food ingredients", "Zero synthetic additives"],
+          ingredientCount: alt.ingredientCount || (alt.nova === 1 ? 3 : 5),
+        },
+      });
+    }
+  }
+
+  res.json(pairs);
 });
 
 // -------------------------------------------------------------

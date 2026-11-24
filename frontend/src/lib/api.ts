@@ -311,7 +311,10 @@ export interface ShoppingItem {
 }
 
 export async function fetchShoppingItems(userId: string): Promise<ShoppingItem[]> {
-  const res = await fetch(`${API_BASE}/shopping-list/${encodeURIComponent(userId)}`);
+  const res = await fetch(`${API_BASE}/shopping-list/${encodeURIComponent(userId)}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Failed to fetch shopping items");
   return res.json();
 }
@@ -323,7 +326,8 @@ export async function addShoppingItem(params: {
 }): Promise<ShoppingItem> {
   const res = await fetch(`${API_BASE}/shopping-list`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    credentials: "include",
     body: JSON.stringify(params),
   });
   if (!res.ok) throw new Error("Failed to add shopping item");
@@ -333,6 +337,8 @@ export async function addShoppingItem(params: {
 export async function toggleShoppingItem(id: string) {
   const res = await fetch(`${API_BASE}/shopping-list/${encodeURIComponent(id)}/toggle`, {
     method: "PATCH",
+    headers: authHeaders(),
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to toggle shopping item");
   return res.json();
@@ -341,8 +347,39 @@ export async function toggleShoppingItem(id: string) {
 export async function deleteShoppingItem(id: string) {
   const res = await fetch(`${API_BASE}/shopping-list/${encodeURIComponent(id)}`, {
     method: "DELETE",
+    headers: authHeaders(),
+    credentials: "include",
   });
   if (!res.ok) throw new Error("Failed to delete shopping item");
+  return res.json();
+}
+
+// Clean Alternatives API
+export interface AlternativePair {
+  id: string;
+  category: string;
+  upfItem: {
+    barcode?: string;
+    name: string;
+    score: number;
+    nova: number;
+    flaws: string[];
+  };
+  cleanAlternative: {
+    name: string;
+    score: number;
+    nova: number;
+    highlights: string[];
+    ingredientCount: number;
+  };
+}
+
+export async function fetchUserAlternatives(userId: string): Promise<AlternativePair[]> {
+  const res = await fetch(`${API_BASE}/alternatives/${encodeURIComponent(userId)}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch clean alternatives");
   return res.json();
 }
 

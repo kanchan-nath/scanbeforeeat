@@ -500,7 +500,7 @@ function inferBrand(text: string): string {
   return "Detected Brand";
 }
 
-function inferCategory(text: string): string {
+export function inferCategory(text: string): string {
   const lower = text.toLowerCase();
   if (lower.includes("noodle") || lower.includes("soup") || lower.includes("ramen")) return "Instant Prepared Meals";
   if (lower.includes("chip") || lower.includes("crisp") || lower.includes("snack") || lower.includes("popcorn")) return "Snacks & Chips";
@@ -509,7 +509,7 @@ function inferCategory(text: string): string {
   return "Packaged Food";
 }
 
-function generateCleanAlternatives(text: string, currentNova: number): CleanProduct["alternatives"] {
+export function generateCleanAlternatives(text: string, currentNova: number): CleanProduct["alternatives"] {
   const lower = text.toLowerCase();
   if (lower.includes("noodle") || lower.includes("ramen")) {
     return [

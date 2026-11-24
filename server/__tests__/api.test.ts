@@ -435,4 +435,119 @@ describe("ScanBeforeEat Server API Endpoints", () => {
     // Clean up
     await fetch(`${BASE_URL}/user/account/test-user-allergen`, { method: "DELETE", headers });
   });
+
+  it("Shopping List API should support authenticated CRUD and toggle operations", async () => {
+    const userId = "test-user-shop";
+    const syncRes = await fetch(`${BASE_URL}/auth/sync`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: userId,
+        email: "shop-test@scanbeforeeat.com",
+        displayName: "Shop Tester",
+        plan: "free",
+      }),
+    });
+    const { token } = await syncRes.json();
+    const authHeaders = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    // 1. Add shopping item
+    const addRes = await fetch(`${BASE_URL}/shopping-list`, {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({
+        userId,
+        productName: "Koyo Organic Garlic Pepper Ramen",
+        category: "Instant Prepared Meals",
+      }),
+    });
+    expect(addRes.status).toBe(200);
+    const addedItem = await addRes.json();
+    expect(addedItem.productName).toBe("Koyo Organic Garlic Pepper Ramen");
+    expect(addedItem.checked).toBe(0);
+
+    // 2. Fetch shopping list
+    const getRes = await fetch(`${BASE_URL}/shopping-list/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(getRes.status).toBe(200);
+    const list = await getRes.json();
+    expect(list.some((item: any) => item.productName === "Koyo Organic Garlic Pepper Ramen")).toBe(true);
+
+    // 3. Toggle shopping item
+    const toggleRes = await fetch(`${BASE_URL}/shopping-list/${addedItem.id}/toggle`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(toggleRes.status).toBe(200);
+    const toggleData = await toggleRes.json();
+    expect(toggleData.checked).toBe(1);
+
+    // 4. Delete shopping item
+    const delRes = await fetch(`${BASE_URL}/shopping-list/${addedItem.id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(delRes.status).toBe(200);
+
+    // Verify deletion
+    const verifyRes = await fetch(`${BASE_URL}/shopping-list/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const updatedList = await verifyRes.json();
+    expect(updatedList.some((item: any) => item.id === addedItem.id)).toBe(false);
+
+    // Clean up
+    await fetch(`${BASE_URL}/user/account/${userId}`, { method: "DELETE", headers: authHeaders });
+  });
+
+  it("GET /api/alternatives/:userId should return dynamic clean alternatives based on user scans", async () => {
+    const userId = "test-user-alts";
+    const syncRes = await fetch(`${BASE_URL}/auth/sync`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: userId,
+        email: "alts-test@scanbeforeeat.com",
+        displayName: "Alts Tester",
+        plan: "free",
+      }),
+    });
+    const { token } = await syncRes.json();
+
+    // 1. Initial state with 0 scans should return empty array (no hardcoded items)
+    const emptyRes = await fetch(`${BASE_URL}/alternatives/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(emptyRes.status).toBe(200);
+    const emptyData = await emptyRes.json();
+    expect(emptyData).toEqual([]);
+
+    // 2. Seed a scan for this user
+    db.prepare(`
+      INSERT INTO scans (id, userId, barcode, productName, healthScore, novaGroup)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(`scan_${Date.now()}`, userId, "8901058017687", "Maggi 2-Minute Masala Instant Noodles", 38, 4);
+
+    // 3. Alternatives should now dynamically return clean noodle/ramen swaps
+    const populatedRes = await fetch(`${BASE_URL}/alternatives/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(populatedRes.status).toBe(200);
+    const pairs = await populatedRes.json();
+    expect(pairs.length).toBeGreaterThan(0);
+    expect(pairs[0].upfItem.name).toContain("Maggi");
+    expect(pairs[0].cleanAlternative.score).toBeGreaterThan(80);
+    expect(pairs[0].cleanAlternative.nova).toBeLessThanOrEqual(2);
+
+    // Clean up
+    db.prepare("DELETE FROM scans WHERE userId = ?").run(userId);
+    await fetch(`${BASE_URL}/user/account/${userId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  });
 });
