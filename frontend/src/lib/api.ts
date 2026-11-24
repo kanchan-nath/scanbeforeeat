@@ -774,6 +774,28 @@ export function getDataExportUrl(userId: string, format: "json" | "csv" = "json"
   return `${API_BASE}/user/export/${encodeURIComponent(userId)}?format=${format}`;
 }
 
+export async function downloadUserDataExport(userId: string, format: "json" | "csv" = "csv"): Promise<void> {
+  const res = await fetch(`${API_BASE}/user/export/${encodeURIComponent(userId)}?format=${format}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed to export audit dossier");
+  }
+
+  const blob = await res.blob();
+  const blobUrl = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  const timestamp = new Date().toISOString().split("T")[0];
+  a.download = `scanbeforeeat-audit-history-${timestamp}.${format}`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(blobUrl);
+}
+
 export async function deleteUserAccount(userId: string) {
   const res = await fetch(`${API_BASE}/user/account/${encodeURIComponent(userId)}`, {
     method: "DELETE",

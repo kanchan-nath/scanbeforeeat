@@ -4,13 +4,15 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import AuthenticatedShell from "@/components/AuthenticatedShell";
 import { useAuth } from "@/lib/auth-context";
-import { fetchScanHistory, getDataExportUrl } from "@/lib/api";
+import { fetchScanHistory, downloadUserDataExport } from "@/lib/api";
 
 export default function HistoryPage() {
   const { user } = useAuth();
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [exportingFormat, setExportingFormat] = useState<"csv" | "json" | null>(null);
+  const [exportStatus, setExportStatus] = useState<string>("");
 
   useEffect(() => {
     if (user?.id) {
@@ -21,6 +23,22 @@ export default function HistoryPage() {
         .finally(() => setLoading(false));
     }
   }, [user?.id]);
+
+  const handleExportData = async (format: "csv" | "json") => {
+    const activeUserId = user?.id || "demo_pro";
+    setExportingFormat(format);
+    setExportStatus(`Downloading ${format.toUpperCase()}...`);
+    try {
+      await downloadUserDataExport(activeUserId, format);
+      setExportStatus(`Exported ${format.toUpperCase()}!`);
+      setTimeout(() => setExportStatus(""), 3000);
+    } catch {
+      setExportStatus("Export failed. Please try again.");
+      setTimeout(() => setExportStatus(""), 3000);
+    } finally {
+      setExportingFormat(null);
+    }
+  };
 
   const filtered = history.filter(
     (h) =>
@@ -48,16 +66,39 @@ export default function HistoryPage() {
               Live audit database of all scanned foods, chemical additives, and risk ratings persisted in Supabase
             </p>
           </div>
-          <button
-            onClick={() => {
-              const url = getDataExportUrl(user?.id || "demo_pro", "csv");
-              window.open(url, "_blank");
-            }}
-            className="px-4 py-2 bg-white border border-zinc-200 text-zinc-800 text-xs font-bold rounded-xl hover:bg-zinc-50 flex items-center gap-1.5 self-start sm:self-auto shadow-xs"
-          >
-            <span className="material-symbols-outlined text-base">download</span>
-            <span>Export Audit Dossier</span>
-          </button>
+          <div className="flex flex-col items-start sm:items-end gap-1.5 self-start sm:self-auto">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleExportData("csv")}
+                disabled={exportingFormat !== null}
+                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
+                title="Download CSV spreadsheet table compatible with Excel and Google Sheets"
+              >
+                <span className="material-symbols-outlined text-base">
+                  {exportingFormat === "csv" ? "sync" : "table_view"}
+                </span>
+                <span>{exportingFormat === "csv" ? "Exporting..." : "Export CSV (Excel)"}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleExportData("json")}
+                disabled={exportingFormat !== null}
+                className="px-3.5 py-2 bg-white border border-zinc-200 text-zinc-800 hover:bg-zinc-50 disabled:opacity-50 text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
+                title="Download full JSON toxicology archive dossier"
+              >
+                <span className="material-symbols-outlined text-base">
+                  {exportingFormat === "json" ? "sync" : "data_object"}
+                </span>
+                <span>{exportingFormat === "json" ? "Exporting..." : "JSON Dossier"}</span>
+              </button>
+            </div>
+            {exportStatus && (
+              <span className="text-[11px] font-mono text-emerald-700 font-semibold animate-in fade-in">
+                {exportStatus}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Live Metrics Grid from Database */}

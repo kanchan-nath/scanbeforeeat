@@ -1400,7 +1400,17 @@ app.get("/api/user/export/:userId", requireAuth, async (req: Request, res: Respo
   const user = db.prepare("SELECT id, email, displayName, plan, scansLimit, scansUsed, createdAt FROM users WHERE id = ?").get(userId) as any;
   if (!user) return res.status(404).json({ error: "User not found" });
 
-  const scans = db.prepare("SELECT barcode, productName, brand, healthScore, novaGroup, scannedAt FROM scans WHERE userId = ?").all(userId);
+  let scans: any[] = [];
+  try {
+    const cloudScans = await getScanHistoryFromSupabase(userId, 500);
+    if (cloudScans && cloudScans.length > 0) {
+      scans = cloudScans;
+    }
+  } catch {}
+  if (scans.length === 0) {
+    scans = db.prepare("SELECT barcode, productName, brand, healthScore, novaGroup, scannedAt FROM scans WHERE userId = ? ORDER BY scannedAt DESC").all(userId) as any[];
+  }
+
   const pantry = db.prepare("SELECT productName, category, novaGroup, healthScore, expiryDate, quantity FROM pantry_items WHERE userId = ?").all(userId);
   const shopping = db.prepare("SELECT productName, category, checked, addedAt FROM shopping_items WHERE userId = ?").all(userId);
   const allergens = db.prepare("SELECT allergen FROM user_allergens WHERE userId = ?").all(userId);
@@ -1420,12 +1430,20 @@ app.get("/api/user/export/:userId", requireAuth, async (req: Request, res: Respo
   };
 
   if (format === "csv") {
-    // Generate valid CSV table of food audits
-    let csv = "Product Name,Barcode,Brand,Health Score,NOVA Level,Scanned At\n";
+    // Generate valid production CSV table of food audits
+    let csv = "Product Name,Barcode,Brand,Health Score,Safety Rating,NOVA Level,Processing Tier,Scanned At\n";
     for (const s of scans as any[]) {
-      csv += `"${s.productName.replace(/"/g, '""')}","${s.barcode}","${(s.brand || "").replace(/"/g, '""')}",${s.healthScore},${s.novaGroup},"${s.scannedAt}"\n`;
+      const pName = (s.productName || "Unknown Food Item").replace(/"/g, '""');
+      const bCode = s.barcode || "";
+      const brand = (s.brand || "N/A").replace(/"/g, '""');
+      const score = s.healthScore ?? 0;
+      const rating = score >= 80 ? "Excellent" : score >= 60 ? "Moderate" : "Poor";
+      const nova = s.novaGroup ?? 1;
+      const tier = nova === 4 ? "Ultra-Processed (UPF)" : nova === 3 ? "Processed" : nova === 2 ? "Culinary Ingredient" : "Minimally Processed";
+      const date = (s.scannedAt || "").replace(/"/g, '""');
+      csv += `"${pName}","${bCode}","${brand}",${score},"${rating}",${nova},"${tier}","${date}"\n`;
     }
-    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Type", "text/csv; charset=utf-8");
     res.setHeader("Content-Disposition", `attachment; filename="scanbeforeeat-audit-history-${userId}.csv"`);
     return res.send(csv);
   }

@@ -3,28 +3,23 @@
 import React, { useState } from "react";
 import AuthenticatedShell from "@/components/AuthenticatedShell";
 import { useAuth } from "@/lib/auth-context";
-import { getDataExportUrl } from "@/lib/api";
+import { downloadUserDataExport } from "@/lib/api";
 
 export default function DataExportPage() {
   const { user } = useAuth();
   const [downloading, setDownloading] = useState(false);
 
-  const handleExport = (format: "json" | "csv" | "pdf") => {
+  const handleExport = async (format: "json" | "csv" | "pdf") => {
     setDownloading(true);
     const userId = user?.id || "demo-user-1";
     const exportFormat = format === "csv" ? "csv" : "json";
-    const downloadUrl = getDataExportUrl(userId, exportFormat);
-
-    const a = document.createElement("a");
-    a.href = downloadUrl;
-    a.download = `scanbeforeeat-dossier-${userId}.${exportFormat}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    setTimeout(() => {
+    try {
+      await downloadUserDataExport(userId, exportFormat);
+    } catch {
+      // Offline fallback
+    } finally {
       setDownloading(false);
-    }, 800);
+    }
   };
 
   return (
