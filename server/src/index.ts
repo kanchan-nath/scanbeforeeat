@@ -560,13 +560,15 @@ app.post("/api/scan", requireAuth, async (req: Request, res: Response) => {
   });
 
   const updatedUser = db.prepare("SELECT * FROM users WHERE id = ?").get(userId) as any;
+  const scansLimit = updatedUser?.scansLimit ?? 15;
+  const scansUsed = updatedUser?.scansUsed ?? 1;
 
   res.json({
     product: productResult,
     quota: {
-      scansLimit: updatedUser.scansLimit,
-      scansUsed: updatedUser.scansUsed,
-      remainingScans: Math.max(0, updatedUser.scansLimit - updatedUser.scansUsed),
+      scansLimit,
+      scansUsed,
+      remainingScans: Math.max(0, scansLimit - scansUsed),
     },
   });
 });

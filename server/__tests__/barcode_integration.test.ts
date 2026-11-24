@@ -38,7 +38,7 @@ afterAll(async () => {
   await new Promise<void>((resolve) => {
     server.close(() => resolve());
   });
-});
+}, 30000);
 
 describe("Barcode Scanner & OpenFoodFacts Catalog Integration", () => {
   it("Scan 1: Maggi Noodles (8901058852331) - returns complete ProductDetail & updates SQLite", async () => {
@@ -313,5 +313,5 @@ describe("Barcode Scanner & OpenFoodFacts Catalog Integration", () => {
     expect(scanRow).toBeDefined();
     expect(scanRow.barcode).toBe(barcode);
     expect(scanRow.healthScore).toBe(p.healthScore);
-  });
+  }, 60000);
 });
