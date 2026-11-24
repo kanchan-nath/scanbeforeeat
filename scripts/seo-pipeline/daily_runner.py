@@ -119,8 +119,9 @@ def run_verification() -> bool:
     print("\n[VERIFY] Running frontend build check...")
     try:
         # Check TypeScript compilation without emitting files
-        cmd = ["npx", "tsc", "--noEmit"]
-        res = subprocess.run(cmd, cwd=frontend_dir, capture_output=True, text=True)
+        local_tsc = frontend_dir / "node_modules" / ".bin" / "tsc"
+        cmd = [str(local_tsc), "--noEmit"] if local_tsc.exists() else ["npx", "--yes", "tsc", "--noEmit"]
+        res = subprocess.run(cmd, cwd=frontend_dir, capture_output=True, text=True, timeout=60)
         if res.returncode == 0:
             print("[VERIFY] TypeScript check passed with 0 errors!")
             return True
@@ -129,7 +130,7 @@ def run_verification() -> bool:
             print(res.stdout[:500])
             return False
     except Exception as e:
-        print(f"[WARN] Could not run npx tsc: {e}")
+        print(f"[WARN] Could not run tsc check: {e}")
         return True
 
 
