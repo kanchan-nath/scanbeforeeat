@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { isRouteActive } from "@/lib/navigation";
 
 interface NavItem {
   name: string;
@@ -138,6 +139,14 @@ export default function AuthenticatedShell({
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
+
+  // Determine current active navigation item and section
+  const currentNavSection = NAV_SECTIONS.find((sec) =>
+    sec.items.some((item) => isRouteActive(pathname, item.href))
+  );
+  const currentNavItem = currentNavSection?.items.find((item) =>
+    isRouteActive(pathname, item.href)
+  ) || MOBILE_NAV_ITEMS.find((item) => isRouteActive(pathname, item.href));
 
   // Smoothly center active item in horizontal scroll rail on mobile
   useEffect(() => {
@@ -276,23 +285,25 @@ export default function AuthenticatedShell({
                 {section.title}
               </div>
               {section.items.map((item) => {
-                const isActive = pathname === item.href;
+                const isActive = isRouteActive(pathname, item.href);
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-colors duration-150 font-medium ${
+                    data-active={isActive ? "true" : "false"}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs transition-all duration-150 ${
                       isActive
-                        ? "bg-emerald-50 text-emerald-800 font-semibold shadow-xs"
-                        : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+                        ? "bg-emerald-50 text-emerald-900 font-bold border-l-4 border-emerald-600 pl-2 shadow-xs"
+                        : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 font-medium"
                     }`}
                   >
-                    <span className={`material-symbols-outlined text-base shrink-0 ${isActive ? "text-emerald-700" : "text-zinc-400"}`}>
+                    <span className={`material-symbols-outlined text-base shrink-0 ${isActive ? "text-emerald-700 font-semibold" : "text-zinc-400"}`}>
                       {item.icon}
                     </span>
                     <span className="truncate">{item.name}</span>
                     {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 ml-auto shrink-0" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 ml-auto shrink-0 shadow-xs" />
                     )}
                   </Link>
                 );
@@ -330,9 +341,27 @@ export default function AuthenticatedShell({
       {/* Main Content Area */}
       <main className="flex-1 md:ml-64 min-h-screen bg-slate-50 flex flex-col pb-28 md:pb-6">
         {/* Desktop Authenticated Top Bar (Matching Stitch 1:1) */}
-        <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-zinc-200 px-6 py-3 hidden md:flex items-center justify-between shadow-xs">
+        <header className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-md border-b border-zinc-200 px-6 py-3 hidden md:flex items-center justify-between shadow-xs gap-4">
+          {/* Breadcrumb / Current Navigation Indicator */}
+          <div className="flex items-center gap-3 shrink-0">
+            {currentNavItem && (
+              <div className="flex items-center gap-2 text-xs font-semibold">
+                <span className="text-[10px] font-mono font-bold tracking-wider text-zinc-400 uppercase">
+                  {currentNavSection?.title || "PORTAL"}
+                </span>
+                <span className="text-zinc-300">/</span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-xs font-bold shadow-2xs">
+                  <span className="material-symbols-outlined text-sm text-emerald-700">
+                    {currentNavItem.icon}
+                  </span>
+                  <span>{currentNavItem.name}</span>
+                </span>
+              </div>
+            )}
+          </div>
+
           {/* Search Bar with ⌘K keyboard shortcut */}
-          <div className="relative max-w-md w-full">
+          <div className="relative max-w-sm w-full">
             <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full px-3 py-1.5 rounded-lg bg-zinc-100 border border-zinc-200 text-xs text-zinc-500 focus-within:border-emerald-500 focus-within:bg-white transition-all">
               <span className="material-symbols-outlined text-base text-zinc-400">search</span>
               <input
@@ -381,14 +410,27 @@ export default function AuthenticatedShell({
 
           {/* Quick Actions, Notifications, Plan Badge, and Profile */}
           <div className="flex items-center gap-3">
-            {/* New Scan CTA */}
-            <Link
-              href="/scanner"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs active:scale-95 transition-all"
-            >
-              <span className="material-symbols-outlined text-sm">add_circle</span>
-              <span>New Scan</span>
-            </Link>
+            {/* New Scan CTA with active highlight */}
+            {(() => {
+              const isScannerActive = isRouteActive(pathname, "/scanner");
+              return (
+                <Link
+                  href="/scanner"
+                  data-active={isScannerActive ? "true" : "false"}
+                  aria-current={isScannerActive ? "page" : undefined}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-xs active:scale-95 transition-all ${
+                    isScannerActive
+                      ? "bg-emerald-700 text-white ring-2 ring-emerald-500 ring-offset-1 font-bold"
+                      : "bg-emerald-600 hover:bg-emerald-700 text-white"
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {isScannerActive ? "qr_code_scanner" : "add_circle"}
+                  </span>
+                  <span>{isScannerActive ? "Live Scanner (Active)" : "New Scan"}</span>
+                </Link>
+              );
+            })()}
 
             {/* Notifications Bell - hidden on mobile, visible sm+ */}
             <Link
@@ -442,7 +484,7 @@ export default function AuthenticatedShell({
           className="flex-1 flex items-center overflow-x-auto no-scrollbar scroll-smooth px-1.5 gap-0.5"
         >
           {MOBILE_NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = isRouteActive(pathname, item.href);
             return (
               <Link
                 key={item.href}
@@ -540,7 +582,7 @@ export default function AuthenticatedShell({
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {section.items.map((item) => {
-                      const isActive = pathname === item.href;
+                      const isActive = isRouteActive(pathname, item.href);
                       return (
                         <Link
                           key={item.href}

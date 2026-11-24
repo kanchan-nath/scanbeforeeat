@@ -2,15 +2,17 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { siteConfig, navItems } from "@/lib/config";
 import { Icon } from "@/components/ui/Icon";
 import { useAuth } from "@/lib/auth-context";
+import { isRouteActive } from "@/lib/navigation";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleScanClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,15 +47,24 @@ export function Navbar() {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-7 text-sm font-medium">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-zinc-600 hover:text-emerald-700 transition-colors duration-150"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive = isRouteActive(pathname, item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                data-active={isActive ? "true" : "false"}
+                aria-current={isActive ? "page" : undefined}
+                className={`transition-colors duration-150 py-1 relative ${
+                  isActive
+                    ? "text-emerald-700 font-bold border-b-2 border-emerald-600"
+                    : "text-zinc-600 hover:text-emerald-700"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Desktop Action Buttons */}
@@ -67,12 +78,23 @@ export function Navbar() {
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 <span>{user.remainingScans} Scans Left</span>
               </Link>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium text-zinc-700 hover:text-zinc-950 transition-colors duration-150"
-              >
-                Dashboard
-              </Link>
+              {(() => {
+                const isDashboardActive = isRouteActive(pathname, "/dashboard");
+                return (
+                  <Link
+                    href="/dashboard"
+                    data-active={isDashboardActive ? "true" : "false"}
+                    aria-current={isDashboardActive ? "page" : undefined}
+                    className={`text-sm transition-all duration-150 ${
+                      isDashboardActive
+                        ? "text-emerald-800 font-bold bg-emerald-50 border border-emerald-300 px-3 py-1.5 rounded-lg shadow-xs"
+                        : "font-medium text-zinc-700 hover:text-zinc-950"
+                    }`}
+                  >
+                    Dashboard
+                  </Link>
+                );
+              })()}
             </>
           ) : (
             <Link
@@ -82,14 +104,25 @@ export function Navbar() {
               Sign In
             </Link>
           )}
-          <Link
-            href="/scanner"
-            onClick={handleScanClick}
-            className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-semibold tracking-wide bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs hover:shadow-emerald-500/25 active:scale-[0.98] transition-all duration-150 gap-1.5"
-          >
-            <Icon name="qr_code_scanner" className="text-sm" />
-            <span>Start Scanning</span>
-          </Link>
+          {(() => {
+            const isScannerActive = isRouteActive(pathname, "/scanner");
+            return (
+              <Link
+                href="/scanner"
+                onClick={handleScanClick}
+                data-active={isScannerActive ? "true" : "false"}
+                aria-current={isScannerActive ? "page" : undefined}
+                className={`inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs tracking-wide transition-all duration-150 gap-1.5 ${
+                  isScannerActive
+                    ? "bg-emerald-700 text-white font-bold ring-2 ring-emerald-500 ring-offset-2 shadow-md"
+                    : "font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs hover:shadow-emerald-500/25 active:scale-[0.98]"
+                }`}
+              >
+                <Icon name="qr_code_scanner" className="text-sm" />
+                <span>{isScannerActive ? "Live Scanner" : "Start Scanning"}</span>
+              </Link>
+            );
+          })()}
         </div>
 
         {/* Mobile Action Controls */}
@@ -125,7 +158,13 @@ export function Navbar() {
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 font-semibold flex items-center justify-between"
+                data-active={isRouteActive(pathname, "/dashboard") ? "true" : "false"}
+                aria-current={isRouteActive(pathname, "/dashboard") ? "page" : undefined}
+                className={`px-3 py-2 rounded-lg font-semibold flex items-center justify-between ${
+                  isRouteActive(pathname, "/dashboard")
+                    ? "bg-emerald-100/90 text-emerald-900 border border-emerald-300 shadow-2xs"
+                    : "bg-emerald-50 text-emerald-800"
+                }`}
               >
                 <span>Dashboard ({user.remainingScans} scans left)</span>
                 <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
@@ -134,20 +173,35 @@ export function Navbar() {
             <Link
               href="/duel"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg hover:bg-zinc-100 transition-colors text-emerald-700 font-medium"
+              data-active={isRouteActive(pathname, "/duel") ? "true" : "false"}
+              aria-current={isRouteActive(pathname, "/duel") ? "page" : undefined}
+              className={`px-3 py-2 rounded-lg transition-colors font-medium ${
+                isRouteActive(pathname, "/duel")
+                  ? "bg-emerald-50 text-emerald-800 font-bold border border-emerald-200"
+                  : "hover:bg-zinc-100 text-emerald-700"
+              }`}
             >
               Product Duel (Comparison)
             </Link>
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg hover:bg-zinc-100 transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = isRouteActive(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  data-active={isActive ? "true" : "false"}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`px-3 py-2 rounded-lg transition-colors ${
+                    isActive
+                      ? "bg-emerald-50 text-emerald-800 font-bold border border-emerald-200"
+                      : "hover:bg-zinc-100 text-zinc-700"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
           <div className="pt-3 border-t border-zinc-100 flex flex-col gap-2">
             {user ? (
