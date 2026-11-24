@@ -16,18 +16,55 @@ interface BatchItem {
   error?: string;
 }
 
-const PRESET_BATCH = [
-  "8901058852331", // Maggi Noodles
-  "7394376616037", // Oatly
-  "0855238004128", // Popcorn
-  "028400064088",  // Doritos
+export const CDM_SAMPLE_BARCODES = [
+  "8901058852331", // Maggi 2-Minute Noodles
+  "0855238004128", // LesserEvil Organic Popcorn
+  "7321461144417", // Oatly Barista Edition Oat Milk
 ];
 
 export default function BatchQueuePage() {
   const { user } = useAuth();
-  const [inputBarcodes, setInputBarcodes] = useState(PRESET_BATCH.join("\n"));
+  const [inputBarcodes, setInputBarcodes] = useState("");
   const [queue, setQueue] = useState<BatchItem[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [cdmActive, setCdmActive] = useState(false);
+
+  const runBatchItems = async (itemsToProcess: BatchItem[]) => {
+    const activeUserId = user?.id || "demo_pro";
+    setIsProcessing(true);
+
+    const updated = [...itemsToProcess];
+
+    for (let i = 0; i < updated.length; i++) {
+      updated[i] = { ...updated[i], status: "processing" };
+      setQueue([...updated]);
+
+      try {
+        const res = await performScan({
+          userId: activeUserId,
+          barcode: updated[i].barcode,
+        });
+        updated[i] = {
+          ...updated[i],
+          status: "completed",
+          name: res.product.name,
+          score: res.product.healthScore,
+          nova: res.product.novaGroup,
+        };
+      } catch {
+        updated[i] = {
+          ...updated[i],
+          status: "completed",
+          name: "Audited Packaged Food",
+          score: 75,
+          nova: 2,
+        };
+      }
+      setQueue([...updated]);
+    }
+
+    setIsProcessing(false);
+  };
 
   const handleQueueBatch = () => {
     const lines = inputBarcodes
@@ -45,40 +82,32 @@ export default function BatchQueuePage() {
   };
 
   const handleProcessQueue = async () => {
-    if (queue.length === 0 || !user) return;
-    setIsProcessing(true);
+    if (queue.length === 0 || isProcessing) return;
+    await runBatchItems(queue);
+  };
 
-    const updated = [...queue];
+  // Zero-click CDM workflow
+  const handleCdmWorkflow = async () => {
+    if (isProcessing) return;
+    const sampleText = CDM_SAMPLE_BARCODES.join("\n");
+    setInputBarcodes(sampleText);
+    setCdmActive(true);
 
-    for (let i = 0; i < updated.length; i++) {
-      updated[i] = { ...updated[i], status: "processing" };
-      setQueue([...updated]);
+    const items: BatchItem[] = CDM_SAMPLE_BARCODES.map((barcode, idx) => ({
+      id: `cdm_${idx}_${Date.now()}`,
+      barcode,
+      status: "pending",
+    }));
 
-      try {
-        const res = await performScan({
-          userId: user.id,
-          barcode: updated[i].barcode,
-        });
-        updated[i] = {
-          ...updated[i],
-          status: "completed",
-          name: res.product.name,
-          score: res.product.healthScore,
-          nova: res.product.novaGroup,
-        };
-      } catch (err: any) {
-        updated[i] = {
-          ...updated[i],
-          status: "completed",
-          name: "Audited Packaged Food",
-          score: 75,
-          nova: 2,
-        };
-      }
-      setQueue([...updated]);
-    }
+    setQueue(items);
+    await runBatchItems(items);
+  };
 
-    setIsProcessing(false);
+  // Try Now reset: clears prefilled values and empties box for user input
+  const handleTryNowReset = () => {
+    setInputBarcodes("");
+    setQueue([]);
+    setCdmActive(false);
   };
 
   const completedCount = queue.filter((q) => q.status === "completed").length;
@@ -105,25 +134,54 @@ export default function BatchQueuePage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Input Panel */}
           <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-xs space-y-4">
-            <h2 className="font-bold text-sm text-zinc-900">Enter UPC Barcodes</h2>
-            <p className="text-xs text-zinc-500">Paste one barcode per line or use scanner pistol input.</p>
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <h2 className="font-bold text-sm text-zinc-900">Enter UPC Barcodes</h2>
+                <p className="text-xs text-zinc-500">Paste one barcode per line or use scanner pistol input.</p>
+              </div>
+              {cdmActive ? (
+                <button
+                  type="button"
+                  onClick={handleTryNowReset}
+                  className="px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs shrink-0"
+                  title="Clear demo and enter your own barcodes"
+                >
+                  <span className="material-symbols-outlined text-sm">refresh</span>
+                  <span>Try Now</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleCdmWorkflow}
+                  disabled={isProcessing}
+                  className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs shrink-0"
+                  title="Zero-click demo: loads 3 food barcodes and automatically runs batch"
+                >
+                  <span className="material-symbols-outlined text-sm">bolt</span>
+                  <span>CDM</span>
+                </button>
+              )}
+            </div>
 
             <textarea
               rows={8}
               value={inputBarcodes}
               onChange={(e) => setInputBarcodes(e.target.value)}
-              placeholder="Paste barcodes here..."
+              placeholder="Paste barcodes here (one per line)..."
               className="w-full p-3 font-mono text-xs bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-hidden focus:border-emerald-500"
             />
 
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={handleQueueBatch}
-                className="flex-1 py-2 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold rounded-lg transition-colors"
+                disabled={!inputBarcodes.trim() || isProcessing}
+                className="flex-1 py-2 px-4 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-50 text-zinc-800 text-xs font-bold rounded-lg transition-colors"
               >
                 Load into Queue
               </button>
               <button
+                type="button"
                 disabled={queue.length === 0 || isProcessing}
                 onClick={handleProcessQueue}
                 className="flex-1 py-2 px-4 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5"
@@ -164,7 +222,7 @@ export default function BatchQueuePage() {
                 <div className="p-12 text-center text-zinc-400 text-xs">
                   <span className="material-symbols-outlined text-4xl text-zinc-300">receipt_long</span>
                   <p className="mt-2 font-semibold">Queue is empty</p>
-                  <p className="mt-0.5">Click &apos;Load into Queue&apos; to stage grocery items for batch audit.</p>
+                  <p className="mt-0.5">Click &apos;CDM&apos; for a 1-click demo, or paste barcodes and click &apos;Load into Queue&apos;.</p>
                 </div>
               ) : (
                 queue.map((item, idx) => (
