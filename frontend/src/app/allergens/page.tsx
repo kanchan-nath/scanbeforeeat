@@ -21,7 +21,7 @@ const PRESET_ALLERGENS = [
 ];
 
 export default function AllergensPage() {
-  const { user } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [selectedIds, setSelectedIds] = useState<string[]>([
     "gluten",
     "azo_dyes",
@@ -63,6 +63,7 @@ export default function AllergensPage() {
     setSaving(true);
     try {
       await saveUserAllergens(user.id, selectedIds);
+      await refreshProfile();
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 3000);
     } catch {

@@ -313,6 +313,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const updated = await fetchUserProfile(user.id);
       setUser(updated);
+      const savedDemo = localStorage.getItem(DEMO_STORAGE_KEY);
+      if (savedDemo) {
+        localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(updated));
+      }
     } catch {
       // Offline fallback
     }

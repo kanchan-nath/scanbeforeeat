@@ -10,6 +10,8 @@ import {
   saveScanToSupabase,
   updateUserQuotaInSupabase,
   getScanHistoryFromSupabase,
+  saveUserAllergensToSupabase,
+  getUserAllergensFromSupabase,
 } from "./db.js";
 import { generateInvoicePdf } from "./services/pdf.js";
 import { fetchFromOpenFoodFacts } from "./services/openfoodfacts.js";
@@ -57,7 +59,18 @@ app.get("/api/health", (_req: Request, res: Response) => {
 // -------------------------------------------------------------
 // Auth & User Profile
 // -------------------------------------------------------------
-app.post("/api/auth/sync", (req: Request, res: Response) => {
+async function loadUserAllergensList(userId: string): Promise<string[]> {
+  try {
+    const cloudAllergens = await getUserAllergensFromSupabase(userId);
+    if (cloudAllergens !== null && cloudAllergens.length > 0) {
+      return cloudAllergens;
+    }
+  } catch {}
+  const rows = db.prepare("SELECT allergen FROM user_allergens WHERE userId = ?").all(userId) as any[];
+  return rows.map((r) => r.allergen);
+}
+
+app.post("/api/auth/sync", async (req: Request, res: Response) => {
   let { id, email, displayName, plan, authProvider, firebaseUid, photoUrl } = req.body;
   if (!email) {
     return res.status(400).json({ error: "email is required" });
@@ -78,7 +91,8 @@ app.post("/api/auth/sync", (req: Request, res: Response) => {
       const remaining = Math.max(0, demo.scansLimit - demo.scansUsed);
       const token = generateJwtToken(demo);
       res.setHeader("Set-Cookie", serializeAuthCookie(token));
-      return res.json({ ...demo, remainingScans: remaining, token });
+      const allergens = await loadUserAllergensList("demo_pro");
+      return res.json({ ...demo, remainingScans: remaining, token, allergens });
     }
   }
 
@@ -101,10 +115,12 @@ app.post("/api/auth/sync", (req: Request, res: Response) => {
     const remaining = Math.max(0, updated.scansLimit - updated.scansUsed);
     const token = generateJwtToken(updated);
     res.setHeader("Set-Cookie", serializeAuthCookie(token));
+    const allergens = await loadUserAllergensList(existing.id);
     return res.json({
       ...updated,
       remainingScans: remaining,
       token,
+      allergens,
     });
   }
 
@@ -132,14 +148,16 @@ app.post("/api/auth/sync", (req: Request, res: Response) => {
   const newUser = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as any;
   const token = generateJwtToken(newUser);
   res.setHeader("Set-Cookie", serializeAuthCookie(token));
+  const allergens = await loadUserAllergensList(id);
   res.json({
     ...newUser,
     remainingScans: limit,
     token,
+    allergens,
   });
 });
 
-app.post("/api/auth/login", (req: Request, res: Response) => {
+app.post("/api/auth/login", async (req: Request, res: Response) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: "email is required" });
   const cleanEmail = email.toLowerCase().trim();
@@ -149,7 +167,8 @@ app.post("/api/auth/login", (req: Request, res: Response) => {
     const remaining = Math.max(0, demo.scansLimit - demo.scansUsed);
     const token = generateJwtToken(demo);
     res.setHeader("Set-Cookie", serializeAuthCookie(token));
-    return res.json({ ...demo, remainingScans: remaining, token });
+    const allergens = await loadUserAllergensList("demo_pro");
+    return res.json({ ...demo, remainingScans: remaining, token, allergens });
   }
 
   const existing = db.prepare("SELECT * FROM users WHERE email = ?").get(cleanEmail) as any;
@@ -157,7 +176,8 @@ app.post("/api/auth/login", (req: Request, res: Response) => {
     const remaining = Math.max(0, existing.scansLimit - existing.scansUsed);
     const token = generateJwtToken(existing);
     res.setHeader("Set-Cookie", serializeAuthCookie(token));
-    return res.json({ ...existing, remainingScans: remaining, token });
+    const allergens = await loadUserAllergensList(existing.id);
+    return res.json({ ...existing, remainingScans: remaining, token, allergens });
   }
 
   const safeId = "usr_" + cleanEmail.replace(/[^a-z0-9]/g, "_");
@@ -180,7 +200,8 @@ app.post("/api/auth/login", (req: Request, res: Response) => {
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(safeId) as any;
   const token = generateJwtToken(user);
   res.setHeader("Set-Cookie", serializeAuthCookie(token));
-  return res.json({ ...user, remainingScans: 15, token });
+  const allergens = await loadUserAllergensList(safeId);
+  return res.json({ ...user, remainingScans: 15, token, allergens });
 });
 
 // -------------------------------------------------------------
@@ -222,7 +243,7 @@ app.post("/api/auth/send-otp", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
+app.post("/api/auth/verify-otp", async (req: Request, res: Response) => {
   const { email, otp, displayName } = req.body;
   if (!email || !otp) {
     return res.status(400).json({ error: "Email and 6-digit OTP code are required" });
@@ -261,9 +282,10 @@ app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
     const remaining = Math.max(0, updated.scansLimit - updated.scansUsed);
     const token = generateJwtToken(updated);
     res.setHeader("Set-Cookie", serializeAuthCookie(token));
+    const allergens = await loadUserAllergensList(existing.id);
     return res.json({
       success: true,
-      user: { ...updated, remainingScans: remaining, token },
+      user: { ...updated, remainingScans: remaining, token, allergens },
       token,
     });
   }
@@ -290,9 +312,10 @@ app.post("/api/auth/verify-otp", (req: Request, res: Response) => {
   const newUser = db.prepare("SELECT * FROM users WHERE id = ?").get(safeId) as any;
   const token = generateJwtToken(newUser);
   res.setHeader("Set-Cookie", serializeAuthCookie(token));
+  const allergens = await loadUserAllergensList(safeId);
   return res.json({
     success: true,
-    user: { ...newUser, remainingScans: 15, token },
+    user: { ...newUser, remainingScans: 15, token, allergens },
     token,
   });
 });
@@ -302,7 +325,7 @@ app.post("/api/auth/logout", (_req: Request, res: Response) => {
   return res.json({ success: true, message: "Logged out successfully" });
 });
 
-app.get("/api/auth/me", requireAuth, (req: Request, res: Response) => {
+app.get("/api/auth/me", requireAuth, async (req: Request, res: Response) => {
   const authUser = (req as AuthenticatedRequest).user;
   if (!authUser) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -312,10 +335,11 @@ app.get("/api/auth/me", requireAuth, (req: Request, res: Response) => {
     return res.status(404).json({ error: "User not found" });
   }
   const remaining = Math.max(0, user.scansLimit - user.scansUsed);
-  return res.json({ ...user, remainingScans: remaining });
+  const allergens = await loadUserAllergensList(authUser.id);
+  return res.json({ ...user, remainingScans: remaining, allergens });
 });
 
-app.get("/api/user/profile/:id", requireAuth, (req: Request, res: Response) => {
+app.get("/api/user/profile/:id", requireAuth, async (req: Request, res: Response) => {
   const { id } = req.params;
   const user = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as any;
   if (!user) {
@@ -323,12 +347,12 @@ app.get("/api/user/profile/:id", requireAuth, (req: Request, res: Response) => {
   }
 
   const remaining = Math.max(0, user.scansLimit - user.scansUsed);
-  const allergens = db.prepare("SELECT allergen FROM user_allergens WHERE userId = ?").all(id) as any[];
+  const allergens = await loadUserAllergensList(id);
 
   res.json({
     ...user,
     remainingScans: remaining,
-    allergens: allergens.map((a) => a.allergen),
+    allergens,
   });
 });
 
@@ -715,24 +739,28 @@ app.get("/api/user/history/:userId", requireAuth, async (req: Request, res: Resp
 // -------------------------------------------------------------
 // Allergens
 // -------------------------------------------------------------
-app.get("/api/user/allergens/:userId", requireAuth, (req: Request, res: Response) => {
+app.get("/api/user/allergens/:userId", requireAuth, async (req: Request, res: Response) => {
   const { userId } = req.params;
-  const rows = db.prepare("SELECT allergen FROM user_allergens WHERE userId = ?").all(userId) as any[];
-  res.json(rows.map((r) => r.allergen));
+  const allergens = await loadUserAllergensList(userId);
+  res.json(allergens);
 });
 
-app.post("/api/user/allergens", requireAuth, (req: Request, res: Response) => {
+app.post("/api/user/allergens", requireAuth, async (req: Request, res: Response) => {
   const { userId, allergens } = req.body;
   if (!userId || !Array.isArray(allergens)) {
     return res.status(400).json({ error: "userId and allergens array required" });
   }
 
+  // 1. Persist to local SQLite
   db.prepare("DELETE FROM user_allergens WHERE userId = ?").run(userId);
   const insert = db.prepare("INSERT INTO user_allergens (userId, allergen) VALUES (?, ?)");
 
   for (const a of allergens) {
     insert.run(userId, a);
   }
+
+  // 2. Persist to Supabase Cloud Database
+  await saveUserAllergensToSupabase(userId, allergens);
 
   res.json({ success: true, allergens });
 });

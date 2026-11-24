@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AuthenticatedShell from "@/components/AuthenticatedShell";
 import { useAuth } from "@/lib/auth-context";
-import { fetchScanHistory, saveUserAllergens, updateUserPlan } from "@/lib/api";
+import { fetchScanHistory, saveUserAllergens, fetchUserAllergens, updateUserPlan } from "@/lib/api";
 
 const DEFAULT_ALLERGENS = [
   "Gluten (Wheat)",
@@ -37,6 +37,24 @@ export default function DashboardPage() {
 
       if (user.allergens && user.allergens.length > 0) {
         setSelectedAllergens(user.allergens);
+      } else {
+        fetchUserAllergens(user.id)
+          .then((allergens) => {
+            if (allergens && allergens.length > 0) {
+              setSelectedAllergens(allergens);
+            } else {
+              try {
+                const cached = localStorage.getItem(`user_allergens_${user.id}`);
+                if (cached) setSelectedAllergens(JSON.parse(cached));
+              } catch {}
+            }
+          })
+          .catch(() => {
+            try {
+              const cached = localStorage.getItem(`user_allergens_${user.id}`);
+              if (cached) setSelectedAllergens(JSON.parse(cached));
+            } catch {}
+          });
       }
     }
   }, [user?.id, user?.allergens]);
@@ -54,9 +72,16 @@ export default function DashboardPage() {
     setSaveStatus("Saving...");
     try {
       await saveUserAllergens(user.id, selectedAllergens);
+      try {
+        localStorage.setItem(`user_allergens_${user.id}`, JSON.stringify(selectedAllergens));
+      } catch {}
+      await refreshProfile();
       setSaveStatus("Saved successfully!");
       setTimeout(() => setSaveStatus(""), 3000);
     } catch {
+      try {
+        localStorage.setItem(`user_allergens_${user.id}`, JSON.stringify(selectedAllergens));
+      } catch {}
       setSaveStatus("Saved locally");
       setTimeout(() => setSaveStatus(""), 3000);
     }

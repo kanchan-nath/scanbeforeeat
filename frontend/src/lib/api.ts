@@ -221,15 +221,28 @@ export async function performDuel(barcode1: string, barcode2: string): Promise<D
 }
 
 export async function fetchScanHistory(userId: string) {
-  const res = await fetch(`${API_BASE}/user/history/${encodeURIComponent(userId)}`);
+  const res = await fetch(`${API_BASE}/user/history/${encodeURIComponent(userId)}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Failed to fetch scan history");
+  return res.json();
+}
+
+export async function fetchUserAllergens(userId: string): Promise<string[]> {
+  const res = await fetch(`${API_BASE}/user/allergens/${encodeURIComponent(userId)}`, {
+    headers: authHeaders(),
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch user allergens");
   return res.json();
 }
 
 export async function saveUserAllergens(userId: string, allergens: string[]) {
   const res = await fetch(`${API_BASE}/user/allergens`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
+    credentials: "include",
     body: JSON.stringify({ userId, allergens }),
   });
   if (!res.ok) throw new Error("Failed to save allergens");

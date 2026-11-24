@@ -705,3 +705,32 @@ export async function getScanHistoryFromSupabase(userId: string, limit = 50): Pr
     return [];
   }
 }
+
+export async function saveUserAllergensToSupabase(userId: string, allergens: string[]): Promise<void> {
+  if (!pgPool) return;
+  try {
+    await pgPool.query(`DELETE FROM public.user_allergens WHERE "userId" = $1;`, [userId]);
+    for (const a of allergens) {
+      await pgPool.query(
+        `INSERT INTO public.user_allergens ("userId", "allergen") VALUES ($1, $2) ON CONFLICT DO NOTHING;`,
+        [userId, a]
+      );
+    }
+  } catch (err) {
+    console.warn("[Supabase] Failed to persist user allergens to cloud:", err);
+  }
+}
+
+export async function getUserAllergensFromSupabase(userId: string): Promise<string[] | null> {
+  if (!pgPool) return null;
+  try {
+    const res = await pgPool.query(
+      `SELECT "allergen" FROM public.user_allergens WHERE "userId" = $1;`,
+      [userId]
+    );
+    return res.rows.map((r: any) => r.allergen);
+  } catch (err) {
+    console.warn("[Supabase] Failed to fetch user allergens from cloud:", err);
+    return null;
+  }
+}

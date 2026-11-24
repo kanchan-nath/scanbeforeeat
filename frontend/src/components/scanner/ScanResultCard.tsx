@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ProductDetail, addPantryItem } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
+import { matchProductAgainstUserAllergens } from "@/lib/allergen-matcher";
 
 interface ScanResultCardProps {
   product: ProductDetail;
@@ -20,6 +21,8 @@ export function ScanResultCard({ product, onScanAnother }: ScanResultCardProps) 
   const additives = Array.isArray(product.additives) ? product.additives : [];
   const deductions = Array.isArray(product.deductions) ? product.deductions : [];
   const alternatives = Array.isArray(product.alternatives) ? product.alternatives : [];
+
+  const userMatrixMatch = matchProductAgainstUserAllergens(product, user?.allergens || []);
 
   const scoreColor =
     product.healthScore >= 80
@@ -142,15 +145,73 @@ export function ScanResultCard({ product, onScanAnother }: ScanResultCardProps) 
         </div>
       </section>
 
-      {/* Allergen & Sensitivity Warnings */}
-      <section className="bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-xs">
+      {/* Personalized Active Allergen Sensitivity Cockpit Guard */}
+      {userMatrixMatch.hasMatches ? (
+        <section className="bg-rose-50 border-2 border-rose-500 rounded-2xl p-5 shadow-sm space-y-3 animate-in fade-in">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-2 text-rose-700 font-bold">
+              <span className="material-symbols-outlined text-rose-600 text-2xl animate-pulse">report</span>
+              <div>
+                <h3 className="text-sm font-bold text-rose-950 uppercase tracking-wide font-mono">
+                  Personal Allergen Matrix Alert
+                </h3>
+                <p className="text-xs text-rose-800">
+                  Detected ingredients matching your personalized health sensitivity guards!
+                </p>
+              </div>
+            </div>
+            <span className="px-2.5 py-1 bg-rose-600 text-white text-[11px] font-mono font-bold rounded-lg shrink-0">
+              {userMatrixMatch.matchedAllergens.length} TRIGGER{userMatrixMatch.matchedAllergens.length > 1 ? "S" : ""}
+            </span>
+          </div>
+
+          <div className="flex flex-wrap gap-2 pt-1">
+            {userMatrixMatch.matchedAllergens.map((item) => (
+              <span
+                key={item}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-100 border border-rose-300 text-rose-900 font-bold text-xs"
+              >
+                <span className="material-symbols-outlined text-sm text-rose-600">block</span>
+                <span>{item}</span>
+              </span>
+            ))}
+          </div>
+
+          <div className="pt-2 border-t border-rose-200 text-[11px] text-rose-800 space-y-1">
+            {userMatrixMatch.matchDetails.map((det, idx) => (
+              <div key={idx} className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                <span><strong>{det.allergen}</strong>: {det.detectedIn}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : user?.allergens && user.allergens.length > 0 ? (
+        <section className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5 text-xs text-emerald-900 font-medium">
+            <span className="material-symbols-outlined text-emerald-600 text-xl">verified_user</span>
+            <span>
+              <strong>Personal Matrix Guard: Clean</strong> — None of your {user.allergens.length} active dietary sensitivities detected.
+            </span>
+          </div>
+          <Link
+            href="/dashboard"
+            className="text-xs font-bold text-emerald-700 hover:text-emerald-800 underline underline-offset-2 shrink-0"
+          >
+            Manage Matrix
+          </Link>
+        </section>
+      ) : null}
+
+      {/* General Packaging Allergen & Sensitivity Warnings */}
+      <section className="bg-rose-50/70 border border-rose-200 rounded-2xl p-5 shadow-xs">
         <div className="flex items-start gap-3">
           <span className="material-symbols-outlined text-rose-600 text-xl shrink-0 mt-0.5">
             warning
           </span>
           <div className="flex-1">
             <h3 className="text-xs font-bold text-rose-950 uppercase tracking-wide font-mono">
-              Allergen Warning & Cross-Contamination
+              Packaging Allergen Declaration & Cross-Contamination
             </h3>
             <p className="text-xs text-rose-800 mt-1 leading-relaxed">
               Contains: <strong className="underline">{allergens.join(", ")}</strong>.

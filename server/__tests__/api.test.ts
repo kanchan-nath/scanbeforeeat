@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import app from "../src/index.js";
 import { db } from "../src/db.js";
+import { generateJwtToken } from "../src/middleware/auth.js";
 import http from "node:http";
 
 let server: http.Server;
@@ -374,5 +375,64 @@ describe("ScanBeforeEat Server API Endpoints", () => {
     // Clean up
     db.prepare("DELETE FROM email_otps WHERE email = ?").run(testEmail);
     db.prepare("DELETE FROM users WHERE email = ?").run(testEmail);
+  });
+
+  it("POST /api/user/allergens and GET /api/user/allergens/:userId should persist and retrieve custom allergens", async () => {
+    // 0. Create a fresh test user
+    const syncRes = await fetch(`${BASE_URL}/auth/sync`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: "test-user-allergen",
+        email: "allergen_test@scanbeforeeat.com",
+        displayName: "Allergen Tester",
+        plan: "free",
+      }),
+    });
+    const syncData = await syncRes.json();
+    const token = syncData.token;
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    // 1. Save allergen preferences
+    const testAllergens = [
+      "Gluten (Wheat)",
+      "Synthetic Azo Dyes (E102/E110/E129)",
+      "Artificial Preservatives (TBHQ/BHA)",
+    ];
+
+    const saveRes = await fetch(`${BASE_URL}/user/allergens`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        userId: "test-user-allergen",
+        allergens: testAllergens,
+      }),
+    });
+    expect(saveRes.status).toBe(200);
+    const saveData = await saveRes.json();
+    expect(saveData.success).toBe(true);
+    expect(saveData.allergens).toEqual(testAllergens);
+
+    // 2. Fetch allergen preferences
+    const getRes = await fetch(`${BASE_URL}/user/allergens/test-user-allergen`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(getRes.status).toBe(200);
+    const getData = await getRes.json();
+    expect(getData).toEqual(expect.arrayContaining(testAllergens));
+
+    // 3. Verify user profile also contains allergens
+    const profileRes = await fetch(`${BASE_URL}/user/profile/test-user-allergen`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(profileRes.status).toBe(200);
+    const profileData = await profileRes.json();
+    expect(profileData.allergens).toEqual(expect.arrayContaining(testAllergens));
+
+    // Clean up
+    await fetch(`${BASE_URL}/user/account/test-user-allergen`, { method: "DELETE", headers });
   });
 });
